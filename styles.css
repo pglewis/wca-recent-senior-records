@@ -1,0 +1,116 @@
+body {
+	margin-bottom: 3em;
+}
+
+.with-margin {
+	margin-top: 1em;
+	margin-bottom: 1em;
+}
+
+th.date {
+	width: 100px;
+}
+
+th.event {
+	width: 145px;
+}
+
+th.age-group {
+	width: 50px;
+}
+
+th.rank {
+	width: 43px;
+}
+
+th.result {
+	width: 55px;
+}
+
+div.parameters {
+	border: 1px solid #dfe2e5;
+	padding: 1em;
+}
+
+.sr-only {
+	position: absolute;
+	top: -30em;
+}
+
+.rankings table.sortable th {
+	position: relative;
+	margin: 0;
+	padding: 0;
+	font-size: 0.85em;
+}
+
+/* Padding needs to be on the label, not the header */
+table.sortable th *:first-child {
+	padding: 8px 20px 8px 14px;
+	margin: 0;
+}
+
+table.sortable th button {
+	font-size: 100%;
+	font-weight: bold;
+	background: transparent;
+	border: none;
+	display: inline;
+	width: 100%;
+	text-align: left;
+	outline: none;
+	cursor: pointer;
+}
+
+/* The column sort state indicators */
+table.sortable th span[aria-hidden="true"] {
+	position: absolute;
+	right: 2px;
+	top: 0;
+	bottom: 0;
+	width: 10px;
+	cursor: pointer;
+	pointer-events: none; /* Don't intercept click events */
+}
+
+table.sortable th span[aria-hidden="true"]:before,
+table.sortable th span[aria-hidden="true"]:after {
+	left: 0;
+	opacity: 0.225;
+	line-height: 9px;
+	font-size: 0.8em;
+}
+
+table.sortable th span[aria-hidden="true"]:before {
+	position: absolute;
+	display: block;
+	bottom: 50%;
+	content: "▲";
+	content: "▲" /"";
+}
+
+table.sortable th span[aria-hidden="true"]:after {
+	position: absolute;
+	display: block;
+	top: 50%;
+	content: "▼";
+	content: "▼" / "";
+}
+
+table.sortable th[aria-sort="ascending"] span[aria-hidden="true"]:before {
+    opacity: 0.6;
+}
+
+table.sortable th[aria-sort="descending"] span[aria-hidden="true"]:after {
+    opacity: 0.6;
+}
+
+.cubing-icon:before {
+    display: inline-block;
+    font-family: cubing-icons;
+    font-style: normal;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    vertical-align: -15%;
+}
