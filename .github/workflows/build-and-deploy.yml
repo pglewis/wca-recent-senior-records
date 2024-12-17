@@ -18,7 +18,7 @@ jobs:
       - name: Copy senior rankings data
         run: |
           pwd
-          curl https://wca-seniors.org/data/Senior_Rankings.js > Senior_Rankings.js
+          curl https://wca-seniors.org/data/Senior_Rankings.js > senior-rankings.js
           ls -al
 
       - name: Deploy
