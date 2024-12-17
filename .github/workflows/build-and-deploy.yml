@@ -17,10 +17,9 @@ jobs:
 
       - name: Copy senior rankings data
         run: |
-          curl https://wca-seniors.org/data/Senior_Rankings.js > senior-rankings.js
           rm .gitignore
           mkdir data
-          cp senior-rankings.js ./data
+          curl https://wca-seniors.org/data/Senior_Rankings.js > data/senior-rankings.js
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
         with:
