@@ -22,4 +22,4 @@ jobs:
 
       - name: Copy senior rankings data
         run:
-          curl https://wca-seniors.org/data/Senior_Rankings.js > data/Senior_Rankings.js
+          mkdir data && curl https://wca-seniors.org/data/Senior_Rankings.js > data/Senior_Rankings.js
