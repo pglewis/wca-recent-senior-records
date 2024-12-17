@@ -3,9 +3,12 @@ on:
   push:
     branches:
       - main
+
   schedule:
     - cron: "20 2 * * *"
+
   workflow_dispatch:
+
 permissions:
   contents: write
 
@@ -13,14 +16,15 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout main
         uses: actions/checkout@v4
 
+      - name: Replace the dev .gitignore with the pages .gitignore
+        run: mv .gitignore-pages .gitignore
+
       - name: Copy senior rankings data
-        run: |
-          mv .gitignore-pages .gitignore
-          mkdir data
-          curl https://wca-seniors.org/data/Senior_Rankings.js > data/senior-rankings.js
+        run: npm run get-data
+
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
         with:

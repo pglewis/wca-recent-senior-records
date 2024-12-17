@@ -3,6 +3,7 @@
     "vite": "^6.0.2"
   },
   "scripts": {
-	"dev": "npx vite"
+    "dev": "npx vite",
+    "get-data": "./bin/get-data.sh"
   }
 }
