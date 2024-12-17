@@ -17,7 +17,7 @@ jobs:
 
       - name: Copy senior rankings data
         run:
-          mkdir data && curl https://wca-seniors.org/data/Senior_Rankings.js > Senior_Rankings.js
+          pwd && curl https://wca-seniors.org/data/Senior_Rankings.js > Senior_Rankings.js
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
