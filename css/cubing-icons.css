@@ -6,6 +6,39 @@
 	font-style: normal;
 }
 
+i.icon {
+	display: inline-block;
+	font-family: icons;
+	font-style: normal;
+	font-weight: 400;
+	font-size: 1.5em;
+	height: 1em;
+	margin: 0 .25rem 0 0;
+	opacity: 1;
+	text-align: center;
+	text-decoration: inherit;
+	width: 1.18em;
+}
+
+i.icon:before {
+	background: 0 0;
+}
+
+i.cubing-icon:before {
+    display: inline-block;
+    font-family: cubing-icons;
+    font-style: normal;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    vertical-align: -15%;
+}
+
+i.cubing-icon {
+	margin: 0;
+	width: auto;
+}
+
 .cubing-icon.event-222:before { content: "\EA01" }
 .cubing-icon.event-333:before { content: "\EA02" }
 .cubing-icon.event-333bf:before { content: "\EA03" }
@@ -27,26 +60,3 @@
 .cubing-icon.event-pyram:before { content: "\EA13" }
 .cubing-icon.event-skewb:before { content: "\EA14" }
 .cubing-icon.event-sq1:before { content: "\EA15" }
-
-i.icon {
-	display: inline-block;
-	font-family: icons;
-	font-style: normal;
-	font-weight: 400;
-	font-size: 1.5em;
-	height: 1em;
-	margin: 0 .25rem 0 0;
-	opacity: 1;
-	text-align: center;
-	text-decoration: inherit;
-	width: 1.18em;
-}
-
-i.icon:before {
-	background: 0 0;
-}
-
-i.cubing-icon {
-	margin: 0;
-	width: auto;
-}
