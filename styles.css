@@ -104,13 +104,3 @@ table.sortable th[aria-sort="ascending"] span[aria-hidden="true"]:before {
 table.sortable th[aria-sort="descending"] span[aria-hidden="true"]:after {
     opacity: 0.6;
 }
-
-.cubing-icon:before {
-    display: inline-block;
-    font-family: cubing-icons;
-    font-style: normal;
-    font-weight: 400;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    vertical-align: -15%;
-}
