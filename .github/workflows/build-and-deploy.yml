@@ -18,7 +18,7 @@ jobs:
 
       - name: Copy senior rankings data
         run: |
-          rm .gitignore
+          mv .gitignore-pages .gitignore
           mkdir data
           curl https://wca-seniors.org/data/Senior_Rankings.js > data/senior-rankings.js
       - name: Deploy
