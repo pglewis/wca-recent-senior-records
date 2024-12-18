@@ -12,7 +12,7 @@ th.date {
 }
 
 th.event {
-	width: 145px;
+	width: 150px;
 }
 
 th.age-group {
@@ -103,4 +103,17 @@ table.sortable th[aria-sort="ascending"] span[aria-hidden="true"]:before {
 
 table.sortable th[aria-sort="descending"] span[aria-hidden="true"]:after {
     opacity: 0.6;
+}
+
+.error {
+  margin: 10px 0;
+  padding: 0 10px 10px 10px;
+  border-radius: 5px;
+  color: #d8000bd5;
+  background-color: #ffcccc;
+  border: 1px solid #f88888;
+}
+
+.error .message {
+	color: black;
 }

@@ -235,9 +235,8 @@ export function Loading() {
  */
 export function ErrorMessage(message) {
 	const errorMessage = getTemplateElement("#error");
-
 	const messageNode = errorMessage.querySelector(".message");
-	messageNode.classList.add("important");
+
 	messageNode.textContent = message;
 
 	return errorMessage;
