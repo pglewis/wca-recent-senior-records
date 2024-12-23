@@ -1,6 +1,6 @@
-import { updateSortFieldsAction, sortResultsAction } from "../state/state";
-import { handleDragStart, handleDragEnd } from "./sort-column-list";
-import { getTemplateElement } from "./get-template-element";
+import { updateSortFieldsAction, sortResultsAction } from "../state/state.js";
+import { handleDragStart, handleDragEnd } from "./sort-column-list.js";
+import { getTemplateElement } from "./get-template-element.js";
 
 /**
  * @param {Object}    props
