@@ -7,29 +7,121 @@ body {
 	margin-bottom: 1em;
 }
 
-th.date {
+.parameters {
+	margin: auto 0;
+	text-align: right;
+}
+
+#panel {
+	width: 100%;
+	background-color: #f6f8fa;
+}
+
+#panel .panel-grid {
+	display: grid;
+	grid-template-columns: minmax(350px, 1fr)  1.5fr;
+	padding: 1em;
+	margin-bottom: 1em;
+	border: 1px solid #dfe2e5;
+}
+
+#sort-columns {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+#sort-columns>* {
+	margin: auto 0;
+}
+
+#sort-columns .label {
+	font-weight: 600;
+	font-size: 12px;
+}
+
+#sort-columns .sort-column {
+	position: relative;
+}
+
+#sort-columns button {
+	width: 100%;
+	padding: 8px 20px 8px 14px;
+	font-size: 12px;
+	font-weight: bold;
+	text-align: left;
+	background-color: white;
+	border: 1px solid #dfe2e5;
+}
+
+#sort-columns button:hover {
+	cursor: grab;
+}
+
+#sort-columns button.over {
+	outline: 3px dotted #666;
+}
+
+#sort-columns div:nth-child(3) button {
+	color: #008000;
+}
+
+#sort-columns div:nth-child(4) button {
+	color: #0000ff;
+}
+
+#sort-columns button+span {
+	position: absolute;
+	right: 5px;
+	top: 0;
+	bottom: 0;
+	width: 10px;
+	cursor: pointer;
+	pointer-events: none;
+	/* Don't intercept click events */
+}
+
+#sort-columns button+span:before {
+	position: absolute;
+	display: block;
+	opacity: 0.9;
+	bottom: 40%;
+}
+
+#sort-columns button.ascending+span:before {
+	content: "▲";
+}
+
+#sort-columns button.descending+span:before {
+	content: "▼";
+}
+
+#sort-columns button.secondary+span:before {
+	color: #008000;
+}
+
+#sort-columns button.tertiary+span:before {
+	color: #0000ff;
+}
+
+table#ranking-table th.date {
 	width: 100px;
 }
 
-th.event {
+table#ranking-table th.event {
 	width: 150px;
 }
 
-th.age-group {
+table#ranking-table th.age {
 	width: 50px;
 }
 
-th.rank {
+table#ranking-table th.rank {
 	width: 43px;
 }
 
-th.result {
+table#ranking-table th.result {
 	width: 55px;
-}
-
-div.parameters {
-	border: 1px solid #dfe2e5;
-	padding: 1em;
 }
 
 .sr-only {
@@ -37,7 +129,7 @@ div.parameters {
 	top: -30em;
 }
 
-.rankings table.sortable th {
+table#ranking-table th {
 	position: relative;
 	margin: 0;
 	padding: 0;
@@ -45,12 +137,12 @@ div.parameters {
 }
 
 /* Padding needs to be on the label, not the header */
-table.sortable th *:first-child {
+table#ranking-table th *:first-child {
 	padding: 8px 20px 8px 14px;
 	margin: 0;
 }
 
-table.sortable th button {
+table#ranking-table th button {
 	font-size: 100%;
 	font-weight: bold;
 	background: transparent;
@@ -63,25 +155,28 @@ table.sortable th button {
 }
 
 /* The column sort state indicators */
-table.sortable th span[aria-hidden="true"] {
+table#ranking-table th button+span {
 	position: absolute;
 	right: 2px;
 	top: 0;
 	bottom: 0;
 	width: 10px;
 	cursor: pointer;
-	pointer-events: none; /* Don't intercept click events */
+	pointer-events: none;
+	/* Don't intercept click events */
 }
 
-table.sortable th span[aria-hidden="true"]:before,
-table.sortable th span[aria-hidden="true"]:after {
+table#ranking-table th button+span:before,
+table#ranking-table th button+span:after,
+.sort-column button+span:before,
+.sort-column button+span:after {
 	left: 0;
 	opacity: 0.225;
 	line-height: 9px;
 	font-size: 0.8em;
 }
 
-table.sortable th span[aria-hidden="true"]:before {
+table#ranking-table th button+span:before {
 	position: absolute;
 	display: block;
 	bottom: 50%;
@@ -89,7 +184,7 @@ table.sortable th span[aria-hidden="true"]:before {
 	content: "▲" /"";
 }
 
-table.sortable th span[aria-hidden="true"]:after {
+table#ranking-table th button+span:after {
 	position: absolute;
 	display: block;
 	top: 50%;
@@ -97,21 +192,44 @@ table.sortable th span[aria-hidden="true"]:after {
 	content: "▼" / "";
 }
 
-table.sortable th[aria-sort="ascending"] span[aria-hidden="true"]:before {
-    opacity: 0.6;
+/* primary sort */
+table#ranking-table th.primary.ascending button+span:before {
+	opacity: 0.9;
 }
 
-table.sortable th[aria-sort="descending"] span[aria-hidden="true"]:after {
-    opacity: 0.6;
+table#ranking-table th.primary.descending button+span:after {
+	opacity: 0.9;
+}
+
+/* secondary sort */
+table#ranking-table th.secondary.ascending button+span:before {
+	opacity: 0.9;
+	color: green;
+}
+
+table#ranking-table th.secondary.descending button+span:after {
+	opacity: 0.9;
+	color: green;
+}
+
+/* tertiary sort */
+table#ranking-table th.tertiary.ascending button+span:before {
+	opacity: 0.9;
+	color: blue;
+}
+
+table#ranking-table th.tertiary.descending button+span:after {
+	opacity: 0.9;
+	color: blue;
 }
 
 .error {
-  margin: 10px 0;
-  padding: 0 10px 10px 10px;
-  border-radius: 5px;
-  color: #d8000bd5;
-  background-color: #ffcccc;
-  border: 1px solid #f88888;
+	margin: 10px 0;
+	padding: 0 10px 10px 10px;
+	border-radius: 5px;
+	color: #de222b;
+	background-color: #ffcccc;
+	border: 1px solid #f88888;
 }
 
 .error .message {
