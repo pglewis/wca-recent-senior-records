@@ -1,5 +1,5 @@
-import { createStore, reducer, searchRankingsAction, sortResultsAction } from "./js/state.js";
-import { createRoot, App, Loading, ErrorMessage } from "./js/app.js";
+import { createStore, reducer, searchRankingsAction, sortResultsAction } from "./js/state/state.js";
+import { createRoot, App, Loading, ErrorMessage } from "./js/components/app.js";
 
 /** @type {GlobalRankingsSnapshot} This is the only direct reference to the global */
 const rankingData = window.rankings || null;
@@ -18,8 +18,11 @@ const initialState = {
 	dataLastUpdated: rankingData.refreshed,
 	topN: 10,
 	recentInDays: 30,
-	sortProp: "date",
-	sortDirection: -1,
+	sortColumns: [
+		{ name: "date", label: "Date", direction: -1 },
+		{ name: "rank", label: "Rank", direction: 1 },
+		{ name: "event", label: "Event", direction: 1 }
+	],
 };
 
 const store = createStore(initialState, reducer);
@@ -27,18 +30,12 @@ render();
 
 function render() {
 	try {
-		const { results, sortProp } = store.getState();
-
 		root.render(Loading());
 
-		if (!results) {
+		if (!store.getState().results) {
 			store.dispatch(searchRankingsAction(rankingData));
-
-			if (sortProp) {
-				store.dispatch(sortResultsAction(sortProp));
-			}
+			store.dispatch(sortResultsAction());
 		}
-
 		root.render(App({ store: store, handleRender: render }));
 	}
 	catch (error) {
