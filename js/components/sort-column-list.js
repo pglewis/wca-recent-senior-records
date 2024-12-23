@@ -1,4 +1,4 @@
-import { updateSortFieldsAction, sortResultsAction } from "../state/state";
+import { updateSortFieldsAction, sortResultsAction } from "../state/state.js";
 import { getTemplateElement } from "./get-template-element.js";
 
 /** @type {DataStore} */
