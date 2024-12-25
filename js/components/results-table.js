@@ -1,6 +1,6 @@
-import { updateSortFieldsAction, sortResultsAction } from "../state/state.js";
-import { handleDragStart, handleDragEnd } from "./sort-column-list.js";
-import { getTemplateElement } from "./get-template-element.js";
+import {updateSortFieldsAction, sortResultsAction} from "../state/state.js";
+import {handleDragStart, handleDragEnd} from "./sort-column-list.js";
+import {getTemplateElement} from "./get-template-element.js";
 
 /**
  * @param {Object}    props
@@ -10,8 +10,8 @@ import { getTemplateElement } from "./get-template-element.js";
  * @returns {HTMLTableElement}
  */
 export function ResultsTable(props) {
-	const { store, handleRender } = props;
-	const { results } = store.getState();
+	const {store, handleRender} = props;
+	const {results} = store.getState();
 	const resultTable = getTemplateElement("#ranking-table-template");
 	const tbody = resultTable.querySelector("tbody");
 
@@ -23,10 +23,10 @@ export function ResultsTable(props) {
 
 		// Only the sortable columns have a sort button
 		if (buttonNode) {
-			const { sortColumns } = store.getState();
+			const {sortColumns} = store.getState();
 			const columnName = colHeader.dataset.sortOn;
 			const columnLabel = buttonNode.textContent;
-			const sortLevels = { 0: "primary", 1: "secondary", 2: "tertiary" };
+			const sortLevels = {0: "primary", 1: "secondary", 2: "tertiary"};
 
 			// Add classes/attributes so the UI reflects the sort state
 			for (const [index, sortColumn] of sortColumns.entries()) {

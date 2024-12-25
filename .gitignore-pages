@@ -3,3 +3,4 @@ node_modules/
 license.txt
 package.json
 package-lock.json
+eslint.config.js

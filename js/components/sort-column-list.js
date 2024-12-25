@@ -1,5 +1,5 @@
-import { updateSortFieldsAction, sortResultsAction } from "../state/state.js";
-import { getTemplateElement } from "./get-template-element.js";
+import {updateSortFieldsAction, sortResultsAction} from "../state/state.js";
+import {getTemplateElement} from "./get-template-element.js";
 
 /** @type {DataStore} */
 let store;
@@ -22,13 +22,13 @@ export function SortColumnList(props) {
 	store = props.store;
 	handleRender = props.handleRender;
 
-	const { sortColumns } = store.getState();
+	const {sortColumns} = store.getState();
 	const colList = getTemplateElement("#sort-column-list-template");
 
 	for (const [index, sortColumn] of sortColumns.entries()) {
 		const root = getTemplateElement("#sort-column-template");
 		const buttonNode = root.querySelector("button");
-		const sortLevels = { 0: "primary", 1: "secondary", 2: "tertiary" };
+		const sortLevels = {0: "primary", 1: "secondary", 2: "tertiary"};
 		const sortDirection = sortColumn.direction == 1 ? "ascending" : "descending";
 
 		buttonNode.classList.add(sortDirection);
