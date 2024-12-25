@@ -52,7 +52,7 @@ export const updateSortFieldsAction = value => {
  * @returns {Action}
  */
 export const clearResultsAction = () => {
-	return { type: ACTION_TYPES.resultsCleared };
+	return {type: ACTION_TYPES.resultsCleared};
 };
 
 /**
@@ -108,27 +108,27 @@ export const setRecentInDaysAction = value => {
  * @type {ReducerCB}
  */
 export const reducer = (state, action) => {
-	const { type, payload } = action;
+	const {type, payload} = action;
 
 	switch (type) {
 		case ACTION_TYPES.resultsCleared:
-			return { ...state, results: null };
+			return {...state, results: null};
 
 		case ACTION_TYPES.rankingsSearched:
 			/** payload is the rankings data snapshot */
-			return { ...state, results: searchRankings(payload, state) };
+			return {...state, results: searchRankings(payload, state)};
 
 		case ACTION_TYPES.resultsSorted:
-			return { ...state, results: sortResults(state) };
+			return {...state, results: sortResults(state)};
 
 		case ACTION_TYPES.topNChanged:
-			return { ...state, topN: payload };
+			return {...state, topN: payload};
 
 		case ACTION_TYPES.recentInDaysChanged:
-			return { ...state, recentInDays: payload };
+			return {...state, recentInDays: payload};
 
 		case ACTION_TYPES.sortFieldsChanged:
-			return { ...state, sortColumns: sortFieldsChanged(payload, state) };
+			return {...state, sortColumns: sortFieldsChanged(payload, state)};
 	}
 
 	return state;
@@ -141,7 +141,7 @@ export const reducer = (state, action) => {
  * @returns {ResultRowData[]}  Array of resulting rows
  */
 function searchRankings(rankingData, state) {
-	const { topN, recentInDays } = state;
+	const {topN, recentInDays} = state;
 	const MS_PER_DAY = 24 * 60 * 60 * 1000;
 	const results = [];
 
@@ -194,7 +194,7 @@ function searchRankings(rankingData, state) {
  * @param {AppState} state
  */
 function sortResults(state) {
-	const { results, sortColumns } = state;
+	const {results, sortColumns} = state;
 
 	sortColumns.reverse();
 	sortColumns.map(sort);
@@ -206,7 +206,7 @@ function sortResults(state) {
 	 * @returns
 	 */
 	function sort(sortField) {
-		const { name, direction } = sortField;
+		const {name, direction} = sortField;
 
 		switch (name) {
 			// String sort
@@ -257,7 +257,7 @@ function sortResults(state) {
 
 			// Sort single before average
 			if (aOrder === bOrder && a.eventType !== b.eventType) {
-				return (a.eventType === 'single') ? -1 : 1;
+				return (a.eventType === "single") ? -1 : 1;
 			}
 			return direction * (aOrder - bOrder);
 		}
@@ -283,14 +283,16 @@ function sortResults(state) {
 			} else {
 				// They're both the same format, what are we comparing?
 				switch (a.eventFormat) {
-					case "time":
+					case "time": {
 						const [aSeconds, bSeconds] = [a.result, b.result].map(timeResultToSeconds);
 						return direction * (aSeconds - bSeconds);
+					}
 
-					case "number":
+					case "number": {
 						return direction * (a.result - b.result);
+					}
 
-					case "multi":
+					case "multi": {
 						/**
 						 * Multi-Blind rankings are assessed based on the number of
 						 * puzzles solved minus the number of puzzles not solved, where
@@ -314,6 +316,7 @@ function sortResults(state) {
 							return direction * (aMulti.seconds - bMulti.seconds);
 						}
 						return direction * (aMulti.unsolved - bMulti.unsolved);
+					}
 				}
 			}
 		}
@@ -336,7 +339,7 @@ function sortResults(state) {
 			const score = solved - unsolved;
 			const seconds = timeResultToSeconds(time);
 
-			return { score, seconds, unsolved };
+			return {score, seconds, unsolved};
 		}
 
 		/**
@@ -347,7 +350,7 @@ function sortResults(state) {
 		 * @returns {number} The duration in seconds
 		 */
 		function timeResultToSeconds(result) {
-			const parts = result.split(':').reverse();
+			const parts = result.split(":").reverse();
 			let seconds = 0;
 			let multiplier = 1;
 
@@ -368,7 +371,7 @@ function sortResults(state) {
  * @returns
  */
 function sortFieldsChanged(newSort, state) {
-	const { sortColumns } = state;
+	const {sortColumns} = state;
 	const sortColumnsCopy = [...sortColumns];
 	const oldPosition = sortColumns.findIndex(f => f.name === newSort.name);
 

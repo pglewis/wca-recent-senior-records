@@ -1,7 +1,7 @@
-import { setTopNAction, setRecentInDaysAction, clearResultsAction } from "../state/state.js";
-import { getTemplateElement } from "./get-template-element.js";
-import { SortColumnList } from "./sort-column-list.js";
-import { ResultsTable } from "./results-table.js";
+import {setTopNAction, setRecentInDaysAction, clearResultsAction} from "../state/state.js";
+import {getTemplateElement} from "./get-template-element.js";
+import {SortColumnList} from "./sort-column-list.js";
+import {ResultsTable} from "./results-table.js";
 
 /**
  * @param {string} selectors
@@ -35,7 +35,7 @@ export function createRoot(selectors) {
  * @returns {HTMLElement}
  */
 export function App(props) {
-	const { results } = props.store.getState();
+	const {results} = props.store.getState();
 	const nodes = [];
 
 	nodes.push(Info(props));
@@ -58,7 +58,7 @@ export function App(props) {
  * @returns {HTMLElement}
  */
 function Info(props) {
-	const { store } = props;
+	const {store} = props;
 	const {
 		results,
 		dataLastUpdated,
@@ -85,8 +85,8 @@ function Info(props) {
  * @returns {HTMLElement}
  */
 function Panel(props) {
-	const { store, handleRender } = props || {};
-	const { recentInDays, topN } = store.getState();
+	const {store, handleRender} = props || {};
+	const {recentInDays, topN} = store.getState();
 
 	const panelRoot = getTemplateElement("#panel-template");
 	const panelGrid = panelRoot.querySelector(".panel-grid");
