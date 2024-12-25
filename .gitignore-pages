@@ -1,6 +1,0 @@
-node_modules/
-/bin/
-license.txt
-package.json
-package-lock.json
-eslint.config.js

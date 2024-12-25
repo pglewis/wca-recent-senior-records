@@ -13,7 +13,7 @@
         "vite": "^6.0.2"
     },
     "scripts": {
-        "dev": "npx vite",
+        "dev": "npx vite serve public",
         "lint": "npx eslint",
         "get-data": "./bin/get-data.sh"
     }
