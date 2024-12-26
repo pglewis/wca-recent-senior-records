@@ -1,5 +1,9 @@
 body {
-	margin-bottom: 3em;
+	/**
+	 * Duct-tape to avoid jank when scrolled and then changing to a state
+	 * with no (or few) results.
+	 */
+	margin-bottom: 30em;
 }
 
 .with-margin {

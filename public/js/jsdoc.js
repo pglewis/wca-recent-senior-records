@@ -117,6 +117,6 @@
  * @property {RenderCB}             render
  *
  * @callback                        RenderCB
- * @param {Node|Node[]}             node
+ * @param {Node|Node[]}             node      node or node list to replace the root content
  * @returns {void}
  */

@@ -101,7 +101,7 @@ function ResultsTableRow(rowData) {
 	tableRow.querySelector("td.rank").textContent = rowData.rank;
 
 	// Competitor
-	let competitorLink = tableRow.querySelector("td.name a");
+	const competitorLink = tableRow.querySelector("td.name a");
 	competitorLink.textContent = rowData.name;
 	competitorLink.href = `${COMPETITOR_BASE_URL}/${rowData.wcaID}?event=${rowData.eventID}`;
 
@@ -110,7 +110,7 @@ function ResultsTableRow(rowData) {
 	theResult.textContent = rowData.result;
 
 	// Competition
-	let competitionLink = tableRow.querySelector("td.competition a");
+	const competitionLink = tableRow.querySelector("td.competition a");
 	competitionLink.textContent = rowData.compName;
 	competitionLink.href = `${COMPETITION_BASE_URL}/${rowData.compWebID}/results/by_person#${rowData.wcaID}`;
 	tableRow.querySelector("td.competition i.flag").classList.add(`flag-${rowData.compCountry}`);

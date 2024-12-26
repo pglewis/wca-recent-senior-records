@@ -31,11 +31,10 @@ export function Panel(props) {
  */
 function Search(props) {
 	const {store, handleRender} = props;
-	const filters = store.getState().filters;
 	const root = getTemplateElement("#search-template");
 	const input = root.querySelector("input");
 
-	input.value = filters.search || "";
+	input.value = store.getState().filters.search || "";
 	input.addEventListener("input", (e) => {
 		store.dispatch(updateSearchFilterAction(e.target.value));
 		handleRender();
@@ -53,12 +52,11 @@ function Search(props) {
  */
 function Parameters(props) {
 	const {store, handleRender} = props;
-	const {recentInDays, topN} = store.getState();
 	const root = getTemplateElement("#parameters-template");
 
 	/** Recent in days select box @type {HTMLSelectElement} */
 	const recentSelect = root.querySelector("#recent-in-days");
-	recentSelect.value = recentInDays;
+	recentSelect.value = store.getState().recentInDays;
 	recentSelect.addEventListener("change", (e) => {
 		store.dispatch(setRecentInDaysAction(+e.target.value));
 		handleRender();
@@ -66,7 +64,7 @@ function Parameters(props) {
 
 	/** Top N select box @type {HTMLSelectElement} */
 	const topNSelect = root.querySelector("#top-n");
-	topNSelect.value = topN;
+	topNSelect.value = store.getState().topN;
 	topNSelect.addEventListener("change", (e) => {
 		store.dispatch(setTopNAction(+e.target.value));
 		handleRender();
