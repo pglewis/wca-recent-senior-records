@@ -1,12 +1,19 @@
-import {createStore, reducer, searchRankingsAction, sortResultsAction} from "./js/state/state.js";
-import {createRoot, App, Loading, ErrorMessage} from "./js/components/app.js";
+import {
+	createStore,
+	reducer,
+	searchRankingsAction,
+	filterResultsAction,
+	sortResultsAction,
+} from "./js/state/state.js";
 
-/** @type {GlobalRankingsSnapshot} This is the only direct reference to the global */
-const rankingData = window.rankings || null;
+import {createRoot, App, Loading, ErrorMessage} from "./js/components/app.js";
 
 /** @type {Root} */
 const root = createRoot("#app");
-if (!rankingData) {
+
+/** @type {GlobalRankingsSnapshot} This is the only direct reference to the global */
+const rankingsData = window.rankings || null;
+if (!rankingsData) {
 	root.render(ErrorMessage("The ranking data is missing, try back in a bit."));
 	console.error(`rankings: ${window.rankings}`);
 	throw "";
@@ -15,9 +22,12 @@ if (!rankingData) {
 /** @type {AppState} */
 const initialState = {
 	results: null,
-	dataLastUpdated: rankingData.refreshed,
+	dataLastUpdated: rankingsData.refreshed,
 	topN: 10,
 	recentInDays: 30,
+	filters: {
+		search: null,
+	},
 	sortColumns: [
 		{name: "date", label: "Date", direction: -1},
 		{name: "rank", label: "Rank", direction: 1},
@@ -30,13 +40,19 @@ render();
 
 function render() {
 	try {
+		const activeID = document.activeElement.id || null;
+
 		root.render(Loading());
 
-		if (!store.getState().results) {
-			store.dispatch(searchRankingsAction(rankingData));
-			store.dispatch(sortResultsAction());
-		}
+		store.dispatch(searchRankingsAction(rankingsData));
+		store.dispatch(filterResultsAction());
+		store.dispatch(sortResultsAction());
+
 		root.render(App({store: store, handleRender: render}));
+
+		if (activeID) {
+			document.getElementById(activeID).focus();
+		}
 	} catch (error) {
 		root.render(ErrorMessage(error));
 

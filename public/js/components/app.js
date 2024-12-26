@@ -1,7 +1,6 @@
-import {setTopNAction, setRecentInDaysAction, clearResultsAction} from "../state/state.js";
 import {getTemplateElement} from "./get-template-element.js";
-import {SortColumnList} from "./sort-column-list.js";
 import {ResultsTable} from "./results-table.js";
+import {Panel} from "./panel.js";
 
 /**
  * @param {string} selectors
@@ -32,7 +31,7 @@ export function createRoot(selectors) {
  * @param {DataStore}  props.store
  * @param {Function}   props.handleRender  Callback to re-render
  *
- * @returns {HTMLElement}
+ * @returns {HTMLElement[]}
  */
 export function App(props) {
 	const {results} = props.store.getState();
@@ -75,44 +74,6 @@ function Info(props) {
 	refreshed.textContent = `Last refreshed: ${dataLastUpdated} (UTC)`;
 
 	return rootElement;
-}
-
-/**
- * @param {Object}    props
- * @param {DataStore} props.store
- * @param {Function}  props.handleRender
- *
- * @returns {HTMLElement}
- */
-function Panel(props) {
-	const {store, handleRender} = props || {};
-	const {recentInDays, topN} = store.getState();
-
-	const panelRoot = getTemplateElement("#panel-template");
-	const panelGrid = panelRoot.querySelector(".panel-grid");
-	const parameters = getTemplateElement("#parameters-template");
-
-	/** Recent in days select box @type {HTMLSelectElement} */
-	const recentSelect = parameters.querySelector("#recent-in-days");
-	recentSelect.value = recentInDays;
-	recentSelect.addEventListener("change", (e) => {
-		store.dispatch(setRecentInDaysAction(+e.currentTarget.value));
-		store.dispatch(clearResultsAction());
-		handleRender();
-	});
-
-	/** Top N select box @type {HTMLSelectElement} */
-	const topNSelect = parameters.querySelector("#top-n");
-	topNSelect.value = topN;
-	topNSelect.addEventListener("change", (e) => {
-		store.dispatch(setTopNAction(+e.currentTarget.value));
-		store.dispatch(clearResultsAction());
-		handleRender();
-	});
-
-	panelGrid.append(SortColumnList(props), parameters);
-
-	return panelRoot;
 }
 
 /**
