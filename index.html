@@ -23,7 +23,9 @@
 			<a href="https://wca-seniors.org" target="_blank">unofficial senior cubing rankings</a>.
 			More information in <a href="about/">the about page</a>.
 		</p>
-		<div id="app"><h3 class="message">Loading... please wait</h3></div>
+		<div id="app">
+			<h3 class="message">Loading... please wait</h3>
+		</div>
 	</div>
 
 	<template id="loading-template">
@@ -38,7 +40,7 @@
 			<p class="result-info"></p>
 			<p>
 				Click a column header to set the primary sort. Ctrl click for the secondary sort,
-				Ctrl-Shift click for the tertiary sort.  You can also drag a column header to the sort columns
+				Ctrl-Shift click for the tertiary sort. You can also drag a column header to the sort columns
 				list.
 			</p>
 		</div>
@@ -50,9 +52,29 @@
 		</div>
 	</template>
 
+	<template id="sort-column-list-template">
+		<div id="sort-columns">
+			<div class="label">Sort Columns:</div>
+		</div>
+	</template>
+
+	<template id="sort-column-template">
+		<div class="sort-column">
+			<button draggable="true"></button>
+			<span aria-hidden="true"></span>
+		</div>
+	</template>
+
+	<template id="search-template">
+		<div id="search">
+			<input id="search-input" type="search" size="15" placeholder="Find...">
+		</div>
+	</template>
+
 	<template id="parameters-template">
-		<div class="parameters">
+		<div id="parameters">
 			<div>
+				<!-- <input id="search" type="search" size="15" placeholder="Find..."> -->
 				<label>
 					Search the top
 					<select id="top-n">
@@ -75,23 +97,6 @@
 				</label>
 			</div>
 		</div>
-	</template>
-
-	<template id="sort-column-list-template">
-		<div id="sort-columns">
-			<div class="label">Sort Columns:</div>
-		</div>
-	</template>
-
-	<template id="sort-column-template">
-		<div class="sort-column">
-			<button draggable="true"></button>
-			<span aria-hidden="true"></span>
-		</div>
-	</template>
-
-	<template id="no-results-template">
-		<h3 class="no-results">No results</h3>
 	</template>
 
 	<template id="ranking-table-template">
@@ -135,6 +140,10 @@
 			<td class="result"></td>
 			<td class="competition"><i class="flag"></i>&nbsp;<a target="_blank"></a></td>
 		</tr>
+	</template>
+
+	<template id="no-results-template">
+		<h3 class="no-results">No results</h3>
 	</template>
 
 	<template id="error-template">

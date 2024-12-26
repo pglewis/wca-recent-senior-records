@@ -27,8 +27,9 @@ export const createStore = (initialState, reducer) => {
 };
 
 const ACTION_TYPES = {
-	resultsCleared: "resultsCleared",
 	rankingsSearched: "rankingsSearched",
+	searchFilterChanged: "searchFilterChanged",
+	resultsFiltered: "resultsFiltered",
 	resultsSorted: "resultsSorted",
 	topNChanged: "topNChanged",
 	recentInDaysChanged: "recentInDaysChanged",
@@ -36,34 +37,47 @@ const ACTION_TYPES = {
 };
 
 /**
- *
- * @param {SortChange} value
+ * @param {string} searchText
  *
  * @returns {Action}
  */
-export const updateSortFieldsAction = value => {
+export const updateSearchFilterAction = searchText => {
 	return {
-		type: ACTION_TYPES.sortFieldsChanged,
-		payload: value
+		type: ACTION_TYPES.searchFilterChanged,
+		payload: searchText
 	};
 };
 
 /**
  * @returns {Action}
  */
-export const clearResultsAction = () => {
-	return {type: ACTION_TYPES.resultsCleared};
+export const filterResultsAction = () => {
+	return {
+		type: ACTION_TYPES.resultsFiltered
+	};
 };
 
 /**
- * @param {ResultRowData[]|null} value  The full rankings snapshot
+ * @param {SortChange} newSort
  *
  * @returns {Action}
  */
-export const searchRankingsAction = value => {
+export const updateSortFieldsAction = newSort => {
+	return {
+		type: ACTION_TYPES.sortFieldsChanged,
+		payload: newSort
+	};
+};
+
+/**
+ * @param {GlobalRankingsSnapshot} rankingsData
+ *
+ * @returns {Action}
+ */
+export const searchRankingsAction = rankingsData => {
 	return {
 		type: ACTION_TYPES.rankingsSearched,
-		payload: value
+		payload: rankingsData
 	};
 };
 
@@ -78,27 +92,27 @@ export const sortResultsAction = () => {
 
 /**
  *
- * @param {number} value
+ * @param {number} newValue
  *
  * @returns {Action}
  */
-export const setTopNAction = value => {
+export const setTopNAction = newValue => {
 	return {
 		type: ACTION_TYPES.topNChanged,
-		payload: value
+		payload: newValue
 	};
 };
 
 /**
  *
- * @param {number} value
+ * @param {number} newValue
  *
  * @returns {Action}
  */
-export const setRecentInDaysAction = value => {
+export const setRecentInDaysAction = newValue => {
 	return {
 		type: ACTION_TYPES.recentInDaysChanged,
-		payload: value
+		payload: newValue
 	};
 };
 
@@ -111,12 +125,18 @@ export const reducer = (state, action) => {
 	const {type, payload} = action;
 
 	switch (type) {
-		case ACTION_TYPES.resultsCleared:
-			return {...state, results: null};
-
 		case ACTION_TYPES.rankingsSearched:
 			/** payload is the rankings data snapshot */
 			return {...state, results: searchRankings(payload, state)};
+
+		case ACTION_TYPES.searchFilterChanged: {
+			const {filters} = state;
+			filters.search = payload;
+			return {...state, filters: filters};
+		}
+
+		case ACTION_TYPES.resultsFiltered:
+			return {...state, results: filterResults(state)};
 
 		case ACTION_TYPES.resultsSorted:
 			return {...state, results: sortResults(state)};
@@ -135,18 +155,44 @@ export const reducer = (state, action) => {
 };
 
 /**
- * @param {GlobalRankingsSnapshot} rankingData
+ *
+ * @param {AppState} state
+ *
+ * @returns {ResultRowData[]}
+ */
+function filterResults(state) {
+	const {filters, results} = state;
+	const {search} = filters;
+
+	if (!search) {
+		return results;
+	}
+
+	const filteredResults = results.filter((rowData) => {
+		const searchFields = ["date", "eventID", "eventType", "name", "compName"];
+		const rowString = searchFields.reduce((str, key) => str + " " + rowData[key], "");
+
+		if (rowString.toLowerCase().includes(search.toLowerCase())) {
+			return rowData;
+		}
+	});
+
+	return filteredResults;
+}
+
+/**
+ * @param {GlobalRankingsSnapshot} rankingsData
  * @param {AppState} state
  *
  * @returns {ResultRowData[]}  Array of resulting rows
  */
-function searchRankings(rankingData, state) {
+function searchRankings(rankingsData, state) {
 	const {topN, recentInDays} = state;
 	const MS_PER_DAY = 24 * 60 * 60 * 1000;
 	const results = [];
 
 	// event: id, name, format (time, number, multi), rankings[]
-	for (const event of rankingData.events) {
+	for (const event of rankingsData.events) {
 
 		// eventRanking: type (single, average, ...), age, ranks[]
 		for (const eventRanking of event.rankings) {
@@ -154,12 +200,12 @@ function searchRankings(rankingData, state) {
 
 			// rank: rank, id, best, competition
 			for (const [index, rank] of eventRanking.ranks.entries()) {
-				const comp = rankingData.competitions.find(c => c.id === rank.competition);
+				const comp = rankingsData.competitions.find(c => c.id === rank.competition);
 				const daysAgo = Math.floor((new Date() - new Date(comp.startDate)) / MS_PER_DAY);
 
 				// Does this qualify as "recent"?
 				if (daysAgo <= recentInDays) {
-					const person = rankingData.persons.find(p => p.id === rank.id);
+					const person = rankingsData.persons.find(p => p.id === rank.id);
 
 					results.push({
 						eventID: event.id,
@@ -257,7 +303,7 @@ function sortResults(state) {
 
 			// Sort single before average
 			if (aOrder === bOrder && a.eventType !== b.eventType) {
-				return (a.eventType === "single") ? -1 : 1;
+				return direction * ((a.eventType === "single") ? -1 : 1);
 			}
 			return direction * (aOrder - bOrder);
 		}

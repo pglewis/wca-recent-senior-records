@@ -73,7 +73,11 @@
  * @property {string}               dataLastUpdated  date/time string of the data snapshot in UTC
  * @property {number}               topN
  * @property {number}               recentInDays
+ * @property {Filters}              filters
  * @property {SortColumn[]}         sortColumns
+ *
+ * @typedef {Object}                Filters
+ * @property {string|null}          search
  *
  * @typedef {Object}                SortColumn
  * @property {string}               name
@@ -113,6 +117,6 @@
  * @property {RenderCB}             render
  *
  * @callback                        RenderCB
- * @param {Node}                    node
+ * @param {Node|Node[]}             node      node or node list to replace the root content
  * @returns {void}
  */
