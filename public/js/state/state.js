@@ -303,7 +303,7 @@ function sortResults(state) {
 
 			// Sort single before average
 			if (aOrder === bOrder && a.eventType !== b.eventType) {
-				return (a.eventType === "single") ? -1 : 1;
+				return direction * ((a.eventType === "single") ? -1 : 1);
 			}
 			return direction * (aOrder - bOrder);
 		}
