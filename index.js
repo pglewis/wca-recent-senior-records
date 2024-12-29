@@ -1,51 +1,31 @@
-import {
-	createStore,
-	reducer,
-	searchRankingsAction,
-	filterResultsAction,
-	sortResultsAction,
-} from "./js/state/state.js";
-
+import {initialState, rootReducer, createStore} from "./js/state/state.js";
+import {filterRankingsAction, sortResultsAction}	from "./js/state/results-reducer.js";
 import {createRoot, App, Loading, ErrorMessage} from "./js/components/app.js";
+import {setRankingsDataAction} from "./js/state/rankings-reducer.js";
 
 /** @type {Root} */
 const appRoot = createRoot("#app");
 
-/** @type {GlobalRankingsSnapshot} This is the only direct reference to the global */
+/** @type {RankingsSnapshot} This is the only direct reference to the global */
 const rankingsData = window.rankings || null;
 if (!rankingsData) {
-	appRoot.render(ErrorMessage("The ranking data is missing, try back in a bit."));
+	appRoot.render(ErrorMessage("The rankings data is missing, try back in a bit."));
 	throw "Missing rankings data";
 }
 
-/** @type {AppState} */
-const initialState = {
-	results: null,
-	dataLastUpdated: rankingsData.refreshed,
-	topN: 10,
-	recentInDays: 30,
-	filters: {
-		search: null,
-	},
-	sortColumns: [
-		{name: "date", label: "Date", direction: -1},
-		{name: "rank", label: "Rank", direction: 1},
-		{name: "event", label: "Event", direction: 1}
-	],
-};
-
-const store = createStore(initialState, reducer);
+const store = createStore(initialState, rootReducer);
+store.dispatch(setRankingsDataAction(rankingsData));
 render();
 
 function render() {
 	try {
+		const state = store.getState();
 		const activeID = document.activeElement?.id || null;
 
 		appRoot.render(Loading());
 
-		store.dispatch(searchRankingsAction(rankingsData));
-		store.dispatch(filterResultsAction());
-		store.dispatch(sortResultsAction());
+		store.dispatch(filterRankingsAction(state.rankings.data, state.filters));
+		store.dispatch(sortResultsAction(state.sortColumns));
 
 		appRoot.render(App({store: store, handleRender: render}));
 
