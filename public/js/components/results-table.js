@@ -1,6 +1,6 @@
-import {updateSortFieldsAction, sortResultsAction} from "../state/state.js";
-import {handleDragStart, handleDragEnd} from "./sort-column-list.js";
 import {getTemplateElement} from "./get-template-element.js";
+import {updateSortColumnsAction} from "../state/sort-columns-reducer.js";
+import {handleDragStart, handleDragEnd} from "./sort-column-list.js";
 
 /**
  * @param {Object}    props
@@ -12,13 +12,13 @@ import {getTemplateElement} from "./get-template-element.js";
 export function ResultsTable(props) {
 	const {store, handleRender} = props;
 	const {results} = store.getState();
-	const resultTable = getTemplateElement("#ranking-table-template");
-	const tbody = resultTable.querySelector("tbody");
+	const resultsTable = getTemplateElement("#ranking-table-template");
+	const tbody = resultsTable.querySelector("tbody");
 
 	tbody.append(...results.map(ResultsTableRow));
 
 	// Listen to column click events on sortable columns
-	for (const colHeader of resultTable.querySelectorAll("thead th")) {
+	for (const colHeader of resultsTable.querySelectorAll("thead th")) {
 		const buttonNode = colHeader.querySelector("button");
 
 		// Only the sortable columns have a sort button
@@ -34,7 +34,7 @@ export function ResultsTable(props) {
 
 				if (sortColumn.name === columnName) {
 					// Set aria-sort if this is the primary sort column.
-					// No aria support for multiple column sorting, sadly
+					// No aria support for multiple column sorting
 					if (index === 0) {
 						colHeader.setAttribute("aria-sort", sortDirection);
 					}
@@ -55,19 +55,18 @@ export function ResultsTable(props) {
 				const position = (e.ctrlKey ? 1 : 0) + (e.shiftKey ? 1 : 0);
 				const defaultDirection = colHeader.dataset.defaultDirection || 1;
 
-				store.dispatch(updateSortFieldsAction({
+				store.dispatch(updateSortColumnsAction({
 					name: columnName,
 					label: columnLabel,
 					position: position,
 					defaultDirection: defaultDirection
 				}));
-				store.dispatch(sortResultsAction());
 				handleRender();
 			});
 		}
 	}
 
-	return resultTable;
+	return resultsTable;
 }
 
 /**

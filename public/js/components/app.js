@@ -1,6 +1,6 @@
 import {getTemplateElement} from "./get-template-element.js";
-import {ResultsTable} from "./results-table.js";
 import {Panel} from "./panel.js";
+import {ResultsTable} from "./results-table.js";
 
 /**
  * @param {string} selectors
@@ -52,26 +52,21 @@ export function App(props) {
 /**
  * @param {Object}     props
  * @param {DataStore}  props.store
- * @param {Function}   props.handleRender  Callback to re-render
  *
  * @returns {HTMLElement}
  */
 function Info(props) {
 	const {store} = props;
-	const {
-		results,
-		dataLastUpdated,
-		topN,
-		recentInDays
-	} = store.getState();
+	const {results} = store.getState();
+	const {lastUpdated} = store.getState().rankings;
+	const {topN, recentInDays} = store.getState().filters;
 
 	const rootElement = getTemplateElement("#info-template");
-
 	const info = rootElement.querySelector(".result-info");
 	const refreshed = rootElement.querySelector(".refreshed");
 
 	info.textContent = `Showing ${results.length} results in the top ${topN} set in the past ${recentInDays} day(s)`;
-	refreshed.textContent = `Last refreshed: ${dataLastUpdated} (UTC)`;
+	refreshed.textContent = `Last refreshed: ${lastUpdated} (UTC)`;
 
 	return rootElement;
 }

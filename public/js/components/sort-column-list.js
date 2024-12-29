@@ -1,5 +1,5 @@
-import {updateSortFieldsAction, sortResultsAction} from "../state/state.js";
 import {getTemplateElement} from "./get-template-element.js";
+import {updateSortColumnsAction} from "../state/sort-columns-reducer.js";
 
 /** @type {DataStore} */
 let store;
@@ -8,7 +8,7 @@ let store;
 let handleRender;
 
 /** @type {HTMLElement} */
-let beingDragged;
+let dragNode;
 
 /**
  * @param {Object}    props
@@ -25,16 +25,16 @@ export function SortColumnList(props) {
 	const {sortColumns} = store.getState();
 	const colList = getTemplateElement("#sort-column-list-template");
 
-	for (const [index, sortColumn] of sortColumns.entries()) {
+	for (const [colIndex, sortColumn] of sortColumns.entries()) {
 		const root = getTemplateElement("#sort-column-template");
 		const buttonNode = root.querySelector("button");
 		const sortLevels = {0: "primary", 1: "secondary", 2: "tertiary"};
 		const sortDirection = sortColumn.direction == 1 ? "ascending" : "descending";
 
 		buttonNode.classList.add(sortDirection);
-		buttonNode.classList.add(sortLevels[index]);
+		buttonNode.classList.add(sortLevels[colIndex]);
 		buttonNode.dataset.sortOn = sortColumn.name;
-		buttonNode.dataset.position = index;
+		buttonNode.dataset.position = colIndex;
 		buttonNode.textContent = sortColumn.label;
 
 		buttonNode.addEventListener("dragstart", handleDragStart);
@@ -52,18 +52,19 @@ export function SortColumnList(props) {
 }
 
 /**
+ * Toggle sort direction
+ *
  * @param {MouseEvent} e
  */
 function handleClick(e) {
 	const buttonNode = e.target;
 
-	store.dispatch(updateSortFieldsAction({
+	store.dispatch(updateSortColumnsAction({
 		name: buttonNode.dataset.sortOn,
 		label: buttonNode.textContent,
-		position: buttonNode.dataset.position,
+		position: +buttonNode.dataset.position,
 		defaultDirection: null
 	}));
-	store.dispatch(sortResultsAction());
 	handleRender();
 }
 
@@ -73,12 +74,10 @@ function handleClick(e) {
 export function handleDragStart(e) {
 	/** @type {HTMLElement} */
 	const node = e.target;
-	beingDragged = node;
+	dragNode = node;
 
 	node.style.opacity = "0.4";
 	e.dataTransfer.effectAllowed = "move";
-
-	e.dataTransfer.setData("text/html", "<h3>Bob!<h3>");
 }
 
 /**
@@ -108,20 +107,18 @@ export function handleDragLeave(e) {
  * @param {DragEvent} e
  */
 function handleDrop(e) {
-	const node = e.target;
+	const dropNode = e.target;
 	e.stopPropagation();
 
-	node.classList.remove("over");
+	dropNode.classList.remove("over");
 
-	if (beingDragged.dataset.sortOn !== node.dataset.sortOn) {
-		store.dispatch(updateSortFieldsAction({
-			name: beingDragged.dataset.sortOn,
-			label: beingDragged.textContent.replace(/[\r\n\t]/g, ""),
-			position: node.dataset.position,
-			defaultDirection: beingDragged.dataset.defaultDirection || null
+	if (dragNode.dataset.sortOn !== dropNode.dataset.sortOn) {
+		store.dispatch(updateSortColumnsAction({
+			name: dragNode.dataset.sortOn,
+			label: dragNode.textContent.trim(),
+			position: +dropNode.dataset.position,
+			defaultDirection: dragNode.dataset.defaultDirection || null
 		}));
-
-		store.dispatch(sortResultsAction());
 		handleRender();
 	}
 

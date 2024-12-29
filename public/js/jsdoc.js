@@ -1,7 +1,7 @@
 /**
  * The global rankings object and its sub-objects
  *
- * @typedef {Object} GlobalRankingsSnapshot
+ * @typedef {Object}         RankingsSnapshot
  * @property {string}        refreshed      date/time string of the data snapshot in UTC
  * @property {WCAEvent[]}    events
  * @property {Person[]}      persons
@@ -9,42 +9,42 @@
  * @property {Continent[]}   continents
  * @property {Country[]}     countries
  *
- * @typedef {Object} WCAEvent
+ * @typedef {Object}          WCAEvent
  * @property {string}         id        eg 333bf
  * @property {string}         name      eg 3x3x3 Blindfolded
  * @property {string}         format    (time, number, multi)
  * @property {EventRanking[]} rankings
  *
- * @typedef {Object} EventRanking
+ * @typedef {Object}  EventRanking
  * @property {string} type     single, average
  * @property {string} age      40, 50, 60, ...
  * @property {Rank[]} ranks
  * @property {Object} missing  needs documentation
  *
- * @typedef {Object} Rank
+ * @typedef {Object}       Rank
  * @property {string}      rank         estimated numeric rank (considers missing records)
  * @property {string}      id           persons.id
  * @property {string}      best         the result
  * @property {string}      competition  competition ID
  * @property {string|null} [age]        sometimes included
  *
- * @typedef {Object} Competition
+ * @typedef {Object}  Competition
  * @property {string} id
  * @property {string} webId
  * @property {string} name
  * @property {string} country     2 character code
  * @property {string} startDate   competition start date, UTC YYYY-MM-DD
  *
- * @typedef {Object} Continent
+ * @typedef {Object}  Continent
  * @property {string} id
  * @property {string} name
  *
- * @typedef {Object} Country
+ * @typedef {Object}  Country
  * @property {string} id
  * @property {string} name
  * @property {string} continent
  *
- * @typedef {Object} Person
+ * @typedef {Object}    Person
  * @property {string}   id       WCA ID
  * @property {string}   name     full name
  * @property {string}   country  2 character code
@@ -69,27 +69,30 @@
  * @property {string}               compCountry   2 character country code
  *
  * @typedef {Object}                AppState
+ * @property {Rankings}             rankings
  * @property {ResultRowData[]|null} results
- * @property {string}               dataLastUpdated  date/time string of the data snapshot in UTC
- * @property {number}               topN
- * @property {number}               recentInDays
  * @property {Filters}              filters
  * @property {SortColumn[]}         sortColumns
  *
+ * @typedef {Object}                Rankings
+ * @property {string|null}          lastUpdated   date/time string of the data snapshot in UTC
+ * @property {RankingsSnapshot}     data
+ *
  * @typedef {Object}                Filters
+ * @property {number}               topN
  * @property {string|null}          search
+ * @property {number}               recentInDays
  *
  * @typedef {Object}                SortColumn
  * @property {string}               name
  * @property {string}               label
  * @property {number}               direction
  *
- * @typedef {Object} 				SortChange
- * @property {string} 				SortChange.name
- * @property {string} 				SortChange.label
- * @property {number} 				SortChange.position
- * @property {number} 				SortChange.defaultDirection
-
+ * @typedef {Object}                SortChange
+ * @property {string}               name
+ * @property {string}               label
+ * @property {number}               position
+ * @property {number}               defaultDirection
  *
  * @typedef {Object}                DataStore
  * @property {GetStateCB}           DataStore.getState   Returns a the current state
@@ -114,9 +117,9 @@
  * @returns {AppState}
  *
  * @typedef {Object}                Root
- * @property {RenderCB}             render
+ * @property {RootRenderCB}         render
  *
- * @callback                        RenderCB
- * @param {Node|Node[]}             node      node or node list to replace the root content
+ * @callback                        RootRenderCB
+ * @param {Node|Node[]}             node      node or node array to replace the root content
  * @returns {void}
  */
