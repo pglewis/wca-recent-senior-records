@@ -19,10 +19,16 @@ jobs:
       - name: Checkout main
         uses: actions/checkout@v4
 
+      - name: Vite Build
+        run: npm run build
+
       - name: Copy senior rankings data
         run: npm run get-data
+
+      - name: Create .nojekyll
+        run: touch ./dist/.nojekyll
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: ./public
+          folder: ./dist

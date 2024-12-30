@@ -5,8 +5,7 @@ import importPlugin from "eslint-plugin-import";
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
-	{files: ["public/*.{js}"]},
-	{ignores: ["**/node_modules/", ".git/", "public/data/"]},
+	{ignores: ["dist", "src/data"]},
 	{languageOptions: {globals: globals.browser}},
 	pluginJs.configs.recommended,
 	{
@@ -46,5 +45,5 @@ export default [
 			"no-duplicate-imports": "error",
 			"no-console": ["error", {allow: ["error"]}],
 		}
-	}
+	},
 ];
