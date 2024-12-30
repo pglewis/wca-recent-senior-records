@@ -3,6 +3,22 @@ import {updateSortColumnsAction} from "../state/sort-columns-reducer.js";
 import {handleDragStart, handleDragEnd} from "./sort-column-list.js";
 
 /**
+ * @param {Object}     props
+ * @param {DataStore}  props.store
+ *
+ * @returns {HTMLElement}
+ */
+export function Results(props) {
+	const {results} = props.store.getState();
+
+	if (results.length === 0) {
+		return NoResults();
+	}
+
+	return ResultsTable(props);
+}
+
+/**
  * @param {Object}    props
  * @param {DataStore} props.store
  * @param {Function}  props.handleRender
@@ -70,10 +86,9 @@ export function ResultsTable(props) {
 }
 
 /**
- *
  * @param {ResultRowData} rowData
  *
- * @returns {HTMLElement}
+ * @returns {HTMLTableRowElement}
  */
 function ResultsTableRow(rowData) {
 	const COMPETITOR_BASE_URL = "https://www.worldcubeassociation.org/persons";
@@ -115,4 +130,11 @@ function ResultsTableRow(rowData) {
 	tableRow.querySelector("td.competition i.flag").classList.add(`flag-${rowData.compCountry}`);
 
 	return tableRow;
+}
+
+/**
+ * @returns {HTMLElement}
+ */
+function NoResults() {
+	return getTemplateElement("#no-results-template");
 }

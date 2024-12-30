@@ -1,10 +1,7 @@
 import {getTemplateElement} from "./get-template-element.js";
 import {SortColumnList} from "./sort-column-list.js";
-import {
-	setTopNAction,
-	setRecentInDaysAction,
-	setSearchFilterAction
-} from "../state/filters-reducer.js";
+import {Search} from "./search.js";
+import {Parameters} from "./parameters.js";
 
 /**
  * @param {Object} props
@@ -16,59 +13,6 @@ export function Panel(props) {
 	const panelGrid = root.querySelector(".panel-grid");
 
 	panelGrid.append(SortColumnList(props), Search(props), Parameters(props));
-
-	return root;
-}
-
-/**
- * @param {Object}    props
- * @param {DataStore} props.store
- * @param {Function}  props.handleRender
- *
- * @returns {HTMLElement}
- */
-function Search(props) {
-	const {store, handleRender} = props;
-	const {search} = store.getState().filters;
-	const root = getTemplateElement("#search-template");
-	const input = root.querySelector("input");
-
-	input.value = search || "";
-	input.addEventListener("input", (e) => {
-		store.dispatch(setSearchFilterAction(e.target.value));
-		handleRender();
-	});
-
-	return root;
-}
-
-/**
- * @param {Object}    props
- * @param {DataStore} props.store
- * @param {Function}  props.handleRender
- *
- * @returns {HTMLElement}
- */
-function Parameters(props) {
-	const {store, handleRender} = props;
-	const {recentInDays, topN} = store.getState().filters;
-	const root = getTemplateElement("#parameters-template");
-
-	/** Recent in days select box @type {HTMLSelectElement} */
-	const recentSelect = root.querySelector("#recent-in-days");
-	recentSelect.value = recentInDays;
-	recentSelect.addEventListener("change", (e) => {
-		store.dispatch(setRecentInDaysAction(+e.target.value));
-		handleRender();
-	});
-
-	/** Top N select box @type {HTMLSelectElement} */
-	const topNSelect = root.querySelector("#top-n");
-	topNSelect.value = topN;
-	topNSelect.addEventListener("change", (e) => {
-		store.dispatch(setTopNAction(+e.target.value));
-		handleRender();
-	});
 
 	return root;
 }

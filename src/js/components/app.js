@@ -1,6 +1,7 @@
 import {getTemplateElement} from "./get-template-element.js";
+import {Info} from "./info.js";
 import {Panel} from "./panel.js";
-import {ResultsTable} from "./results-table.js";
+import {Results} from "./results.js";
 
 /**
  * @param {string} selectors
@@ -34,51 +35,11 @@ export function createRoot(selectors) {
  * @returns {HTMLElement[]}
  */
 export function App(props) {
-	const {results} = props.store.getState();
 	const nodes = [];
 
-	nodes.push(Info(props));
-	nodes.push(Panel(props));
-
-	if (results.length === 0) {
-		nodes.push(NoResults());
-	} else {
-		nodes.push(ResultsTable(props));
-	}
+	nodes.push(Info(props), Panel(props), Results(props));
 
 	return nodes;
-}
-
-/**
- * @param {Object}     props
- * @param {DataStore}  props.store
- *
- * @returns {HTMLElement}
- */
-function Info(props) {
-	const {store} = props;
-	const {results} = store.getState();
-	const {lastUpdated} = store.getState().rankings;
-	const {topN, recentInDays, search} = store.getState().filters;
-
-	const rootElement = getTemplateElement("#info-template");
-	const info = rootElement.querySelector(".result-info");
-	const refreshed = rootElement.querySelector(".refreshed");
-
-	refreshed.textContent = `Last refreshed: ${lastUpdated} (UTC)`;
-	info.textContent =
-		`Showing ${results.length} ${results.length === 1 ? "result" : "results"} `
-		+ `${search ? ' matching "' + search + '"' : ""} `
-		+ `in the top ${topN} set in the past ${recentInDays} day(s) `;
-
-	return rootElement;
-}
-
-/**
- * @returns {HTMLElement}
- */
-function NoResults() {
-	return getTemplateElement("#no-results-template");
 }
 
 /**

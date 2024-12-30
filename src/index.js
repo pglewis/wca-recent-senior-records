@@ -1,5 +1,5 @@
 import {initialState, rootReducer, createStore} from "./js/state/state.js";
-import {filterRankingsAction, sortResultsAction}	from "./js/state/results-reducer.js";
+import {filterRankingsAction, sortResultsAction} from "./js/state/results-reducer.js";
 import {createRoot, App, Loading, ErrorMessage} from "./js/components/app.js";
 import {setRankingsDataAction} from "./js/state/rankings-reducer.js";
 
