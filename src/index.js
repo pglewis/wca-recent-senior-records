@@ -1,20 +1,22 @@
-import {initialState, rootReducer, createStore} from "./js/state/state.js";
-import {filterRankingsAction, sortResultsAction} from "./js/state/results-reducer.js";
-import {createRoot, App, Loading, ErrorMessage} from "./js/components/app.js";
-import {setRankingsDataAction} from "./js/state/rankings-reducer.js";
+/** @typedef {import("./js/rankings-snapshot").RankingsSnapshot} RankingsSnapshot */
 
-/** @type {Root} */
+import {initialState, rootReducer, createStore} from "./js/state/state.js";
+import {setRankingsDataAction} from "./js/state/rankings-reducer.js";
+import {filterRankingsAction, sortResultsAction} from "./js/state/results-reducer.js";
+import {createRoot} from "./js/components/create-root.js";
+import {App, Loading, ErrorMessage} from "./js/components/app.js";
+
 const appRoot = createRoot("#app");
 
-/** @type {RankingsSnapshot} This is the only direct reference to the global */
-const rankingsData = window.rankings || null;
-if (!rankingsData) {
+/** @type {RankingsSnapshot|null} */
+const rankingsSnapshot = window.rankings || null;
+if (!rankingsSnapshot) {
 	appRoot.render(ErrorMessage("The rankings data is missing, try back in a bit."));
 	throw "Missing rankings data";
 }
 
 const store = createStore(initialState, rootReducer);
-store.dispatch(setRankingsDataAction(rankingsData));
+store.dispatch(setRankingsDataAction(rankingsSnapshot));
 render();
 
 function render() {

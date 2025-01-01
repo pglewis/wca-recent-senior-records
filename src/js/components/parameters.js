@@ -1,13 +1,7 @@
 import {getTemplateElement} from "./get-template-element.js";
 import {setTopNAction, setRecentInDaysAction} from "../state/filters-reducer.js";
 
-/**
- * @param {Object}    props
- * @param {DataStore} props.store
- * @param {Function}  props.handleRender
- *
- * @returns {HTMLElement}
- */
+/** @type {import("./parameters").Parameters} */
 export function Parameters(props) {
 	const {store, handleRender} = props;
 	const {recentInDays, topN} = store.getState().filters;

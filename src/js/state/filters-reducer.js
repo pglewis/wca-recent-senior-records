@@ -4,12 +4,7 @@ const ACTION_TYPES = {
 	searchFilterChanged: "searchFilterChanged",
 };
 
-/**
- *
- * @param {number} newValue
- *
- * @returns {Action}
- */
+/** @type {import("./filters-reducer").setTopNAction} setTopNAction */
 export const setTopNAction = newValue => {
 	return {
 		type: ACTION_TYPES.topNChanged,
@@ -17,12 +12,7 @@ export const setTopNAction = newValue => {
 	};
 };
 
-/**
- *
- * @param {number} newValue
- *
- * @returns {Action}
- */
+/** @type {import("./filters-reducer").setRecentInDaysAction} setRecentInDaysAction */
 export const setRecentInDaysAction = newValue => {
 	return {
 		type: ACTION_TYPES.recentInDaysChanged,
@@ -30,11 +20,7 @@ export const setRecentInDaysAction = newValue => {
 	};
 };
 
-/**
- * @param {string} searchText
- *
- * @returns {Action}
- */
+/** @type {import("./filters-reducer").setSearchFilterAction} setSearchFilterAction */
 export const setSearchFilterAction = searchText => {
 	return {
 		type: ACTION_TYPES.searchFilterChanged,
@@ -42,14 +28,7 @@ export const setSearchFilterAction = searchText => {
 	};
 };
 
-/**
- * @type {ReducerCB}
- *
- * @param {Filters}  filters
- * @param {Action}   action
- *
- * @returns {Filters}  filters
- */
+/** @type {import("./filters-reducer").filtersReducer} filtersReducer */
 export const filtersReducer = (filters = {}, action) => {
 	const {type, payload} = action;
 

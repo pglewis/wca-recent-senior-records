@@ -1,11 +1,6 @@
 import {getTemplateElement} from "./get-template-element.js";
 
-/**
- * @param {Object}     props
- * @param {DataStore}  props.store
- *
- * @returns {HTMLElement}
- */
+/** @type {import("./info").Info} */
 export function Info(props) {
 	const {store} = props;
 	const {results} = store.getState();

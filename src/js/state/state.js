@@ -1,3 +1,8 @@
+/**
+ * @typedef {import("./state").AppState} AppState
+ * @typedef {import("./state").GetStateCB} GetStateCB
+ * @typedef {import("./state").DispatchCB} DispatchCB
+ */
 import {rankingsReducer} from "./rankings-reducer.js";
 import {resultsReducer} from "./results-reducer.js";
 import {filtersReducer} from "./filters-reducer.js";
@@ -22,6 +27,7 @@ export const initialState = {
 	],
 };
 
+/** @type {import("./state").rootReducer} */
 export const rootReducer = combineReducers({
 	rankings: rankingsReducer,
 	results: resultsReducer,
@@ -29,14 +35,7 @@ export const rootReducer = combineReducers({
 	sortColumns: sortColumnsReducer,
 });
 
-/**
- * Minimal store implementation
- *
- * @param {AppState}  initialState
- * @param {ReducerCB} reducer
- *
- * @returns {DataStore}
- */
+/** @type {import("./state").createStore} createStore */
 export const createStore = (initialState, reducer) => {
 	let state = initialState;
 
@@ -57,10 +56,8 @@ export const createStore = (initialState, reducer) => {
 };
 
 /**
- *
- * @param {Object} reducers
- *
- * @returns {ReducerCB}
+ * @param   {*}      reducers
+ * @returns {object}
  */
 function combineReducers(reducers) {
 	return function(state = {}, action) {

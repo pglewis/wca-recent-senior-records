@@ -1,14 +1,16 @@
+/**
+ * @typedef {import("../rankings-snapshot").RankingsSnapshot} RankingsSnapshot
+ * @typedef {import("./state").ResultRowData} ResultRowData
+ * @typedef {import("./state").Filters} Filters
+ * @typedef {import("./state").SortColumn} SortColumn
+ */
+
 const ACTION_TYPES = {
 	rankingsFiltered: "rankingsFiltered",
 	resultsSorted: "resultsSorted",
 };
 
-/**
- * @param {RankingsSnapshot} rankingsData
- * @param {Filters}          filters
- *
- * @returns {Action}
- */
+/** @type {import("./results-reducer").filterRankingsAction} filterRankingsAction */
 export const filterRankingsAction = (rankingsData, filters) => {
 	return {
 		type: ACTION_TYPES.rankingsFiltered,
@@ -16,11 +18,7 @@ export const filterRankingsAction = (rankingsData, filters) => {
 	};
 };
 
-/**
- * @param {SortColumn[]} sortColumns
- *
- * @returns {Action}
- */
+/** @type {import("./results-reducer").sortResultsAction} sortResultsAction */
 export const sortResultsAction = (sortColumns) => {
 	return {
 		type: ACTION_TYPES.resultsSorted,
@@ -28,13 +26,7 @@ export const sortResultsAction = (sortColumns) => {
 	};
 };
 
-/**
- *
- * @param {ResultRowData[]} results
- * @param {Action}          action
- *
- * @returns {ResultRowData[]}
- */
+/** @type {import("./results-reducer").resultsReducer} resultsReducer */
 export const resultsReducer = (results = [], action) => {
 	const {type, payload} = action;
 
@@ -53,10 +45,9 @@ export const resultsReducer = (results = [], action) => {
 };
 
 /**
- * @param {RankingsSnapshot} rankingsData
- * @param {Filters} filters
- *
- * @returns {ResultRowData[]}  Array of resulting rows
+ * @param   {RankingsSnapshot} rankingsData
+ * @param   {Filters}          filters
+ * @returns {ResultRowData[]}               Array of resulting rows
  */
 function filterResults(rankingsData, filters) {
 	const {topN, recentInDays} = filters;
@@ -108,10 +99,9 @@ function filterResults(rankingsData, filters) {
 
 /**
  *
- * @param {ResultRowData} rowData
- * @param {Filters}       filters
- *
- * @returns {Boolean}
+ * @param   {ResultRowData} rowData
+ * @param   {Filters}       filters
+ * @returns {boolean}
  */
 function checkFilters(rowData, filters) {
 	const {search} = filters;
@@ -128,9 +118,8 @@ function checkFilters(rowData, filters) {
 
 /**
  *
- * @param {ResultRowData[]} results
- * @param {SortColumn[]}    sortColumns
- *
+ * @param   {ResultRowData[]} results
+ * @param   {SortColumn[]}    sortColumns
  * @returns {ResultRowData[]}
  */
 function sortResults(results, sortColumns) {
@@ -141,8 +130,8 @@ function sortResults(results, sortColumns) {
 	return resultsCopy;
 
 	/**
-	 * @param {SortColumn} sortColumn
-	 * @returns
+	 * @param   {SortColumn}      sortColumn
+	 * @returns {ResultRowData[]}
 	 */
 	function sort(sortColumn) {
 		const {name, direction} = sortColumn;
@@ -176,10 +165,8 @@ function sortResults(results, sortColumns) {
 		return resultsCopy;
 
 		/**
-		 *
-		 * @param {ResultRowData} a
-		 * @param {ResultRowData} b
-		 *
+		 * @param   {ResultRowData} a
+		 * @param   {ResultRowData} b
 		 * @returns {number}
 		 */
 		function customEventSort(a, b) {
@@ -201,9 +188,8 @@ function sortResults(results, sortColumns) {
 
 		/**
 		 *
-		 * @param {ResultRowData} a
-		 * @param {ResultRowData} b
-		 *
+		 * @param   {ResultRowData} a
+		 * @param   {ResultRowData} b
 		 * @returns {number}
 		 */
 		function customResultSort(a, b) {
@@ -258,15 +244,12 @@ function sortResults(results, sortColumns) {
 }
 
 /**
- * @param {string} result
- *     Format: Solved/Attempted in MM:SS - Example: 3/4 in 38:05
- *
- * @returns {MultiResult}
- *
- * @typedef {Object} MultiResult
- * @property {number} score    solved - unsolved
- * @property {number} seconds
- * @property {number} unsolved
+ * @param    {string}      result   - Format: Solved/Attempted in MM:SS - Example: 3/4 in 38:05
+ * @returns  {MultiResult}
+ * @typedef {object} MultiResult
+ * @property {number}      score    solved - unsolved
+ * @property {number}      seconds
+ * @property {number}      unsolved
  */
 function parseMultiResult(result) {
 	const [solvedAndAttempted, time] = result.split(" in ");
@@ -279,11 +262,8 @@ function parseMultiResult(result) {
 }
 
 /**
- * @param {string} result
- *     Minutes and hours are not padded if zero:
- *     23.27, 1:40.83, 1:00:02
- *
- * @returns {number} The duration in seconds
+ * @param   {string} result - Minutes and hours are not padded if zero: 23.27, 1:40.83, 1:00:02
+ * @returns {number}        The duration in seconds
  */
 function timeResultToSeconds(result) {
 	const parts = result.split(":").reverse();

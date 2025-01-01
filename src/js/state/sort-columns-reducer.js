@@ -1,13 +1,12 @@
-
+/**
+ * @typedef {import("../state/state").SortColumn} SortColumn
+ * @typedef {import("./sort-columns-reducer").SortChange} SortChange
+ */
 const ACTION_TYPES = {
 	sortColumnsChanged: "sortColumnsChanged",
 };
 
-/**
- * @param {SortChange} newSort
- *
- * @returns {Action}
- */
+/** @type {import("./sort-columns-reducer").updateSortColumnsAction} updateSortColumnsAction */
 export const updateSortColumnsAction = newSort => {
 	return {
 		type: ACTION_TYPES.sortColumnsChanged,
@@ -15,13 +14,7 @@ export const updateSortColumnsAction = newSort => {
 	};
 };
 
-/**
- *
- * @param {SortColumn[]} sortColumns
- * @param {Action} action
- *
- * @returns {SortColumn[]}
- */
+/** @type {import("./sort-columns-reducer").sortColumnsReducer} sortColumnsReducer */
 export const sortColumnsReducer = (sortColumns = [], action) => {
 	const {type, payload} = action;
 
@@ -35,10 +28,8 @@ export const sortColumnsReducer = (sortColumns = [], action) => {
 };
 
 /**
- *
- * @param {SortColumn[]} sortColums
- * @param {SortChange}   newSort
- *
+ * @param   {SortColumn[]} sortColumns
+ * @param   {SortChange}   newSort
  * @returns {SortColumn[]}
  */
 function sortColumnsChanged(sortColumns, newSort) {

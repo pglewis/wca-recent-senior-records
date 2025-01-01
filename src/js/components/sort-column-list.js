@@ -1,3 +1,6 @@
+/**
+ * @typedef {import("../state/state").DataStore} DataStore
+ */
 import {getTemplateElement} from "./get-template-element.js";
 import {updateSortColumnsAction} from "../state/sort-columns-reducer.js";
 
@@ -10,13 +13,7 @@ let handleRender;
 /** @type {HTMLElement} */
 let dragNode;
 
-/**
- * @param {Object}    props
- * @param {DataStore} props.store
- * @param {Function}  props.handleRender
- *
- * @returns {HTMLElement}
- */
+/** @type {import("./sort-column-list").SortColumnList} */
 export function SortColumnList(props) {
 	//--! TODO: scope duct-tape
 	store = props.store;
@@ -53,7 +50,6 @@ export function SortColumnList(props) {
 
 /**
  * Toggle sort direction
- *
  * @param {MouseEvent} e
  */
 function handleClick(e) {
@@ -86,7 +82,6 @@ export function handleDragStart(e) {
 export function handleDragOver(e) {
 	e.preventDefault();
 	e.dataTransfer.dropEffect = "move";
-	return false;
 }
 
 /**
@@ -121,8 +116,6 @@ function handleDrop(e) {
 		}));
 		handleRender();
 	}
-
-	return false;
 }
 
 /**

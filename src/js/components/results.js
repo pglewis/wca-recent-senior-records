@@ -1,13 +1,12 @@
+/**
+ * @typedef {import("../state/state").ResultRowData} ResultRowData
+ * @typedef {import("./app").AppProps} AppProps
+ */
 import {getTemplateElement} from "./get-template-element.js";
 import {updateSortColumnsAction} from "../state/sort-columns-reducer.js";
 import {handleDragStart, handleDragEnd} from "./sort-column-list.js";
 
-/**
- * @param {Object}     props
- * @param {DataStore}  props.store
- *
- * @returns {HTMLElement}
- */
+/** @type {import("./results").Results} */
 export function Results(props) {
 	const {results} = props.store.getState();
 
@@ -19,13 +18,10 @@ export function Results(props) {
 }
 
 /**
- * @param {Object}    props
- * @param {DataStore} props.store
- * @param {Function}  props.handleRender
- *
+ * @param   {AppProps}         props
  * @returns {HTMLTableElement}
  */
-export function ResultsTable(props) {
+function ResultsTable(props) {
 	const {store, handleRender} = props;
 	const {results} = store.getState();
 	const resultsTable = getTemplateElement("#ranking-table-template");
@@ -86,8 +82,7 @@ export function ResultsTable(props) {
 }
 
 /**
- * @param {ResultRowData} rowData
- *
+ * @param   {ResultRowData}       rowData
  * @returns {HTMLTableRowElement}
  */
 function ResultsTableRow(rowData) {

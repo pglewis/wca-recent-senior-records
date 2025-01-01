@@ -2,12 +2,7 @@ const ACTION_TYPES = {
 	rankingsDataSet: "rankingsDataSet",
 };
 
-/**
- *
- * @param {RankingsSnapshot} rankingsSnapshot
- *
- * @returns {Action}
- */
+/** @type {import("./rankings-reducer").setRankingsDataAction} setRankingsDataAction */
 export const setRankingsDataAction = rankingsSnapshot => {
 	return {
 		type: ACTION_TYPES.rankingsDataSet,
@@ -15,14 +10,7 @@ export const setRankingsDataAction = rankingsSnapshot => {
 	};
 };
 
-/**
- * @type {ReducerCB}
- *
- * @param {Rankings}  rankings
- * @param {Action}    action
- *
- * @returns {Rankings}
- */
+/** @type {import("./rankings-reducer").rankingsReducer} rankingsReducer */
 export const rankingsReducer = (rankings = {}, action) => {
 	const {type, payload} = action;
 

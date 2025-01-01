@@ -3,11 +3,7 @@ import {SortColumnList} from "./sort-column-list.js";
 import {Search} from "./search.js";
 import {Parameters} from "./parameters.js";
 
-/**
- * @param {Object} props
- *
- * @returns {HTMLElement}
- */
+/** @type {import("./panel").Panel} */
 export function Panel(props) {
 	const root = getTemplateElement("#panel-template");
 	const panelGrid = root.querySelector(".panel-grid");
