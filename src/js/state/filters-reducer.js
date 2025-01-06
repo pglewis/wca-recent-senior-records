@@ -1,10 +1,8 @@
-const ACTION_TYPES = {
-	topNChanged: "topNChanged",
-	recentInDaysChanged: "recentInDaysChanged",
-	searchFilterChanged: "searchFilterChanged",
-};
+// @ts-check
+import {initialState} from "./state.js";
+import {ACTION_TYPES} from "./actions.js";
 
-/** @type {import("./filters-reducer").setTopNAction} setTopNAction */
+/** @type {import("./filters-reducer").setTopNAction} */
 export const setTopNAction = newValue => {
 	return {
 		type: ACTION_TYPES.topNChanged,
@@ -12,7 +10,7 @@ export const setTopNAction = newValue => {
 	};
 };
 
-/** @type {import("./filters-reducer").setRecentInDaysAction} setRecentInDaysAction */
+/** @type {import("./filters-reducer").setRecentInDaysAction} */
 export const setRecentInDaysAction = newValue => {
 	return {
 		type: ACTION_TYPES.recentInDaysChanged,
@@ -20,7 +18,7 @@ export const setRecentInDaysAction = newValue => {
 	};
 };
 
-/** @type {import("./filters-reducer").setSearchFilterAction} setSearchFilterAction */
+/** @type {import("./filters-reducer").setSearchFilterAction} */
 export const setSearchFilterAction = searchText => {
 	return {
 		type: ACTION_TYPES.searchFilterChanged,
@@ -28,8 +26,8 @@ export const setSearchFilterAction = searchText => {
 	};
 };
 
-/** @type {import("./filters-reducer").filtersReducer} filtersReducer */
-export const filtersReducer = (filters = {}, action) => {
+/** @type {import("./filters-reducer").filtersReducer} */
+export const filtersReducer = (filters = initialState.filters, action) => {
 	const {type, payload} = action;
 
 	switch (type) {

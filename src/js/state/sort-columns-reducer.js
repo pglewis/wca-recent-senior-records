@@ -1,10 +1,10 @@
+// @ts-check
+
 /**
  * @typedef {import("../state/state").SortColumn} SortColumn
  * @typedef {import("./sort-columns-reducer").SortChange} SortChange
  */
-const ACTION_TYPES = {
-	sortColumnsChanged: "sortColumnsChanged",
-};
+import {ACTION_TYPES} from "./actions.js";
 
 /** @type {import("./sort-columns-reducer").updateSortColumnsAction} updateSortColumnsAction */
 export const updateSortColumnsAction = newSort => {

@@ -1,6 +1,8 @@
+// @ts-check
 import {getTemplateElement} from "./get-template-element.js";
+import {getTemplatePart} from "./get-template-part.js";
 
-/** @type {import("./info").Info} */
+/** @type {import("./info.js").Info} */
 export function Info(props) {
 	const {store} = props;
 	const {results} = store.getState();
@@ -8,8 +10,8 @@ export function Info(props) {
 	const {topN, recentInDays, search} = store.getState().filters;
 
 	const rootElement = getTemplateElement("#info-template");
-	const info = rootElement.querySelector(".result-info");
-	const refreshed = rootElement.querySelector(".refreshed");
+	const info = getTemplatePart(rootElement, ".result-info", HTMLElement);
+	const refreshed = getTemplatePart(rootElement, ".refreshed", HTMLElement);
 
 	refreshed.textContent = `Last refreshed: ${lastUpdated} (UTC)`;
 	info.textContent =

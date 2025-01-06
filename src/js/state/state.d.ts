@@ -1,8 +1,17 @@
-import {RankingsSnapshot} from "../rankings-snapshot"
+// @ts-check
+import {Action} from "./actions";
+import {
+	RankingsSnapshot,
+	Person,
+	WCAEvent,
+	EventRanking,
+	Competition,
+	Rank,
+} from "../rankings-snapshot";
 
 export type AppState = {
 	rankings: Rankings
-	results: ResultRowData[] | null
+	results: ResultRowData[]
 	filters: Filters
 	sortColumns: SortColumn[]
 }
@@ -10,39 +19,56 @@ export type AppState = {
 export type Rankings = {
 	/** date/time string of the data snapshot in UTC */
 	lastUpdated: string | null
-	data: RankingsSnapshot
+	data: RankingsSnapshot | {}
 }
 
 export type ResultRowData = {
-	/** e.g. 333bf */
-	eventID: string
-	/** e.g. 3x3x3 Blindfolded */
-	eventName: string
+	/** eg 333bf */
+	eventID: WCAEvent["id"]
+
+	/** eg 3x3x3 Blindfolded */
+	eventName: WCAEvent["name"]
+
+	/** The format used for the result */
+	eventFormat: WCAEvent["format"]
+
 	/** single, average */
-	eventType: 'single' | 'average'
-	eventyFormat: 'time' | 'number' | 'multi'
-	age: string  // should this be number?
+	eventType: EventRanking["type"]
+
+	/** The age group for this ranking (40, 50, 60, ...) */
+	age: EventRanking["age"]
+
 	/** competition start date, UTC YYYY-MM-DD */
-	date: string
+	date: Competition["startDate"]
+
 	/** estimated numeric rank (considers missing records) */
-	rank: string  // should this be number?
-	/** persons.name */
-	name: string  // if there is an actual type "Person", this could be Person['name'] to make the relation clearer and more robust
-	/** persons.id */
-	wcaID: string // see above
-	/** result as time, number, multi */
-	result: 'time'
-	/** competition full name */
-	compName: string
-	/** web ID for linking */
-	compWebID: string
+	rank: Rank["rank"]
+
+	/** Competitor's full name */
+	name: Person["name"]
+
+	/** Competitor's WCA ID */
+	wcaID: Person["id"]
+
+	/**
+	 * Event result. Format may be a time duration, number (for fewest moves
+	 * competition), or multi ("X/Y in MM:SS") as specified by the event format
+ 	 */
+	result: Rank["best"]
+
+	/** Competition full name */
+	compName: Competition["name"]
+
+	/** Competition web ID for linking */
+	compWebID: Competition["webId"]
+
 	/** 2 character country code */
-	compCountry: string  // this could also be set as a strict type, i.e. 'AF' | 'AL' | 'DZ' | ...
+	compCountry: Competition["country"]
 }
 
 export type Filters = {
 	topN: number
-	search: string | null
+	search: string
 	recentInDays: number
 }
 
@@ -52,13 +78,6 @@ export type SortColumn = {
 	direction: number
 }
 
-export type Action = {
-	/** Unique identifier for the action */
-	type: string
-	/** context-specific data */
-	payload?: unknown
-}
-
 export type DataStore = {
 	/** Returns the current state */
 	getState: GetStateCB
@@ -66,10 +85,10 @@ export type DataStore = {
 	dispatch: DispatchCB
 }
 
-export type GetStateCB = () => AppState
-export type DispatchCB = (action: Action) => void
-export type ReducerCB = (state: AppState, action: Action) => AppState
+export type GetStateCB = () => AppState;
+export type DispatchCB = (action: Action) => void;
+export type ReducerCB = (state: AppState, action: Action) => AppState;
 
-export declare const initialState: AppState
-export declare function rootReducer(state: AppState, action: Action): AppState
-export declare function createStore(initialState: AppState, reducer: ReducerCB): DataStore
+export declare const initialState: AppState;
+export declare function rootReducer(state: AppState, action: Action): AppState;
+export declare function createStore(initialState: AppState, reducer: ReducerCB): DataStore;

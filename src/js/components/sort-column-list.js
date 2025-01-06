@@ -1,7 +1,8 @@
-/**
- * @typedef {import("../state/state").DataStore} DataStore
- */
+// @ts-check
+
+/** @typedef {import("../state/state").DataStore} DataStore */
 import {getTemplateElement} from "./get-template-element.js";
+import {getTemplatePart} from "./get-template-part.js";
 import {updateSortColumnsAction} from "../state/sort-columns-reducer.js";
 
 /** @type {DataStore} */
@@ -24,14 +25,14 @@ export function SortColumnList(props) {
 
 	for (const [colIndex, sortColumn] of sortColumns.entries()) {
 		const root = getTemplateElement("#sort-column-template");
-		const buttonNode = root.querySelector("button");
+		const buttonNode = getTemplatePart(root, "button", HTMLButtonElement);
 		const sortLevels = {0: "primary", 1: "secondary", 2: "tertiary"};
 		const sortDirection = sortColumn.direction == 1 ? "ascending" : "descending";
 
 		buttonNode.classList.add(sortDirection);
 		buttonNode.classList.add(sortLevels[colIndex]);
 		buttonNode.dataset.sortOn = sortColumn.name;
-		buttonNode.dataset.position = colIndex;
+		buttonNode.dataset.position = String(colIndex);
 		buttonNode.textContent = sortColumn.label;
 
 		buttonNode.addEventListener("dragstart", handleDragStart);
@@ -53,12 +54,15 @@ export function SortColumnList(props) {
  * @param {MouseEvent} e
  */
 function handleClick(e) {
-	const buttonNode = e.target;
+	const buttonNode = /**@type {HTMLButtonElement}*/(e.currentTarget);
+	const name = String(buttonNode.dataset.sortOn);
+	const label = String(buttonNode.textContent);
+	const position = Number(buttonNode.dataset.position);
 
 	store.dispatch(updateSortColumnsAction({
-		name: buttonNode.dataset.sortOn,
-		label: buttonNode.textContent,
-		position: +buttonNode.dataset.position,
+		name: name,
+		label: label,
+		position: /** @type {0|1|2} */(position),
 		defaultDirection: null
 	}));
 	handleRender();
@@ -68,51 +72,60 @@ function handleClick(e) {
  * @param {DragEvent} e
  */
 export function handleDragStart(e) {
-	/** @type {HTMLElement} */
-	const node = e.target;
-	dragNode = node;
+	const element = /**@type {HTMLElement}*/(e.currentTarget);
+	const dataTransfer = /**@type {DataTransfer}*/(e.dataTransfer);
 
-	node.style.opacity = "0.4";
-	e.dataTransfer.effectAllowed = "move";
+	dragNode = element;
+	element.style.opacity = "0.4";
+	dataTransfer.effectAllowed = "move";
 }
 
 /**
  * @param {DragEvent} e
  */
 export function handleDragOver(e) {
+	const dataTransfer = /**@type {DataTransfer}*/(e.dataTransfer);
+
 	e.preventDefault();
-	e.dataTransfer.dropEffect = "move";
+	dataTransfer.dropEffect = "move";
 }
 
 /**
  * @param {DragEvent} e
  */
 export function handleDragEnter(e) {
-	e.target.classList.add("over");
+	const element = /**@type {HTMLElement}*/(e.currentTarget);
+	element.classList.add("over");
 }
 
 /**
  * @param {DragEvent} e
  */
 export function handleDragLeave(e) {
-	e.target.classList.remove("over");
+	const element = /**@type {HTMLElement}*/(e.currentTarget);
+	element.classList.remove("over");
 }
 
 /**
  * @param {DragEvent} e
  */
 function handleDrop(e) {
-	const dropNode = e.target;
+	const dropNode = /**@type {HTMLElement} */(e.currentTarget);
 	e.stopPropagation();
 
 	dropNode.classList.remove("over");
 
 	if (dragNode.dataset.sortOn !== dropNode.dataset.sortOn) {
+		const name = String(dragNode.dataset.sortOn);
+		const label = String(dragNode.textContent).trim();
+		const position = Number(dropNode.dataset.position);
+		const defaultDirection = Number(dragNode.dataset.defaultDirection) || null;
+
 		store.dispatch(updateSortColumnsAction({
-			name: dragNode.dataset.sortOn,
-			label: dragNode.textContent.trim(),
-			position: +dropNode.dataset.position,
-			defaultDirection: dragNode.dataset.defaultDirection || null
+			name: name,
+			label: label,
+			position: /**@type {0|1|2}*/(position),
+			defaultDirection: /**@type {1|-1|null}*/(defaultDirection)
 		}));
 		handleRender();
 	}
@@ -122,5 +135,6 @@ function handleDrop(e) {
  * @param {DragEvent} e
  */
 export function handleDragEnd(e) {
-	e.target.removeAttribute("style");
+	const element = /**@type {HTMLElement}*/(e.currentTarget);
+	element.removeAttribute("style");
 }

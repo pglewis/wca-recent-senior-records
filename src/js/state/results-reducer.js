@@ -1,16 +1,14 @@
+// @ts-check
+
 /**
  * @typedef {import("../rankings-snapshot").RankingsSnapshot} RankingsSnapshot
  * @typedef {import("./state").ResultRowData} ResultRowData
  * @typedef {import("./state").Filters} Filters
  * @typedef {import("./state").SortColumn} SortColumn
  */
+import {ACTION_TYPES} from "./actions.js";
 
-const ACTION_TYPES = {
-	rankingsFiltered: "rankingsFiltered",
-	resultsSorted: "resultsSorted",
-};
-
-/** @type {import("./results-reducer").filterRankingsAction} filterRankingsAction */
+/** @type {import("./results-reducer").filterRankingsAction} */
 export const filterRankingsAction = (rankingsData, filters) => {
 	return {
 		type: ACTION_TYPES.rankingsFiltered,
@@ -18,7 +16,7 @@ export const filterRankingsAction = (rankingsData, filters) => {
 	};
 };
 
-/** @type {import("./results-reducer").sortResultsAction} sortResultsAction */
+/** @type {import("./results-reducer").sortResultsAction} */
 export const sortResultsAction = (sortColumns) => {
 	return {
 		type: ACTION_TYPES.resultsSorted,
@@ -26,16 +24,14 @@ export const sortResultsAction = (sortColumns) => {
 	};
 };
 
-/** @type {import("./results-reducer").resultsReducer} resultsReducer */
+/** @type {import("./results-reducer").resultsReducer} */
 export const resultsReducer = (results = [], action) => {
 	const {type, payload} = action;
 
 	switch (type) {
 		case ACTION_TYPES.rankingsFiltered: {
-			const {rankingsData, filters} = payload;
-			return filterResults(rankingsData, filters);
+			return filterRankings(payload.rankingsData, payload.filters);
 		}
-
 		case ACTION_TYPES.resultsSorted: {
 			return sortResults(results, payload);
 		}
@@ -48,8 +44,9 @@ export const resultsReducer = (results = [], action) => {
  * @param   {RankingsSnapshot} rankingsData
  * @param   {Filters}          filters
  * @returns {ResultRowData[]}               Array of resulting rows
+ * @throws
  */
-function filterResults(rankingsData, filters) {
+function filterRankings(rankingsData, filters) {
 	const {topN, recentInDays} = filters;
 	const MS_PER_DAY = 24 * 60 * 60 * 1000;
 	const results = [];
@@ -63,9 +60,18 @@ function filterResults(rankingsData, filters) {
 			// rank: rank, id, best, competition
 			for (const rank of eventRanking.ranks) {
 				const comp = rankingsData.competitions.find(c => c.id === rank.competition);
+				if (!comp) {
+					throw `Missing competition ID ${rank.competition}`;
+				}
 				const person = rankingsData.persons.find(p => p.id === rank.id);
-				const daysAgo = Math.floor((new Date() - new Date(comp.startDate)) / MS_PER_DAY);
+				if (!person) {
+					throw `Missing competitor ID ${rank.id}`;
+				}
+				const daysAgo = Math.floor(
+					(new Date().getTime() - new Date(comp.startDate).getTime()) / MS_PER_DAY
+				);
 
+				/** @type {ResultRowData} */
 				const rowData = {
 					eventID: event.id,
 					eventName: event.name,
@@ -110,6 +116,7 @@ function checkFilters(rowData, filters) {
 		return true;
 	}
 
+	// Concatenate the values we want to search in a space separated string
 	const searchFields = ["date", "eventID", "eventType", "name", "compName"];
 	const rowString = searchFields.reduce((str, key) => str + " " + rowData[key], "");
 
@@ -211,7 +218,7 @@ function sortResults(results, sortColumns) {
 					}
 
 					case "number": {
-						return direction * (a.result - b.result);
+						return direction * (Number(a.result) - Number(b.result));
 					}
 
 					/**
@@ -253,7 +260,7 @@ function sortResults(results, sortColumns) {
  */
 function parseMultiResult(result) {
 	const [solvedAndAttempted, time] = result.split(" in ");
-	const [solved, attempted] = solvedAndAttempted.split("/");
+	const [solved, attempted] = solvedAndAttempted.split("/").map(Number);
 	const unsolved = attempted - solved;
 	const score = solved - unsolved;
 	const seconds = timeResultToSeconds(time);

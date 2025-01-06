@@ -7,5 +7,5 @@ export interface AppProps {
 }
 
 export declare function App(props: AppProps): HTMLElement[]
-export declare function Loading(): HTMLElement[]
+export declare function Loading(): HTMLElement
 export declare function ErrorMessage(message: string): HTMLElement

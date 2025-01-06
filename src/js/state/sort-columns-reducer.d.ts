@@ -1,4 +1,6 @@
-import {SortColumn, Action} from '../state/state';
+// @ts-check
+import {Action, SortColumnsChangedAction} from '../state/actions';
+import {SortColumn} from './state';
 
 type SortChange = {
 	position: 0 | 1 | 2
@@ -7,5 +9,5 @@ type SortChange = {
 	defaultDirection: 1 | -1 | null
 }
 
-export declare function updateSortColumnsAction(newSort: SortChange): Action
-export declare function sortColumnsReducer(sortColumns: SortColumn[], action: Action): SortColumn[]
+export declare function updateSortColumnsAction(newSort: SortChange): SortColumnsChangedAction;
+export declare function sortColumnsReducer(sortColumns: SortColumn[], action: Action): SortColumn[];
