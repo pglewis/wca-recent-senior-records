@@ -113,24 +113,26 @@ body {
 	text-align: right;
 }
 
-table#ranking-table th.date {
+table#ranking-table .date {
 	width: 100px;
 }
 
-table#ranking-table th.event {
+table#ranking-table .event {
 	width: 150px;
 }
 
-table#ranking-table th.age {
+table#ranking-table .age {
 	width: 50px;
 }
 
-table#ranking-table th.rank {
+table#ranking-table .rank {
 	width: 43px;
+	text-align: center;
 }
 
-table#ranking-table th.result {
+table#ranking-table .result {
 	width: 55px;
+	text-align: right;
 }
 
 .sr-only {
@@ -158,7 +160,7 @@ table#ranking-table th button {
 	border: none;
 	display: inline;
 	width: 100%;
-	text-align: left;
+	text-align: inherit;
 	outline: none;
 	cursor: pointer;
 }
