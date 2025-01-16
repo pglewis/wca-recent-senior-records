@@ -9,9 +9,8 @@
 
 
 	<link rel="shortcut icon" type="image/x-icon" href="./assets/favicon-CQwlhDkP.ico">
-  <script type="module" crossorigin src="./assets/main-BjrTZ12l.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/main-B8PGvq7l.css">
-  <link rel="stylesheet" crossorigin href="./assets/common-D_tiUH6z.css">
+  <script type="module" crossorigin src="./assets/main-CTfV-neI.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/main-BCCQI5u6.css">
 </head>
 <body>
 	<div class="container">
@@ -28,7 +27,7 @@
 	</div>
 
 	<template id="loading-template">
-		<div class="loading with-margin">
+		<div class="loading">
 			<h3 class="message">Loading... please wait</h3>
 		</div>
 	</template>
@@ -38,7 +37,7 @@
 			<p class="refreshed"></p>
 			<p class="result-info"></p>
 			<p>
-				Drag the columns in the sort column list to rearrange the sort order.  Column
+				Drag the columns in the sort column list to rearrange the sort order. Column
 				headers can be dragged to the list to change the sort columns.
 				You can also click a column header to set the primary sort, ctrl-click to set the
 				secondary sort, and ctrl+shift-click to set the tertiary sort.
@@ -54,28 +53,28 @@
 
 	<template id="sort-column-list-template">
 		<div id="sort-columns">
-			<div class="label">Sort Columns:</div>
+			<div class="strong">Sort:</div>
 		</div>
 	</template>
 
 	<template id="sort-column-template">
-		<div class="sort-column">
-			<button draggable="true"></button>
-			<span aria-hidden="true"></span>
-		</div>
+		<button class="sort-column strong" draggable="true"><span aria-hidden="true"></span></button>
 	</template>
 
 	<template id="search-template">
 		<div id="search">
-			<input id="search-input" type="search" size="15" placeholder="Find...">
+			<label class="strong">
+				Search:
+				<input id="search-input" type="search" size="15" placeholder="e.g. 333bf">
+			</label>
 		</div>
 	</template>
 
 	<template id="parameters-template">
 		<div id="parameters">
 			<div>
-				<label>
-					Search the top
+				<label class="strong">
+					Show the top
 					<select id="top-n">
 						<option value="5">5</option>
 						<option value="10">10</option>
@@ -83,7 +82,7 @@
 						<option value="50">50</option>
 					</select>
 				</label>
-				<label>
+				<label class="strong">
 					in the past
 					<select id="recent-in-days">
 						<option value="7">7 days</option>
@@ -102,24 +101,72 @@
 			<thead>
 				<tr>
 					<th class="date" draggable="true" data-sort-on="date" data-default-direction="-1">
-						<button>Date</button><span aria-hidden="true"></span>
+						<button class="strong" type="button">
+							<div class="column">
+								<span class="text">Date</span>
+							</div>
+							<div class="column">
+								<span class="sort up" aria-hidden="true">▲</span>
+								<span class="sort down" aria-hidden="true">▼</span>
+							</div>
+						</button>
 					</th>
 					<th class="event" draggable="true" data-sort-on="event">
-						<button>Event</button><span aria-hidden="true"></span>
+						<button class="strong" type="button">
+							<div class="column">
+								<span class="text">Event</span>
+							</div>
+							<div class="column">
+								<span class="sort up" aria-hidden="true">▲</span>
+								<span class="sort down" aria-hidden="true">▼</span>
+							</div>
+						</button>
 					</th>
 					<th class="age" draggable="true" data-sort-on="age">
-						<button>Group</button><span aria-hidden="true"></span>
+						<button class="strong" type="button">
+							<div class="column">
+								<span class="text">Group</span>
+							</div>
+							<div class="column">
+								<span class="sort up" aria-hidden="true">▲</span>
+								<span class="sort down" aria-hidden="true">▼</span>
+							</div>
+						</button>
 					</th>
 					<th class="rank" draggable="true" data-sort-on="rank">
-						<button>Rank</button><span aria-hidden="true"></span>
+						<button class="strong" type="button">
+							<div class="column">
+								<span class="text">Rank</span>
+							</div>
+							<div class="column">
+								<span class="sort up" aria-hidden="true">▲</span>
+								<span class="sort down" aria-hidden="true">▼</span>
+							</div>
+						</button>
 					</th>
 					<th class="name" draggable="true" data-sort-on="name">
-						<button>Name</button><span aria-hidden="true"></span>
+						<button class="strong" type="button">
+							<div class="column">
+								<span class="text">Name</span>
+							</div>
+							<div class="column">
+								<span class="sort up" aria-hidden="true">▲</span>
+								<span class="sort down" aria-hidden="true">▼</span>
+							</div>
+						</button>
 					</th>
 					<th class="result" draggable="true" data-sort-on="result">
-						<button>Result</button><span aria-hidden="true"></span>
+						<button class="strong" type="button">
+							<div class="column">
+								<span class="text">Result</span>
+							</div>
+							<div class="column">
+								<span class="sort up" aria-hidden="true">▲</span>
+								<span class="sort down" aria-hidden="true">▼</span>
+							</div>
+						</button>
 					</th>
-					<th class="competition no-sort">
+					<th class="strong competition no-sort">
 						<span>Competition</span>
 					</th>
 				</tr>
