@@ -6,7 +6,7 @@ import importPlugin from "eslint-plugin-import";
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
-	{ignores: ["dist", "src/data"]},
+	{ignores: ["dist", "src/data", "src/js/vendor"]},
 	{languageOptions: {globals: globals.browser}},
 	pluginJs.configs.recommended,
 	{

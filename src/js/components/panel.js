@@ -10,7 +10,7 @@ export function Panel(props) {
 	const root = getTemplateElement("#panel-template");
 	const panelGrid = getTemplatePart(root, ".panel-grid", HTMLElement);
 
-	panelGrid.append(SortColumnList(props), Search(props), Parameters(props));
+	panelGrid.append(Search(props), Parameters(props), SortColumnList(props));
 
 	return root;
 }

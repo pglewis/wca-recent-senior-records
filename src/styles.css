@@ -1,3 +1,10 @@
+@import url("css/common.css");
+
+html {
+	width: 100%;
+	font-size: 11px;
+}
+
 body {
 	/**
 	 * Duct-tape to avoid jank when scrolled and then changing to a state
@@ -6,243 +13,236 @@ body {
 	margin-bottom: 30em;
 }
 
-.with-margin {
-	margin-top: 1em;
-	margin-bottom: 1em;
-}
-
+/**
+ Panel
+ */
 #panel {
 	width: 100%;
-	min-width: 690px;
 	background-color: #f6f8fa;
 }
 
 #panel .panel-grid {
-	display: grid;
-	grid-template-columns: minmax(350px, 1fr) minmax(100px, 1fr) minmax(150px, 1fr);
-	padding: 1em;
+	display: flex;
+	flex-direction: column;
+	row-gap: 1em;
+	padding: .5em;
 	margin-bottom: 1em;
 	border: 1px solid #dfe2e5;
 }
 
+/**
+ Sort columns
+ */
 #sort-columns {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
+	display: flex;
+	gap: .5em;
 }
 
+/* This is only aligning the label with the buttons at this point */
 #sort-columns>* {
 	margin: auto 0;
 }
 
-#sort-columns .label {
-	font-weight: 600;
-	font-size: 12px;
-}
-
-#sort-columns .sort-column {
-	position: relative;
-}
-
-#sort-columns button {
-	width: 100%;
-	padding: 8px 20px 8px 14px;
-	font-size: 12px;
-	font-weight: bold;
-	text-align: left;
+.sort-column {
 	background-color: white;
 	border: 1px solid #dfe2e5;
+	padding: 0.25em 0 0.25em 0.5em;
+	font-weight: 700;
+	font-size: 90%;
 }
 
-#sort-columns button:hover {
-	cursor: grab;
+.sort-column:hover {
+	cursor: pointer;
 }
 
-#sort-columns button.over {
+.sort-column.over {
 	outline: 3px dotted #666;
 }
 
-#sort-columns div:nth-child(3) button {
+.sort-column.secondary {
 	color: #008000;
 }
 
-#sort-columns div:nth-child(4) button {
+.sort-column.tertiary {
 	color: #0000ff;
 }
 
-#sort-columns button+span {
-	position: absolute;
-	right: 5px;
-	top: 0;
-	bottom: 0;
-	width: 10px;
-	cursor: pointer;
-	pointer-events: none;
-	/* Don't intercept click events */
-}
-
-#sort-columns button+span:before {
-	position: absolute;
-	display: block;
+.sort-column span {
+	display: inline-block;
 	opacity: 0.9;
-	bottom: 40%;
+	transform: scale(0.7);
+	padding-left: 1em;
 }
 
-#sort-columns button.ascending+span:before {
-	content: "▲";
-}
-
-#sort-columns button.descending+span:before {
+.sort-column.descending span:before {
 	content: "▼";
 }
 
-#sort-columns button.secondary+span:before {
-	color: #008000;
+.sort-column.ascending span:before {
+	content: "▲";
 }
 
-#sort-columns button.tertiary+span:before {
-	color: #0000ff;
+/**
+ The rankings table
+ */
+table.rankings {
+	width: 100%;
+
 }
 
-#search {
-	margin: auto;
+/* th only */
+table.rankings th {
+	background: white;
 }
 
-#parameters {
-	margin: auto 0;
-	text-align: right;
+/* th or td */
+table.rankings th,
+table.rankings td {
+	border: 1px solid #dfe2e5;
+	line-height: 1;
+	text-align: left;
 }
 
-table#ranking-table .date {
-	width: 100px;
+/* All cell padding (must be on the button for sortable column headers) */
+table.rankings th button,
+table.rankings th.no-sort,
+table.rankings td {
+	padding: 3px 2px 3px 8px;
 }
 
-table#ranking-table .event {
-	width: 150px;
+/* zebra */
+table.rankings tr:nth-child(2n - 1) {
+	background-color: #f6f8fa;
 }
 
-table#ranking-table .age {
-	width: 50px;
+/* table row hover */
+table.rankings tr:hover th,
+table.rankings tr:hover {
+	background: #ffdab9;
 }
 
-table#ranking-table .rank {
-	width: 43px;
+/* Sortable column header stuff */
+table.rankings th button {
+	background: transparent;
+	display: flex;
+	width: 100%;
+	text-align: inherit;
+	cursor: pointer;
+}
+
+table.rankings th .column {
+	display: flex;
+	flex-direction: column;
+}
+
+table.rankings th .column:first-child {
+	flex: 1;
+}
+
+table.rankings th span.sort {
+	flex: 1;
+	opacity: 0.225;
+	line-height: 0.5;
+	margin-left: 3px;
+}
+
+table.rankings th span.up {
+	transform: scale(0.7) translateY(-.15em);
+}
+
+table.rankings th span.down {
+	transform: scale(0.7) translateY(.15em);
+}
+
+table.rankings th.secondary span.sort {
+	color: green;
+}
+
+table.rankings th.tertiary span.sort {
+	color: blue;
+}
+
+table.rankings th.ascending span.up {
+	opacity: 0.9;
+}
+
+table.rankings th.descending span.down {
+	opacity: 0.9;
+}
+
+/* Column specific stuff */
+table.rankings .age {
 	text-align: center;
 }
 
-table#ranking-table .result {
-	width: 55px;
+table.rankings .rank {
+	text-align: center;
+}
+
+table.rankings .result {
 	text-align: right;
 }
 
-.sr-only {
-	position: absolute;
-	top: -30em;
+/* Hidden except on wider screens */
+table.rankings .event .cubing-icon {
+	display: none;
 }
 
-table#ranking-table th {
-	position: relative;
-	margin: 0;
-	padding: 0;
-	font-size: 0.85em;
+i.cubing-icon:before {
+    font-family: cubing-icons;
+    font-style: normal;
+    vertical-align: -15%;
 }
 
-/* Padding needs to be on the label, not the header */
-table#ranking-table th *:first-child {
-	padding: 8px 20px 8px 14px;
-	margin: 0;
+i.cubing-icon {
+	margin: 0 .5em 0 0;
+	font-size: 1em;
+	width: 1.18em;
+	transform: scale(1.5);
+	text-decoration: inherit;
 }
 
-table#ranking-table th button {
-	font-size: 100%;
-	font-weight: bold;
-	background: transparent;
-	border: none;
-	display: inline;
-	width: 100%;
-	text-align: inherit;
-	outline: none;
-	cursor: pointer;
+table.rankings .competition {
+	text-align: left;
+	display: none;
 }
 
-/* The column sort state indicators */
-table#ranking-table th button+span {
-	position: absolute;
-	right: 2px;
-	top: 0;
-	bottom: 0;
-	width: 10px;
-	cursor: pointer;
-	pointer-events: none;
-	/* Don't intercept click events */
+@media screen and (min-width: 500px) {
+	html {
+		font-size: 12px;
+	}
 }
 
-table#ranking-table th button+span:before,
-table#ranking-table th button+span:after,
-.sort-column button+span:before,
-.sort-column button+span:after {
-	left: 0;
-	opacity: 0.225;
-	line-height: 9px;
-	font-size: 0.8em;
+@media screen and (min-width: 768px) {
+	html {
+		font-size: 13px;
+	}
+
+	/* Wide enough to show the competition column */
+	table#ranking-table .competition {
+		display: table-cell;
+	}
 }
 
-table#ranking-table th button+span:before {
-	position: absolute;
-	display: block;
-	bottom: 50%;
-	content: "▲";
-	content: "▲" /"";
+@media screen and (min-width: 992px) {
+	html {
+		font-size: 14px;
+	}
+
+	/* We can include the event icon at this point */
+	table#ranking-table .event .cubing-icon {
+		display: inline-block;
+	}
 }
 
-table#ranking-table th button+span:after {
-	position: absolute;
-	display: block;
-	top: 50%;
-	content: "▼";
-	content: "▼" / "";
-}
+@media screen and (min-width: 1024px) {
+	html {
+		font-size: 15px;
+	}
 
-/* primary sort */
-table#ranking-table th.primary.ascending button+span:before {
-	opacity: 0.9;
-}
-
-table#ranking-table th.primary.descending button+span:after {
-	opacity: 0.9;
-}
-
-/* secondary sort */
-table#ranking-table th.secondary.ascending button+span:before {
-	opacity: 0.9;
-	color: green;
-}
-
-table#ranking-table th.secondary.descending button+span:after {
-	opacity: 0.9;
-	color: green;
-}
-
-/* tertiary sort */
-table#ranking-table th.tertiary.ascending button+span:before {
-	opacity: 0.9;
-	color: blue;
-}
-
-table#ranking-table th.tertiary.descending button+span:after {
-	opacity: 0.9;
-	color: blue;
-}
-
-.error {
-	margin: 10px 0;
-	padding: 0 10px 10px 10px;
-	border-radius: 5px;
-	color: #de222b;
-	background-color: #ffcccc;
-	border: 1px solid #f88888;
-}
-
-.error .message {
-	color: black;
+	table.rankings th button,
+	table.rankings th.no-sort,
+	table.rankings td {
+		padding: 6px 2px 6px 13px;
+	}
 }

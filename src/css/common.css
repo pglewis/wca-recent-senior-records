@@ -1,17 +1,11 @@
+* {
+	box-sizing: border-box;
+}
+
 body {
 	font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-	font-size: 15px;
 	line-height: 1.5;
-	word-wrap: break-word;
-}
-
-table {
-	border-collapse: collapse;
-}
-
-table th {
-	font-weight: 600;
-	text-align: left;
+	/* word-wrap: break-word; */
 }
 
 h1,
@@ -21,8 +15,27 @@ h4 {
 	font-weight: 600;
 }
 
-strong {
-	font-weight: 600;
+button {
+	padding: 0;
+	border: none;
+	outline: none;
+	font: inherit;
+	color: inherit;
+	background: none;
+}
+
+button:focus-visible {
+	outline: 2px solid black;
+	border-radius: 2px;
+}
+
+select,
+input {
+	font-size: inherit;
+}
+
+table {
+	border-collapse: collapse;
 }
 
 a:link {
@@ -51,6 +64,11 @@ ul li {
 	margin-left: 4px;
 }
 
+.strong {
+	font-weight: 600;
+	font-size: 90%;
+}
+
 .important {
 	color: #d00000;
 	font-weight: 600;
@@ -69,25 +87,15 @@ ul li {
 	box-sizing: content-box;
 }
 
-table.rankings {
-	font-size: 14px;
-	width: 100%;
+.error {
+	margin: 10px 0;
+	padding: 0 10px 10px 10px;
+	border-radius: 5px;
+	color: #de222b;
+	background-color: #ffcccc;
+	border: 1px solid #f88888;
 }
 
-table.rankings th,
-table.rankings td {
-	padding: 6px 13px;
-	border: 1px solid #dfe2e5;
-}
-
-table.rankings tr:nth-child(2n) {
-	background-color: #f6f8fa;
-}
-
-table.rankings tr th {
-	background: white;
-}
-
-table.rankings tr:hover th {
-	background: #ffdab9;
+.error .message {
+	color: black;
 }

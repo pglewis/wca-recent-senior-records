@@ -103,7 +103,13 @@ function ResultsTableRow(rowData) {
 
 	// Date
 	const date = getTemplatePart(tableRow, "td.date", HTMLElement);
-	date.textContent = rowData.date;
+
+	// Declare that we can word-break after the "YYYY-" portion
+	const dashIndex = rowData.date.indexOf("-");
+	date.innerHTML =
+		rowData.date.slice(0, dashIndex + 1)
+		+ "<wbr>"
+		+ rowData.date.slice(dashIndex + 1);
 
 	// Event
 	const eventCell = getTemplatePart(tableRow, "td.event", HTMLElement);

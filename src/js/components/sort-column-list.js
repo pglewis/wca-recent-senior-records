@@ -2,7 +2,6 @@
 
 /** @typedef {import("../state/state").DataStore} DataStore */
 import {getTemplateElement} from "./get-template-element.js";
-import {getTemplatePart} from "./get-template-part.js";
 import {updateSortColumnsAction} from "../state/sort-columns-reducer.js";
 
 /** @type {DataStore} */
@@ -24,8 +23,7 @@ export function SortColumnList(props) {
 	const colList = getTemplateElement("#sort-column-list-template");
 
 	for (const [colIndex, sortColumn] of sortColumns.entries()) {
-		const root = getTemplateElement("#sort-column-template");
-		const buttonNode = getTemplatePart(root, "button", HTMLButtonElement);
+		const buttonNode = getTemplateElement("#sort-column-template");
 		const sortLevels = {0: "primary", 1: "secondary", 2: "tertiary"};
 		const sortDirection = sortColumn.direction == 1 ? "ascending" : "descending";
 
@@ -33,7 +31,9 @@ export function SortColumnList(props) {
 		buttonNode.classList.add(sortLevels[colIndex]);
 		buttonNode.dataset.sortOn = sortColumn.name;
 		buttonNode.dataset.position = String(colIndex);
-		buttonNode.textContent = sortColumn.label;
+
+		const labelNode = document.createTextNode(sortColumn.label);
+		buttonNode.insertBefore(labelNode, buttonNode.firstChild);
 
 		buttonNode.addEventListener("dragstart", handleDragStart);
 		buttonNode.addEventListener("dragenter", handleDragEnter);
@@ -43,7 +43,7 @@ export function SortColumnList(props) {
 		buttonNode.addEventListener("dragend", handleDragEnd);
 		buttonNode.addEventListener("click", handleClick);
 
-		colList.append(root);
+		colList.append(buttonNode);
 	}
 
 	return colList;
@@ -116,8 +116,9 @@ function handleDrop(e) {
 	dropNode.classList.remove("over");
 
 	if (dragNode.dataset.sortOn !== dropNode.dataset.sortOn) {
+		const labelNode = dragNode.querySelector("span.text");
 		const name = String(dragNode.dataset.sortOn);
-		const label = String(dragNode.textContent).trim();
+		const label = String(labelNode?.textContent).trim();
 		const position = Number(dropNode.dataset.position);
 		const defaultDirection = Number(dragNode.dataset.defaultDirection) || null;
 
