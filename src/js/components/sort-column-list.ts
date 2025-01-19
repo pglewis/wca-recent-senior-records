@@ -1,20 +1,14 @@
-// @ts-check
+import type {DataStore} from "../state/state";
+import type {AppProps} from "./app";
+import {updateSortColumnsAction} from "../app-state/sort-columns-reducer";
+import {getTemplateElement} from "./get-template-element";
+import {AppState} from "../app-state/app-state";
 
-/** @typedef {import("../state/state").DataStore} DataStore */
-import {getTemplateElement} from "./get-template-element.js";
-import {updateSortColumnsAction} from "../state/sort-columns-reducer.js";
+let store: DataStore<AppState>;
+let handleRender: () => void;
+let dragNode: HTMLElement;
 
-/** @type {DataStore} */
-let store;
-
-/** @type {Function} */
-let handleRender;
-
-/** @type {HTMLElement} */
-let dragNode;
-
-/** @type {import("./sort-column-list").SortColumnList} */
-export function SortColumnList(props) {
+export function SortColumnList(props: AppProps): HTMLElement {
 	//--! TODO: scope duct-tape
 	store = props.store;
 	handleRender = props.handleRender;
@@ -28,7 +22,7 @@ export function SortColumnList(props) {
 		const sortDirection = sortColumn.direction == 1 ? "ascending" : "descending";
 
 		buttonNode.classList.add(sortDirection);
-		buttonNode.classList.add(sortLevels[colIndex]);
+		buttonNode.classList.add(sortLevels[colIndex as 0 | 1 | 2]);
 		buttonNode.dataset.sortOn = sortColumn.name;
 		buttonNode.dataset.position = String(colIndex);
 
@@ -49,12 +43,8 @@ export function SortColumnList(props) {
 	return colList;
 }
 
-/**
- * Toggle sort direction
- * @param {MouseEvent} e
- */
-function handleClick(e) {
-	const buttonNode = /**@type {HTMLButtonElement}*/(e.currentTarget);
+function handleClick(e: MouseEvent) {
+	const buttonNode = e.currentTarget as HTMLButtonElement;
 	const name = String(buttonNode.dataset.sortOn);
 	const label = String(buttonNode.textContent);
 	const position = Number(buttonNode.dataset.position);
@@ -62,55 +52,40 @@ function handleClick(e) {
 	store.dispatch(updateSortColumnsAction({
 		name: name,
 		label: label,
-		position: /** @type {0|1|2} */(position),
+		position: position as 0 | 1 | 2,
 		defaultDirection: null
 	}));
 	handleRender();
 }
 
-/**
- * @param {DragEvent} e
- */
-export function handleDragStart(e) {
-	const element = /**@type {HTMLElement}*/(e.currentTarget);
-	const dataTransfer = /**@type {DataTransfer}*/(e.dataTransfer);
+export function handleDragStart(e: DragEvent) {
+	const element = e.currentTarget as HTMLElement;
+	const dataTransfer = e.dataTransfer as DataTransfer;
 
 	dragNode = element;
 	element.style.opacity = "0.4";
 	dataTransfer.effectAllowed = "move";
 }
 
-/**
- * @param {DragEvent} e
- */
-export function handleDragOver(e) {
-	const dataTransfer = /**@type {DataTransfer}*/(e.dataTransfer);
+export function handleDragOver(e: DragEvent) {
+	const dataTransfer = e.dataTransfer as DataTransfer;
 
 	e.preventDefault();
 	dataTransfer.dropEffect = "move";
 }
 
-/**
- * @param {DragEvent} e
- */
-export function handleDragEnter(e) {
-	const element = /**@type {HTMLElement}*/(e.currentTarget);
+export function handleDragEnter(e: MouseEvent) {
+	const element = e.currentTarget as HTMLElement;
 	element.classList.add("over");
 }
 
-/**
- * @param {DragEvent} e
- */
-export function handleDragLeave(e) {
-	const element = /**@type {HTMLElement}*/(e.currentTarget);
+export function handleDragLeave(e: DragEvent) {
+	const element = e.currentTarget as HTMLElement;
 	element.classList.remove("over");
 }
 
-/**
- * @param {DragEvent} e
- */
-function handleDrop(e) {
-	const dropNode = /**@type {HTMLElement} */(e.currentTarget);
+function handleDrop(e: DragEvent) {
+	const dropNode = e.currentTarget as HTMLElement;
 	e.stopPropagation();
 
 	dropNode.classList.remove("over");
@@ -125,17 +100,14 @@ function handleDrop(e) {
 		store.dispatch(updateSortColumnsAction({
 			name: name,
 			label: label,
-			position: /**@type {0|1|2}*/(position),
-			defaultDirection: /**@type {1|-1|null}*/(defaultDirection)
+			position: position as 0 | 1 | 2,
+			defaultDirection: defaultDirection as 1 | -1 | null
 		}));
 		handleRender();
 	}
 }
 
-/**
- * @param {DragEvent} e
- */
-export function handleDragEnd(e) {
-	const element = /**@type {HTMLElement}*/(e.currentTarget);
+export function handleDragEnd(e: DragEvent) {
+	const element = e.currentTarget as HTMLElement;
 	element.removeAttribute("style");
 }

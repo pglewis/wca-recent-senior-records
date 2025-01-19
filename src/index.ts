@@ -1,16 +1,16 @@
-// @ts-check
+import {type RankingsSnapshot} from "./js/rankings-snapshot";
+import {createStore} from "./js/state/state";
+import {initialState, rootReducer} from "./js/app-state/app-state";
+import {setRankingsDataAction} from "./js/app-state/rankings-reducer";
+import {filterRankingsAction, sortResultsAction} from "./js/app-state/results-reducer";
+import {createRoot} from "./js/components/create-root";
+import {App, Loading, ErrorMessage} from "./js/components/app";
 
-/** @typedef {import("./js/rankings-snapshot").RankingsSnapshot} RankingsSnapshot */
-import {initialState, rootReducer, createStore} from "./js/state/state.js";
-import {setRankingsDataAction} from "./js/state/rankings-reducer.js";
-import {filterRankingsAction, sortResultsAction} from "./js/state/results-reducer.js";
-import {createRoot} from "./js/components/create-root.js";
-import {App, Loading, ErrorMessage} from "./js/components/app.js";
+declare global {interface Window {rankings: RankingsSnapshot | undefined;}}
 
+const rankingsSnapshot = window.rankings;
 const appRoot = createRoot("#app");
-/** @type {RankingsSnapshot|null} */
-// @ts-ignore
-const rankingsSnapshot = window.rankings || null;
+
 if (!rankingsSnapshot) {
 	appRoot.render(ErrorMessage("The rankings data is missing, try back in a bit."));
 	throw new Error("Missing rankings data");
@@ -27,7 +27,6 @@ function render() {
 
 		appRoot.render(Loading());
 
-		// @ts-ignore
 		store.dispatch(filterRankingsAction(state.rankings.data, state.filters));
 		store.dispatch(sortResultsAction(state.sortColumns));
 
@@ -36,8 +35,10 @@ function render() {
 		if (activeID) {
 			document.getElementById(activeID)?.focus();
 		}
-	} catch (error) {
-		appRoot.render(ErrorMessage(error));
+	} catch (error: unknown) {
+		if (error instanceof Error) {
+			appRoot.render(ErrorMessage(error.message));
+		}
 		throw error;
 	}
 }

@@ -1,10 +1,9 @@
-// @ts-check
-import {getTemplateElement} from "./get-template-element.js";
-import {setSearchFilterAction} from "../state/filters-reducer.js";
-import {getTemplatePart} from "./get-template-part.js";
+import {AppProps} from "./app";
+import {getTemplateElement} from "./get-template-element";
+import {setSearchFilterAction} from "../app-state/filters-reducer";
+import {getTemplatePart} from "./get-template-part";
 
-/** @type {import("./search").Search} */
-export function Search(props) {
+export function Search(props: AppProps): HTMLElement {
 	const {store, handleRender} = props;
 	const {search} = store.getState().filters;
 	const root = getTemplateElement("#search-template");
@@ -12,7 +11,7 @@ export function Search(props) {
 
 	input.value = search;
 	input.addEventListener("input", (e) => {
-		const inputElement = /**@type {HTMLInputElement}*/(e.currentTarget);
+		const inputElement = e.currentTarget as HTMLInputElement;
 		store.dispatch(setSearchFilterAction(inputElement.value));
 		handleRender();
 	});

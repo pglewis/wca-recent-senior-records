@@ -1,6 +1,4 @@
-// @ts-check
-import {Action} from "./actions";
-import {
+import type {
 	RankingsSnapshot,
 	Person,
 	WCAEvent,
@@ -8,21 +6,27 @@ import {
 	Competition,
 	Rank,
 } from "../rankings-snapshot";
+import {type ReducersMapObject, combineReducers} from "../state/state";
+
+import {filtersReducer} from "./filters-reducer";
+import {rankingsReducer} from "./rankings-reducer";
+import {resultsReducer} from "./results-reducer";
+import {sortColumnsReducer} from "./sort-columns-reducer";
 
 export type AppState = {
 	rankings: Rankings
-	results: ResultRowData[]
+	results: ResultRow[]
 	filters: Filters
 	sortColumns: SortColumn[]
 }
 
 export type Rankings = {
 	/** date/time string of the data snapshot in UTC */
-	lastUpdated: string | null
-	data: RankingsSnapshot | {}
+	lastUpdated: string
+	data: RankingsSnapshot
 }
 
-export type ResultRowData = {
+export type ResultRow = {
 	/** eg 333bf */
 	eventID: WCAEvent["id"]
 
@@ -53,7 +57,7 @@ export type ResultRowData = {
 	/**
 	 * Event result. Format may be a time duration, number (for fewest moves
 	 * competition), or multi ("X/Y in MM:SS") as specified by the event format
- 	 */
+	 */
 	result: Rank["best"]
 
 	/** Competition full name */
@@ -67,9 +71,9 @@ export type ResultRowData = {
 }
 
 export type Filters = {
-	topN: number
 	search: string
-	recentInDays: number
+	topN: number
+	timeFrame: number
 }
 
 export type SortColumn = {
@@ -78,17 +82,27 @@ export type SortColumn = {
 	direction: number
 }
 
-export type DataStore = {
-	/** Returns the current state */
-	getState: GetStateCB
-	/** Dispatch an action, all state mutations go through here */
-	dispatch: DispatchCB
-}
+export const initialState: AppState = {
+	rankings: {
+		lastUpdated: "",
+		data: {} as RankingsSnapshot
+	},
+	results: [],
+	filters: {
+		topN: 10,
+		timeFrame: 30,
+		search: "",
+	},
+	sortColumns: [
+		{name: "date", label: "Date", direction: -1},
+		{name: "rank", label: "Rank", direction: 1},
+		{name: "event", label: "Event", direction: 1}
+	],
+};
 
-export type GetStateCB = () => AppState;
-export type DispatchCB = (action: Action) => void;
-export type ReducerCB = (state: AppState, action: Action) => AppState;
-
-export declare const initialState: AppState;
-export declare function rootReducer(state: AppState, action: Action): AppState;
-export declare function createStore(initialState: AppState, reducer: ReducerCB): DataStore;
+export const rootReducer = combineReducers<AppState>({
+	rankings: rankingsReducer,
+	results: resultsReducer,
+	filters: filtersReducer,
+	sortColumns: sortColumnsReducer,
+} as ReducersMapObject<AppState>);

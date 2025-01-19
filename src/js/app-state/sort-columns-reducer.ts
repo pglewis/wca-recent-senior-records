@@ -1,38 +1,33 @@
-// @ts-check
+import type {SortColumn} from "./app-state";
+import {type AppAction, AppActionTypes, SortColumnsChangedAction} from "./app-actions.js";
 
-/**
- * @typedef {import("../state/state").SortColumn} SortColumn
- * @typedef {import("./sort-columns-reducer").SortChange} SortChange
- */
-import {ACTION_TYPES} from "./actions.js";
+export type SortChange = {
+	position: 0 | 1 | 2
+	name: string
+	label: string
+	defaultDirection: 1 | -1 | null
+}
 
-/** @type {import("./sort-columns-reducer").updateSortColumnsAction} updateSortColumnsAction */
-export const updateSortColumnsAction = newSort => {
+export function updateSortColumnsAction(newSort: SortChange): SortColumnsChangedAction {
 	return {
-		type: ACTION_TYPES.sortColumnsChanged,
+		type: AppActionTypes.sortColumnsChanged,
 		payload: newSort
 	};
-};
+}
 
-/** @type {import("./sort-columns-reducer").sortColumnsReducer} sortColumnsReducer */
-export const sortColumnsReducer = (sortColumns = [], action) => {
+export function sortColumnsReducer(sortColumns: SortColumn[] = [], action: AppAction): SortColumn[] {
 	const {type, payload} = action;
 
 	switch (type) {
-		case ACTION_TYPES.sortColumnsChanged: {
+		case AppActionTypes.sortColumnsChanged: {
 			return sortColumnsChanged(sortColumns, payload);
 		}
 	}
 
 	return sortColumns;
-};
+}
 
-/**
- * @param   {SortColumn[]} sortColumns
- * @param   {SortChange}   newSort
- * @returns {SortColumn[]}
- */
-function sortColumnsChanged(sortColumns, newSort) {
+function sortColumnsChanged(sortColumns: SortColumn[], newSort: SortChange): SortColumn[] {
 	const sortColumnsCopy = [...sortColumns];
 	const oldPosition = sortColumns.findIndex(f => f.name === newSort.name);
 

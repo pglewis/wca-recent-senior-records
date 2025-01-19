@@ -1,31 +1,21 @@
-import globals from "globals";
-import pluginJs from "@eslint/js";
+// @ts-check
+import eslint from "@eslint/js";
+import tseslint from "typescript-eslint";
 import stylisticJs from "@stylistic/eslint-plugin-js";
 import jsdoc from "eslint-plugin-jsdoc";
-import importPlugin from "eslint-plugin-import";
+import globals from "globals";
 
-/** @type {import('eslint').Linter.Config[]} */
-export default [
+export default tseslint.config(
+	eslint.configs.recommended,
+	tseslint.configs.recommended,
 	{ignores: ["dist", "src/data", "src/js/vendor"]},
 	{languageOptions: {globals: globals.browser}},
-	pluginJs.configs.recommended,
 	{
 		plugins: {
 			"@stylistic/js": stylisticJs,
-			"import": importPlugin,
 			"jsdoc": jsdoc,
 		},
 		rules: {
-			"import/extensions": [
-				"error",
-				"ignorePackages",
-				{
-					// Enforce explicit file extension on imports. It will work
-					// locally without them but not on gh pages.
-					"js": "always",
-					"jsx": "always",
-				}
-			],
 			"no-duplicate-imports": "error",
 			"no-console": ["error", {allow: ["error"]}],
 			"@stylistic/js/linebreak-style": ["error", "unix"],
@@ -64,11 +54,12 @@ export default [
 			"jsdoc/require-jsdoc": "off",
 			"jsdoc/require-throws": "error",
 			//"jsdoc/require-description": "warn",
-			//"jsdoc/require-hyphen-before-param-description": "warn",
+			"jsdoc/require-hyphen-before-param-description": "warn",
 			"jsdoc/require-property-description": "off",
 			"jsdoc/require-param-description": "off",
 			"jsdoc/require-returns-description": "off",
-
+			"jsdoc/require-returns-type": "off",
+			"jsdoc/require-param-type": "off",
 		}
 	},
-];
+);
