@@ -1,46 +1,49 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import {h} from "tsx-dom";
+import type {AppProps, AppState, SortColumn} from "../app-state/app-state";
 import type {DataStore} from "../state/state";
-import type {AppProps} from "./app";
 import {updateSortColumnsAction} from "../app-state/sort-columns-reducer";
-import {getTemplateElement} from "./get-template-element";
-import {AppState} from "../app-state/app-state";
 
 let store: DataStore<AppState>;
 let handleRender: () => void;
 let dragNode: HTMLElement;
 
-export function SortColumnList(props: AppProps): HTMLElement {
+export function SortColumnList(props: AppProps): JSX.Element {
 	//--! TODO: scope duct-tape
 	store = props.store;
 	handleRender = props.handleRender;
 
-	const {sortColumns} = store.getState();
-	const colList = getTemplateElement("#sort-column-list-template");
+	return (
+		<div id="sort-columns">
+			<div class="strong">Sort:</div>
+			{store.getState().sortColumns.map(SortColumnButton)}
+		</div>
+	);
+}
 
-	for (const [colIndex, sortColumn] of sortColumns.entries()) {
-		const buttonNode = getTemplateElement("#sort-column-template");
-		const sortLevels = {0: "primary", 1: "secondary", 2: "tertiary"};
-		const sortDirection = sortColumn.direction == 1 ? "ascending" : "descending";
+function SortColumnButton(sortColumn: SortColumn, colIndex: number): JSX.Element {
+	const sortLevels = ["primary", "secondary", "tertiary"];
+	const sortDirection = sortColumn.direction == 1 ? "ascending" : "descending";
 
-		buttonNode.classList.add(sortDirection);
-		buttonNode.classList.add(sortLevels[colIndex as 0 | 1 | 2]);
-		buttonNode.dataset.sortOn = sortColumn.name;
-		buttonNode.dataset.position = String(colIndex);
-
-		const labelNode = document.createTextNode(sortColumn.label);
-		buttonNode.insertBefore(labelNode, buttonNode.firstChild);
-
-		buttonNode.addEventListener("dragstart", handleDragStart);
-		buttonNode.addEventListener("dragenter", handleDragEnter);
-		buttonNode.addEventListener("dragover", handleDragOver);
-		buttonNode.addEventListener("dragleave", handleDragLeave);
-		buttonNode.addEventListener("drop", handleDrop);
-		buttonNode.addEventListener("dragend", handleDragEnd);
-		buttonNode.addEventListener("click", handleClick);
-
-		colList.append(buttonNode);
-	}
-
-	return colList;
+	return (
+		<button
+			onClick={handleClick}
+			onDragStart={handleDragStart}
+			onDragEnter={handleDragEnter}
+			onDragOver={handleDragOver}
+			onDragLeave={handleDragLeave}
+			onDrop={handleDrop}
+			onDragEnd={handleDragEnd}
+			class={`sort-column ${sortDirection} ${sortLevels[colIndex]} strong`}
+			// @ts-expect-error: incorrect type set for draggable
+			draggable="true"
+			data-sort-on={sortColumn.name}
+			data-position={colIndex}
+		>
+			{sortColumn.label}
+			<span aria-hidden="true" />
+		</button>
+	);
 }
 
 function handleClick(e: MouseEvent) {

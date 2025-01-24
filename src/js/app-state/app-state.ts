@@ -6,12 +6,19 @@ import type {
 	Competition,
 	Rank,
 } from "../rankings-snapshot";
-import {type ReducersMapObject, combineReducers} from "../state/state";
+import {type DataStore, type ReducersMapObject, combineReducers} from "../state/state";
 
 import {filtersReducer} from "./filters-reducer";
 import {rankingsReducer} from "./rankings-reducer";
 import {resultsReducer} from "./results-reducer";
 import {sortColumnsReducer} from "./sort-columns-reducer";
+
+export interface AppProps {
+	store: DataStore<AppState>,
+
+	/** Callback to trigger a re-render of the UI */
+	handleRender: () => void
+}
 
 export type AppState = {
 	rankings: Rankings
@@ -73,6 +80,8 @@ export type ResultRow = {
 export type Filters = {
 	search: string
 	topN: number
+
+	/** In days */
 	timeFrame: number
 }
 
