@@ -50,6 +50,9 @@ function render() {
 function getUIState(): UIState {
 	const uiState = initialState.uiState;
 
+	uiState.scrollX = window.scrollX;
+	uiState.scrollY = window.scrollY;
+
 	uiState.activeID = document.activeElement?.id || null;
 
 	const search = document.getElementById("search-input") as HTMLInputElement;
@@ -72,4 +75,6 @@ function setUIState(uiState: UIState): void {
 	search.selectionStart = uiState?.selectionStart || null;
 	search.selectionEnd = uiState?.selectionEnd || null;
 	search.selectionDirection = uiState?.selectionDirection || "none";
+
+	window.scroll(uiState.scrollX, uiState.scrollY);
 }

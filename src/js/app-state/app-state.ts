@@ -103,6 +103,8 @@ export interface SortColumn {
 	direction: number
 }
 export interface UIState {
+	scrollX: number
+	scrollY: number
 	activeID: string | null
 	selectionStart?: number | null
 	selectionEnd?: number | null
@@ -131,6 +133,8 @@ export const initialState: AppState = {
 		{name: "event", label: "Event", direction: 1}
 	],
 	uiState: {
+		scrollX: 0,
+		scrollY: 0,
 		activeID: null
 	}
 };
