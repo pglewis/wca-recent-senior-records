@@ -14,6 +14,7 @@ import {filtersReducer} from "./filters-reducer";
 import {rankingsReducer} from "./rankings-reducer";
 import {resultsReducer} from "./results-reducer";
 import {sortColumnsReducer} from "./sort-columns-reducer";
+import {uiReducer} from "./ui-reducer";
 
 export interface AppProps {
 	store: DataStore<AppState>,
@@ -27,9 +28,10 @@ export type AppState = {
 	results: ResultRow[]
 	filters: Filters
 	sortColumns: SortColumn[]
+	uiState: UIState
 }
 
-export type Rankings = {
+export interface Rankings {
 	/** date/time string of the data snapshot in UTC */
 	lastUpdated: string
 	data: RankingsSnapshot
@@ -39,7 +41,7 @@ export type Rankings = {
 	countryIDToIndex: {[key: string]: number}
 }
 
-export type ResultRow = {
+export interface ResultRow {
 	/** eg 333bf */
 	eventID: WCAEvent["id"]
 
@@ -95,10 +97,16 @@ export interface Filters {
 	region: "world" | "continent" | "country"
 }
 
-export type SortColumn = {
+export interface SortColumn {
 	name: string
 	label: string
 	direction: number
+}
+export interface UIState {
+	activeID: string | null
+	selectionStart?: number | null
+	selectionEnd?: number | null
+	selectionDirection?: "forward" | "backward" | "none" | null
 }
 
 export const initialState: AppState = {
@@ -122,6 +130,9 @@ export const initialState: AppState = {
 		{name: "rank", label: "Rank", direction: 1},
 		{name: "event", label: "Event", direction: 1}
 	],
+	uiState: {
+		activeID: null
+	}
 };
 
 export const rootReducer = combineReducers<AppState>({
@@ -129,4 +140,5 @@ export const rootReducer = combineReducers<AppState>({
 	results: resultsReducer,
 	filters: filtersReducer,
 	sortColumns: sortColumnsReducer,
+	uiState: uiReducer,
 } as ReducersMapObject<AppState>);

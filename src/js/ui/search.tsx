@@ -24,12 +24,6 @@ export function Search(props: AppProps): JSX.Element {
 		handleRender();
 	}
 
-	//--!! Duct tape
-	function handleFocus(this: HTMLInputElement) {
-		const textLen = this.value.length;
-		this.setSelectionRange(textLen, textLen);
-	}
-
 	return (
 		<div id="search">
 			<label class="strong">
@@ -37,7 +31,6 @@ export function Search(props: AppProps): JSX.Element {
 				<input
 					value={search}
 					onInput={debounce(handleInput, 500)}
-					onFocus={handleFocus}
 					id="search-input"
 					type="search"
 					size={20}

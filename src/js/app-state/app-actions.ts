@@ -1,7 +1,7 @@
 import type {UnknownAction} from "../state/actions";
 import type {RankingsSnapshot} from "../rankings-snapshot";
 import type {SortChange} from "./sort-columns-reducer";
-import type {Rankings, Filters, SortColumn} from "./app-state";
+import type {Rankings, Filters, SortColumn, UIState} from "./app-state";
 
 export enum AppActionTypes {
 	searchFilterChanged = "searchFilterChanged",
@@ -12,6 +12,7 @@ export enum AppActionTypes {
 	rankingsFiltered = "rankingsFiltered",
 	resultsSorted = "resultsSorted",
 	sortColumnsChanged = "sortColumnsChanged",
+	uiStateSet = "uiStateSet",
 };
 
 export interface SearchFilterChangedAction extends UnknownAction {
@@ -60,6 +61,11 @@ export interface SortColumnsChangedAction extends UnknownAction {
 	payload: SortChange
 }
 
+export interface UIStateSetAction extends UnknownAction {
+	type: AppActionTypes.uiStateSet
+	payload: UIState
+}
+
 export type AppAction =
 	TopNChangedAction
 	| TimeFrameChangedAction
@@ -69,3 +75,4 @@ export type AppAction =
 	| RankingsFilteredAction
 	| ResultsSortedAction
 	| SortColumnsChangedAction
+	| UIStateSetAction
