@@ -1,10 +1,11 @@
-import {initialState, Filters} from "./app-state";
+import {initialState, type Filters} from "./app-state";
 import {
 	AppActionTypes,
 	AppAction,
-	TimeFrameChangedAction,
 	SearchFilterChangedAction,
-	TopNChangedAction
+	TopNChangedAction,
+	TimeFrameChangedAction,
+	RegionChangedAction,
 } from "./app-actions";
 
 export function setTopNAction(newValue: number): TopNChangedAction {
@@ -14,7 +15,7 @@ export function setTopNAction(newValue: number): TopNChangedAction {
 	};
 }
 
-export function setRecentInDaysAction(newValue: number): TimeFrameChangedAction {
+export function setTimeFrameAction(newValue: number): TimeFrameChangedAction {
 	return {
 		type: AppActionTypes.timeFrameChanged,
 		payload: newValue
@@ -25,6 +26,13 @@ export function setSearchFilterAction(searchText: string): SearchFilterChangedAc
 	return {
 		type: AppActionTypes.searchFilterChanged,
 		payload: searchText
+	};
+}
+
+export function setRegionAction(region: Filters["region"]): RegionChangedAction {
+	return {
+		type: AppActionTypes.regionChanged,
+		payload: region
 	};
 }
 
@@ -40,6 +48,10 @@ export function filtersReducer(filters: Filters = initialState.filters, action: 
 
 		case AppActionTypes.searchFilterChanged:
 			return {...filters, search: payload};
+
+		case AppActionTypes.regionChanged:
+			return {...filters, region: payload};
+
 	}
 
 	return filters;

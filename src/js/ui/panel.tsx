@@ -6,12 +6,15 @@ import {Search} from "./search";
 import {Parameters} from "./parameters";
 
 export function Panel(props: AppProps): JSX.Element {
+	const {results} = props.store.getState();
+
 	return (
 		<div id="panel">
 			<div class="panel-grid">
 				<Search {...props} />
 				<Parameters {...props} />
 				<SortColumnList {...props} />
+				<div class="strong">Showing {results.length} {results.length === 1 ? "result" : "results"}</div>
 			</div>
 		</div>
 	);

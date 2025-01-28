@@ -5,6 +5,8 @@ import type {
 	EventRanking,
 	Competition,
 	Rank,
+	Continent,
+	Country,
 } from "../rankings-snapshot";
 import {type DataStore, type ReducersMapObject, combineReducers} from "../state/state";
 
@@ -31,6 +33,10 @@ export type Rankings = {
 	/** date/time string of the data snapshot in UTC */
 	lastUpdated: string
 	data: RankingsSnapshot
+	competitionIDToIndex: {[key: number]: number}
+	personIDToIndex: {[key: string]: number}
+	continentIDToIndex: {[key: string]: number}
+	countryIDToIndex: {[key: string]: number}
 }
 
 export type ResultRow = {
@@ -61,6 +67,9 @@ export type ResultRow = {
 	/** Competitor's WCA ID */
 	wcaID: Person["id"]
 
+	continent: Continent
+	country: Country
+
 	/**
 	 * Event result. Format may be a time duration, number (for fewest moves
 	 * competition), or multi ("X/Y in MM:SS") as specified by the event format
@@ -77,12 +86,13 @@ export type ResultRow = {
 	compCountry: Competition["country"]
 }
 
-export type Filters = {
+export interface Filters {
 	search: string
 	topN: number
 
 	/** In days */
 	timeFrame: number
+	region: "world" | "continent" | "country"
 }
 
 export type SortColumn = {
@@ -94,13 +104,18 @@ export type SortColumn = {
 export const initialState: AppState = {
 	rankings: {
 		lastUpdated: "",
-		data: {} as RankingsSnapshot
+		data: {} as RankingsSnapshot,
+		competitionIDToIndex: {},
+		personIDToIndex: {},
+		continentIDToIndex: {},
+		countryIDToIndex: {},
 	},
 	results: [],
 	filters: {
+		search: "",
 		topN: 10,
 		timeFrame: 30,
-		search: "",
+		region: "world",
 	},
 	sortColumns: [
 		{name: "date", label: "Date", direction: -1},

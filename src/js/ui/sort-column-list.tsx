@@ -35,7 +35,7 @@ function SortColumnButton(sortColumn: SortColumn, colIndex: number): JSX.Element
 			onDrop={handleDrop}
 			onDragEnd={handleDragEnd}
 			class={`sort-column ${sortDirection} ${sortLevels[colIndex]} strong`}
-			// @ts-expect-error: incorrect type set for draggable
+			// @ts-expect-error: tsx-dom incorrectly has draggable as boolean
 			draggable="true"
 			data-sort-on={sortColumn.name}
 			data-position={colIndex}
@@ -49,7 +49,7 @@ function SortColumnButton(sortColumn: SortColumn, colIndex: number): JSX.Element
 function handleClick(e: MouseEvent) {
 	const buttonNode = e.currentTarget as HTMLButtonElement;
 	const name = String(buttonNode.dataset.sortOn);
-	const label = String(buttonNode.textContent);
+	const label = String(buttonNode.textContent).trim();
 	const position = Number(buttonNode.dataset.position);
 
 	store.dispatch(updateSortColumnsAction({

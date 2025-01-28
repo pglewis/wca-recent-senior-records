@@ -31,6 +31,14 @@ body {
 }
 
 /**
+ Region filter
+ */
+ #region-filter div {
+	margin-left: 1em;
+	line-height: 1.2em;
+ }
+
+/**
  Sort columns
  */
 #sort-columns {
@@ -97,6 +105,7 @@ table.rankings th {
 /* th or td */
 table.rankings th,
 table.rankings td {
+	max-width: 14em;
 	border: 1px solid #dfe2e5;
 	line-height: 1;
 	text-align: left;
@@ -106,7 +115,7 @@ table.rankings td {
 table.rankings th button,
 table.rankings th.no-sort,
 table.rankings td {
-	padding: 2px 0 2px 2px;
+	padding: 2px 0 2px 3px;
 }
 
 /* zebra */
@@ -170,7 +179,7 @@ table.rankings th.descending span.down {
 }
 
 /* Column specific stuff */
-table.rankings .age {
+table.rankings .group {
 	text-align: center;
 }
 
@@ -194,9 +203,8 @@ i.cubing-icon:before {
 }
 
 i.cubing-icon {
-	margin: 0 .5em 0 0;
+	padding: 0 .5em 0 .5em;
 	font-size: 1em;
-	width: 1.18em;
 	transform: scale(1.5);
 	text-decoration: inherit;
 }
@@ -214,7 +222,7 @@ table.rankings .competition {
 	table.rankings th button,
 	table.rankings th.no-sort,
 	table.rankings td {
-		padding: 4px 2px 4px 6px;
+		padding: 4px 3px 4px 3px;
 	}
 
 }
@@ -227,7 +235,7 @@ table.rankings .competition {
 	table.rankings th button,
 	table.rankings th.no-sort,
 	table.rankings td {
-		padding: 5px 2px 5px 8px;
+		padding: 5px 3px 5px 3px;
 	}
 
 
@@ -256,6 +264,6 @@ table.rankings .competition {
 	table.rankings th button,
 	table.rankings th.no-sort,
 	table.rankings td {
-		padding: 6px 2px 6px 13px;
+		padding: 6px 3px 6px 3px;
 	}
 }

@@ -1,6 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {h} from "tsx-dom";
-import {type AppProps} from "../app-state/app-state";
+import type {AppProps} from "../app-state/app-state";
 import {Info} from "./info";
 import {Panel} from "./panel";
 import {Results} from "./results";
@@ -17,7 +17,7 @@ export function App(props: AppProps): JSX.Element {
 
 export function Loading(): JSX.Element {
 	return (
-		<h3 class="no-results">No results</h3>
+		<h3 class="message">Loading... please wait</h3>
 	);
 }
 

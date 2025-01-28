@@ -1,4 +1,4 @@
-export type RankingsSnapshot = {
+export interface RankingsSnapshot {
 	/** Human readable date/time string of the data snapshot, in UTC */
 	refreshed: string
 	events: WCAEvent[]
@@ -8,7 +8,7 @@ export type RankingsSnapshot = {
 	countries: Country[]
 }
 
-export type WCAEvent = {
+export interface WCAEvent {
 	/** eg 333bf */
 	id: string
 
@@ -21,20 +21,33 @@ export type WCAEvent = {
 	rankings: EventRanking[]
 }
 
-export type EventRanking = {
+interface MissingContinents {
+	[key: Continent["id"]]: number
+}
+
+interface MissingCountries {
+	[key: Country["id"]]: number
+}
+
+export interface Missing {
+	continents: MissingContinents
+	countries: MissingCountries
+	world: number
+}
+
+export interface EventRanking {
 	/** single, average */
 	type: "single" | "average"
 
 	/** The age group for this ranking (40, 50, 60, ...) */
 	age: number
 
-	/** TODO: needs documentation */
-	missing: object
+	missing: Missing
 
 	ranks: Rank[]
 }
 
-export type Rank = {
+export interface Rank {
 	/** estimated numeric rank (considers missing records) */
 	rank: number
 
@@ -54,7 +67,7 @@ export type Rank = {
 	age?: number | null
 }
 
-export type Competition = {
+export interface Competition {
 	/** Competition ID */
 	id: number
 
@@ -71,7 +84,7 @@ export type Competition = {
 	startDate: string
 }
 
-export type Continent = {
+export interface Continent {
 	/** 2 character continent code */
 	id: string
 
@@ -79,7 +92,7 @@ export type Continent = {
 	name: string
 }
 
-export type Country = {
+export interface Country {
 	/** 2 character country code */
 	id: string
 
@@ -90,7 +103,7 @@ export type Country = {
 	continent: Continent["id"]
 }
 
-export type Person = {
+export interface Person {
 	/** Competitor's WCA ID */
 	id: string
 

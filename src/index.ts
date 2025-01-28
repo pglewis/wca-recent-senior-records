@@ -1,12 +1,12 @@
-import {type RankingsSnapshot} from "./js/rankings-snapshot";
+import type {RankingsSnapshot} from "./js/rankings-snapshot";
 import {createStore} from "./js/state/state";
 import {initialState, rootReducer} from "./js/app-state/app-state";
 import {setRankingsDataAction} from "./js/app-state/rankings-reducer";
 import {filterRankingsAction, sortResultsAction} from "./js/app-state/results-reducer";
-import {createRoot} from "./js/components/create-root";
-import {App, Loading, ErrorMessage} from "./js/components/app";
+import {createRoot} from "./js/ui/create-root";
+import {App, Loading, ErrorMessage} from "./js/ui/app";
 
-declare global {interface Window {rankings: RankingsSnapshot | undefined;}}
+declare global {interface Window {rankings: RankingsSnapshot | undefined}}
 
 const rankingsSnapshot = window.rankings;
 const appRoot = createRoot("#app");
@@ -27,8 +27,8 @@ function render() {
 
 		appRoot.render(Loading());
 
-		store.dispatch(filterRankingsAction(state.rankings.data, state.filters));
-		store.dispatch(sortResultsAction(state.sortColumns));
+		store.dispatch(filterRankingsAction(state.rankings, state.filters));
+		store.dispatch(sortResultsAction(state.sortColumns, state.filters.region));
 
 		appRoot.render(App({store: store, handleRender: render}));
 

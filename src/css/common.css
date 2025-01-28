@@ -29,6 +29,7 @@ button:focus-visible {
 	border-radius: 2px;
 }
 
+fieldset,
 select,
 input {
 	font-size: inherit;

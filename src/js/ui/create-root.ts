@@ -1,19 +1,20 @@
-export type RenderCB = (node: Node | Node[]) => void
+type RenderCB = (node: Node | Node[]) => void
 
-export type Root = {
-	/**
-	 * @param node - node or node array to replace the root DOM element's content
-	 */
+interface Root {
 	render: RenderCB
 }
 
 /**
  * @param selectors - CSS selector(s) targetting the DOM element to be used for the root
- * @returns         a Root object
+ * @returns         a Root object with a render method
  */
 export function createRoot(selectors: string): Root {
 	const root = document.querySelector(selectors);
 
+	/**
+	 * @param node - node or node array to replace the root DOM element's content
+	 * @throws
+	 */
 	function render(node: Node | Node[]): void {
 		if (!root) {
 			throw new Error(`render(): "${selectors}" was not found`);

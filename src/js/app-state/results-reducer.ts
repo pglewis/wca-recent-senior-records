@@ -1,5 +1,5 @@
-import type {RankingsSnapshot} from "../rankings-snapshot";
-import type {ResultRow, Filters, SortColumn} from "./app-state";
+import type {Continent, Country} from "../rankings-snapshot";
+import type {ResultRow, Rankings, Filters, SortColumn} from "./app-state";
 import {
 	type AppAction,
 	type RankingsFilteredAction,
@@ -7,17 +7,38 @@ import {
 	AppActionTypes
 } from "./app-actions";
 
-export function filterRankingsAction(rankingsData: RankingsSnapshot, filters: Filters): RankingsFilteredAction {
+interface ContinentAccumulator {
+	[key: Continent["id"]]: number
+}
+interface CountryAccumulator {
+	[key: Country["id"]]: number
+}
+interface Accumulators {
+	world: number
+	continents: ContinentAccumulator
+	countries: CountryAccumulator
+};
+interface MultiResult {
+	/* solved minus unsolved */
+	score: number,
+	seconds: number,
+	unsolved: number
+}
+
+export function filterRankingsAction(rankings: Rankings, filters: Filters): RankingsFilteredAction {
 	return {
 		type: AppActionTypes.rankingsFiltered,
-		payload: {rankingsData, filters}
+		payload: {rankings: rankings, filters}
 	};
 };
 
-export function sortResultsAction(sortColumns: SortColumn[]): ResultsSortedAction {
+export function sortResultsAction(sortColumns: SortColumn[], region: Filters["region"]): ResultsSortedAction {
 	return {
 		type: AppActionTypes.resultsSorted,
-		payload: sortColumns
+		payload: {
+			sortColumns,
+			region,
+		}
 	};
 };
 
@@ -26,24 +47,19 @@ export function resultsReducer(results: ResultRow[] = [], action: AppAction): Re
 
 	switch (type) {
 		case AppActionTypes.rankingsFiltered: {
-			return filterRankings(payload.rankingsData, payload.filters);
+			return filterRankings(payload.rankings, payload.filters);
 		}
 		case AppActionTypes.resultsSorted: {
-			return sortResults(results, payload);
+			return sortResults(results, payload.sortColumns, payload.region);
 		}
 	}
 
 	return results;
 };
 
-/**
- *
- * @param rankingsData
- * @param filters
- * @returns
- * @throws
- */
-function filterRankings(rankingsData: RankingsSnapshot, filters: Filters): ResultRow[] {
+function filterRankings(rankings: Rankings, filters: Filters): ResultRow[] {
+	const rankingsData = rankings.data;
+	const {competitionIDToIndex, personIDToIndex, continentIDToIndex, countryIDToIndex} = rankings;
 	const {topN, timeFrame} = filters;
 	const MS_PER_DAY = 24 * 60 * 60 * 1000;
 	const results: ResultRow[] = [];
@@ -53,20 +69,72 @@ function filterRankings(rankingsData: RankingsSnapshot, filters: Filters): Resul
 
 		// eventRanking: type (single, average, ...), age, ranks[]
 		for (const eventRanking of event.rankings) {
+			const acc = {world: 0, continents: {}, countries: {}} as Accumulators;
 
 			// rank: rank, id, best, competition
-			for (const rank of eventRanking.ranks) {
-				const comp = rankingsData.competitions.find(c => c.id === rank.competition);
+			for (const [rankIdx, rank] of eventRanking.ranks.entries()) {
+				const comp = rankingsData.competitions[competitionIDToIndex[rank.competition]];
 				if (!comp) {
-					throw `Missing competition ID ${rank.competition}`;
+					throw new Error(`Missing competition ID ${rank.competition}`);
 				}
-				const person = rankingsData.persons.find(p => p.id === rank.id);
+				const person = rankingsData.persons[personIDToIndex[rank.id]];
 				if (!person) {
-					throw `Missing competitor ID ${rank.id}`;
+					throw new Error(`Missing competitor ID ${rank.id}`);
+				}
+				const country = rankingsData.countries[countryIDToIndex[person.country]];
+				if (!country) {
+					throw new Error(`Missing country ID ${person.country}`);
+				}
+				const continent = rankingsData.continents[continentIDToIndex[country.continent]];
+				if (!continent) {
+					throw new Error(`Missing continent ID ${country.continent}`);
 				}
 				const daysAgo = Math.floor(
 					(new Date().getTime() - new Date(comp.startDate).getTime()) / MS_PER_DAY
 				);
+
+				acc.world++;
+				acc.continents[continent.id] ??= 0;
+				acc.continents[continent.id]++;
+				acc.countries[country.id] ??= 0;
+				acc.countries[country.id]++;
+
+				const missingWorld = eventRanking.missing?.world ?? 0;
+				let missing: number;
+				let fakeRatio = 1;
+				let thisRank: number;
+
+				if (filters.region === "continent") {
+					if (eventRanking.missing.continents?.[continent.id]) {
+						missing = eventRanking.missing.continents[continent.id];
+
+						if (missingWorld > 0) {
+							fakeRatio = missing / missingWorld;
+						}
+					} else if (missingWorld > 0) {
+						fakeRatio = 0;
+					}
+
+					thisRank = acc.continents[continent.id] + fakeRatio * (rank.rank - rankIdx - 1);
+
+				} else if (filters.region === "country") {
+					if (eventRanking.missing.countries?.[country.id]) {
+						missing = eventRanking.missing.countries[country.id];
+
+						if (missingWorld > 0) {
+							fakeRatio = missing / missingWorld;
+						}
+					} else if (missingWorld > 0) {
+						fakeRatio = 0;
+					}
+
+					thisRank = acc.countries[country.id] + fakeRatio * (rank.rank - rankIdx - 1);
+
+				} else {
+					missing = missingWorld;
+					thisRank = acc.world + fakeRatio * (rank.rank - rankIdx - 1);
+				}
+				thisRank = Number(thisRank.toFixed(0));
 
 				const rowData: ResultRow = {
 					eventID: event.id,
@@ -75,27 +143,25 @@ function filterRankings(rankingsData: RankingsSnapshot, filters: Filters): Resul
 					eventFormat: event.format,
 					age: eventRanking.age,
 					date: comp.startDate,
-					rank: rank.rank,
+					rank: thisRank,
 					name: person.name,
 					wcaID: person.id,
+					continent: continent,
+					country: country,
 					result: rank.best,
 					compName: comp.name,
 					compWebID: comp.webId,
 					compCountry: comp.country,
 				};
 
-				// Stash this one if it qualifies as "recent" and passes filter checks
-				if (daysAgo <= timeFrame && checkFilters(rowData, filters)) {
+				// Stash any that meet the criteria
+				if (daysAgo <= timeFrame && thisRank <= topN && checkFilters(rowData, filters)) {
 					results.push(rowData);
-				}
-
-				// Only consider the top N
-				if (rank.rank > Math.min(eventRanking.ranks.length, topN) - 1) {
-					break;
 				}
 			}
 		}
 	}
+
 	return results;
 }
 
@@ -113,8 +179,18 @@ function checkFilters(rowData: ResultRow, filters: Filters): boolean {
 	}
 
 	// Concatenate the values we want to search in a space separated string
-	const searchFields = ["date", "eventID", "eventType", "name", "compName"];
-	const rowString = searchFields.map(prop => rowData[prop as keyof ResultRow]).join(" ");
+	const searchFields = [
+		rowData.date,
+		rowData.eventID, rowData.continent.id, rowData.age,
+		rowData.eventID, rowData.country.id, rowData.age,
+		rowData.eventID, rowData.age,
+		rowData.eventID, rowData.eventType, rowData.continent.id, rowData.age,
+		rowData.eventID, rowData.eventType, rowData.country.id, rowData.age,
+		rowData.eventID, rowData.eventType, rowData.age,
+		rowData.name,
+		rowData.compName,
+	];
+	const rowString = searchFields.map(value => String(value)).join(" ");
 
 	return (rowString.toLowerCase().includes(search.toLowerCase()));
 }
@@ -123,9 +199,14 @@ function checkFilters(rowData: ResultRow, filters: Filters): boolean {
  *
  * @param results
  * @param sortColumns
+ * @param region
  * @returns
  */
-function sortResults(results: ResultRow[], sortColumns: SortColumn[]): ResultRow[] {
+function sortResults(
+	results: ResultRow[],
+	sortColumns: SortColumn[],
+	region: Filters["region"]
+): ResultRow[] {
 	const resultsCopy = [...results];
 	const sortColumnsCopy = [...sortColumns];
 
@@ -140,40 +221,30 @@ function sortResults(results: ResultRow[], sortColumns: SortColumn[]): ResultRow
 	function sort(sortColumn: SortColumn): ResultRow[] {
 		const {name, direction} = sortColumn;
 
-		switch (name) {
-			// String sort
-			case "date":
-			case "name":
-				resultsCopy.sort((a, b) =>
-					direction * a[name].localeCompare(b[name])
-				);
-				break;
+		//---------------------------------------------------------------
+		//
+		function customGroupSort(a: ResultRow, b: ResultRow): number {
+			switch (region) {
+				case "world": {
+					return direction * (a.age - b.age);
+				}
 
-			// Numeric sort
-			case "age":
-			case "rank":
-				resultsCopy.sort((a, b) => direction * (a[name] - b[name]));
-				break;
+				case "continent": {
+					const aValue = `${a.continent.id} ${a.age}`;
+					const bValue = `${b.continent.id} ${b.age}`;
+					return direction * aValue.localeCompare(bValue);
+				}
 
-			// Custom
-			case "event":
-				resultsCopy.sort(customEventSort);
-				break;
-
-			// Multiple formats to deal with: time, number, and multi
-			case "result":
-				resultsCopy.sort(customResultSort);
-				break;
+				case "country": {
+					const aValue = `${a.country.id} ${a.age}`;
+					const bValue = `${b.country.id} ${b.age}`;
+					return direction * aValue.localeCompare(bValue);
+				}
+			}
 		}
 
-		return resultsCopy;
-
-		/**
-		 *
-		 * @param a
-		 * @param b
-		 * @returns
-		 */
+		//---------------------------------------------------------------
+		//
 		function customEventSort(a: ResultRow, b: ResultRow): number {
 			const eventOrder = [
 				"333", "222", "444", "555", "666", "777",
@@ -191,12 +262,8 @@ function sortResults(results: ResultRow[], sortColumns: SortColumn[]): ResultRow
 			return direction * (aOrder - bOrder);
 		}
 
-		/**
-		 *
-		 * @param a
-		 * @param b
-		 * @returns
-		 */
+		//---------------------------------------------------------------
+		//
 		function customResultSort(a: ResultRow, b: ResultRow): number {
 			if (a.eventFormat !== b.eventFormat) {
 				// Comparing different formats, arbitrarily
@@ -245,14 +312,39 @@ function sortResults(results: ResultRow[], sortColumns: SortColumn[]): ResultRow
 				}
 			}
 		}
-	}
-}
 
-interface MultiResult {
-	/* solved minus unsolved */
-	score: number,
-	seconds: number,
-	unsolved: number
+		switch (name) {
+			// String sort
+			case "date":
+			case "name":
+				resultsCopy.sort((a, b) =>
+					direction * a[name].localeCompare(b[name])
+				);
+				break;
+
+			// Numeric sort
+			case "rank":
+				resultsCopy.sort((a, b) => direction * (a[name] - b[name]));
+				break;
+
+			// Custom
+			case "event":
+				resultsCopy.sort(customEventSort);
+				break;
+
+			// Custom
+			case "group":
+				resultsCopy.sort(customGroupSort);
+				break;
+
+			// Multiple formats to deal with: time, number, and multi
+			case "result":
+				resultsCopy.sort(customResultSort);
+				break;
+		}
+
+		return resultsCopy;
+	}
 }
 
 /**
@@ -281,7 +373,7 @@ function timeResultToSeconds(result: string): number {
 	let multiplier = 1;
 
 	for (const part of parts) {
-		seconds += +part * multiplier;
+		seconds += Number(part) * multiplier;
 		multiplier *= 60;
 	}
 

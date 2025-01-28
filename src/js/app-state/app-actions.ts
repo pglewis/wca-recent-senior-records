@@ -1,60 +1,70 @@
-import {type UnknownAction} from "../state/actions";
-import {type RankingsSnapshot} from "../rankings-snapshot";
-import {type SortChange} from "./sort-columns-reducer";
-import {type Filters, type SortColumn} from "./app-state";
+import type {UnknownAction} from "../state/actions";
+import type {RankingsSnapshot} from "../rankings-snapshot";
+import type {SortChange} from "./sort-columns-reducer";
+import type {Rankings, Filters, SortColumn} from "./app-state";
 
 export enum AppActionTypes {
+	searchFilterChanged = "searchFilterChanged",
 	topNChanged = "topNChanged",
 	timeFrameChanged = "timeFrameChanged",
-	searchFilterChanged = "searchFilterChanged",
+	regionChanged = "regionChanged",
 	rankingsDataSet = "rankingsDataSet",
 	rankingsFiltered = "rankingsFiltered",
 	resultsSorted = "resultsSorted",
 	sortColumnsChanged = "sortColumnsChanged",
 };
 
+export interface SearchFilterChangedAction extends UnknownAction {
+	type: AppActionTypes.searchFilterChanged
+	payload: string
+}
+
 export interface TopNChangedAction extends UnknownAction {
-	type: AppActionTypes.topNChanged;
-	payload: number;
+	type: AppActionTypes.topNChanged
+	payload: number
 }
 
 export interface TimeFrameChangedAction extends UnknownAction {
-	type: AppActionTypes.timeFrameChanged;
-	payload: number;
+	type: AppActionTypes.timeFrameChanged
+	payload: number
 }
 
-export interface SearchFilterChangedAction extends UnknownAction {
-	type: AppActionTypes.searchFilterChanged;
-	payload: string;
+export interface RegionChangedAction extends UnknownAction {
+	type: AppActionTypes.regionChanged
+	payload: Filters["region"]
 }
 
 export interface RankingsDataSetAction extends UnknownAction {
-	type: AppActionTypes.rankingsDataSet;
-	payload: RankingsSnapshot;
+	type: AppActionTypes.rankingsDataSet
+	payload: RankingsSnapshot
 }
 
 export interface RankingsFilteredAction extends UnknownAction {
-	type: AppActionTypes.rankingsFiltered;
+	type: AppActionTypes.rankingsFiltered
 	payload: {
-		rankingsData: RankingsSnapshot,
+		rankings: Rankings
 		filters: Filters
-	};
+	}
 }
 
 export interface ResultsSortedAction extends UnknownAction {
-	type: AppActionTypes.resultsSorted;
-	payload: SortColumn[];
+	type: AppActionTypes.resultsSorted
+	payload: {
+		sortColumns: SortColumn[]
+		region: Filters["region"]
+	}
 }
 
 export interface SortColumnsChangedAction extends UnknownAction {
-	type: AppActionTypes.sortColumnsChanged;
-	payload: SortChange;
+	type: AppActionTypes.sortColumnsChanged
+	payload: SortChange
 }
 
 export type AppAction =
 	TopNChangedAction
 	| TimeFrameChangedAction
 	| SearchFilterChangedAction
+	| RegionChangedAction
 	| RankingsDataSetAction
 	| RankingsFilteredAction
 	| ResultsSortedAction

@@ -2,14 +2,24 @@
 import {h} from "tsx-dom";
 import {AppProps} from "../app-state/app-state";
 import {setSearchFilterAction} from "../app-state/filters-reducer";
+import {debounce} from "../util/debounce";
+
+const placeHolders = [
+	"333bf",
+	"333 60",
+	"sq1 eu",
+	"555 au 40",
+	"60",
+];
+const randomPlaceholder = placeHolders[Math.floor(Math.random() * placeHolders.length)];
 
 export function Search(props: AppProps): JSX.Element {
 	const {store, handleRender} = props;
 	const {search} = store.getState().filters;
-	const placeHolder = "e.g. 333bf";
+	const placeHolder = "e.g. " + randomPlaceholder;
 
 	function handleInput(e: Event) {
-		const inputElement = e.currentTarget as HTMLInputElement;
+		const inputElement = e.target as HTMLInputElement;
 		store.dispatch(setSearchFilterAction(inputElement.value));
 		handleRender();
 	}
@@ -26,11 +36,11 @@ export function Search(props: AppProps): JSX.Element {
 				Search:&nbsp;
 				<input
 					value={search}
-					onInput={handleInput}
+					onInput={debounce(handleInput, 500)}
 					onFocus={handleFocus}
 					id="search-input"
 					type="search"
-					size={15}
+					size={20}
 					placeholder={placeHolder}
 				/>
 			</label>
