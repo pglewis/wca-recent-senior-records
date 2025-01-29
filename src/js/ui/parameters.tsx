@@ -20,9 +20,9 @@ const topNOptions: Option[] = [
 ];
 
 const regionOptions: RegionOption[] = [
-	{value: "world", label: "World"},
-	{value: "continent", label: "Continent"},
-	{value: "country", label: "Country"},
+	{value: "world", label: "WR"},
+	{value: "continent", label: "CR"},
+	{value: "country", label: "NR"},
 ];
 
 const timeFrameOptions: Option[] = [
@@ -61,7 +61,7 @@ export function Parameters(props: AppProps): JSX.Element {
 				</select>
 			</label>
 			<label class="strong">
-				&nbsp;&nbsp;Region:&nbsp;
+				&nbsp;&nbsp;Type:&nbsp;
 				<select id="region" onChange={handleRegionChange}>
 					{SelectOptions(regionOptions, region)}
 				</select>
