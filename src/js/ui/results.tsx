@@ -187,7 +187,6 @@ function TableRow(props: {rowData: ResultRow, appProps: AppProps}): JSX.Element 
 		case "country": {
 			groupLink = (
 				<a href={rankingURL + `-xx-${rowData.country.id}`} target="_blank">
-					<span class={`flag-${rowData.country.id} flag`} />&nbsp;
 					{rowData.country.id}&nbsp;{rowData.age}+
 				</a>
 			);
@@ -209,7 +208,9 @@ function TableRow(props: {rowData: ResultRow, appProps: AppProps}): JSX.Element 
 				{rowData.rank}
 			</td>
 			<td class="name">
-				<a href={competitorURL} target="_blank">{rowData.name}</a>
+				<a href={competitorURL} target="_blank">
+					<span class={`flag-${rowData.country.id} flag`} />&nbsp;{rowData.name}
+				</a>
 			</td>
 			<td class="result">{rowData.result}</td>
 			<td class="competition">
