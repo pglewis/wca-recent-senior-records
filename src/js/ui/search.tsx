@@ -10,13 +10,13 @@ const placeHolders = [
 	"sq1 eu",
 	"555 au 40",
 	"60",
+	"minx average",
 ];
-const randomPlaceholder = placeHolders[Math.floor(Math.random() * placeHolders.length)];
 
 export function Search(props: AppProps): JSX.Element {
 	const {store, handleRender} = props;
 	const {search} = store.getState().filters;
-	const placeHolder = "e.g. " + randomPlaceholder;
+	const placeHolder = "e.g. " + placeHolders[Math.floor(Math.random() * placeHolders.length)];
 
 	function handleInput(e: Event) {
 		const inputElement = e.target as HTMLInputElement;
