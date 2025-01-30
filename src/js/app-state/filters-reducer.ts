@@ -5,7 +5,9 @@ import {
 	SearchFilterChangedAction,
 	TopNChangedAction,
 	TimeFrameChangedAction,
-	RegionChangedAction,
+	RankingTypeChangedAction,
+	ContinentFilterChangedAction,
+	CountryFilterChangedAction,
 } from "./app-actions";
 
 export function setTopNAction(newValue: number): TopNChangedAction {
@@ -29,10 +31,24 @@ export function setSearchFilterAction(searchText: string): SearchFilterChangedAc
 	};
 }
 
-export function setRegionAction(region: Filters["region"]): RegionChangedAction {
+export function setRankingTypeAction(rankingType: Filters["rankingType"]): RankingTypeChangedAction {
 	return {
-		type: AppActionTypes.regionChanged,
-		payload: region
+		type: AppActionTypes.rankingTypeChanged,
+		payload: rankingType
+	};
+}
+
+export function setContinentFilterAction(continent: Filters["continent"]): ContinentFilterChangedAction {
+	return {
+		type: AppActionTypes.continentFilterChanged,
+		payload: continent
+	};
+}
+
+export function setCountryFilterAction(country: Filters["country"]): CountryFilterChangedAction {
+	return {
+		type: AppActionTypes.countryFilterChanged,
+		payload: country
 	};
 }
 
@@ -49,9 +65,14 @@ export function filtersReducer(filters: Filters = initialState.filters, action: 
 		case AppActionTypes.searchFilterChanged:
 			return {...filters, search: payload};
 
-		case AppActionTypes.regionChanged:
-			return {...filters, region: payload};
+		case AppActionTypes.rankingTypeChanged:
+			return {...filters, rankingType: payload};
 
+		case AppActionTypes.continentFilterChanged:
+			return {...filters, continent: payload};
+
+		case AppActionTypes.countryFilterChanged:
+			return {...filters, country: payload};
 	}
 
 	return filters;

@@ -40,7 +40,7 @@ export function Search(props: AppProps): JSX.Element {
 					onInput={debounce(handleInput, 350)}
 					id="search-input"
 					type="search"
-					size={20}
+					size={25}
 					placeholder={getPlaceholder()}
 				/>
 			</label>

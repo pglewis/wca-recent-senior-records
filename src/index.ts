@@ -32,10 +32,11 @@ function render() {
 		appRoot.render(Loading());
 
 		store.dispatch(filterRankingsAction(state.rankings, state.filters));
-		store.dispatch(sortResultsAction(state.sortColumns, state.filters.region));
-
+		store.dispatch(sortResultsAction(state.sortColumns, state.filters.rankingType));
 		appRoot.render(App({store: store, handleRender: render}));
-		setUIState(store.getState().uiState);
+
+		setUIState(state.uiState);
+
 	} catch (error: unknown) {
 		if (error instanceof Error) {
 			appRoot.render(ErrorMessage(error.message));

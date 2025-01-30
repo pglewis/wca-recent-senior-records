@@ -8,8 +8,7 @@ import type {
 	Continent,
 	Country,
 } from "../rankings-snapshot";
-import {type DataStore, type ReducersMapObject, combineReducers} from "../state/state";
-
+import {combineReducers, type DataStore, type ReducersMapObject} from "../state/state";
 import {filtersReducer} from "./filters-reducer";
 import {rankingsReducer} from "./rankings-reducer";
 import {resultsReducer} from "./results-reducer";
@@ -35,10 +34,14 @@ export interface Rankings {
 	/** date/time string of the data snapshot in UTC */
 	lastUpdated: string
 	data: RankingsSnapshot
-	competitionIDToIndex: {[key: number]: number}
 	personIDToIndex: {[key: string]: number}
+	competitionIDToIndex: {[key: number]: number}
 	continentIDToIndex: {[key: string]: number}
 	countryIDToIndex: {[key: string]: number}
+	activeRegions: {
+		continents: Set<Continent["id"]>
+		countries: Set<Country["id"]>
+	}
 }
 
 export interface ResultRow {
@@ -94,7 +97,9 @@ export interface Filters {
 
 	/** In days */
 	timeFrame: number
-	region: "world" | "continent" | "country"
+	rankingType: "wr" | "cr" | "nr"
+	continent: Continent["id"] | ""
+	country: Country["id"] | ""
 }
 
 export interface SortColumn {
@@ -119,23 +124,26 @@ export const initialState: AppState = {
 		personIDToIndex: {},
 		continentIDToIndex: {},
 		countryIDToIndex: {},
+		activeRegions: {continents: new Set(), countries: new Set()},
 	},
 	results: [],
 	filters: {
 		search: "",
 		topN: 10,
 		timeFrame: 30,
-		region: "world",
+		rankingType: "wr",
+		continent: "",
+		country: "",
 	},
 	sortColumns: [
 		{name: "date", label: "Date", direction: -1},
 		{name: "rank", label: "Rank", direction: 1},
-		{name: "event", label: "Event", direction: 1}
+		{name: "event", label: "Event", direction: 1},
 	],
 	uiState: {
 		scrollX: 0,
 		scrollY: 0,
-		activeID: null
+		activeID: null,
 	}
 };
 

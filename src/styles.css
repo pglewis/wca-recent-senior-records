@@ -31,9 +31,9 @@ body {
 }
 
 /**
- Region filter
+ rankingType filter
  */
- #region-filter div {
+ #ranking-type-filter div {
 	margin-left: 1em;
 	line-height: 1.2em;
  }

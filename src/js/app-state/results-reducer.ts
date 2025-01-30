@@ -1,5 +1,11 @@
 import type {Continent, Country} from "../rankings-snapshot";
-import type {ResultRow, Rankings, Filters, SortColumn} from "./app-state";
+import {
+	type ResultRow,
+	type Rankings,
+	type Filters,
+	type SortColumn,
+} from "./app-state";
+
 import {
 	type AppAction,
 	type RankingsFilteredAction,
@@ -7,17 +13,20 @@ import {
 	AppActionTypes
 } from "./app-actions";
 
-interface ContinentAccumulator {
+export interface ContinentCounts {
 	[key: Continent["id"]]: number
 }
-interface CountryAccumulator {
+
+export interface CountryCounts {
 	[key: Country["id"]]: number
 }
-interface Accumulators {
+
+export interface RegionCounts {
 	world: number
-	continents: ContinentAccumulator
-	countries: CountryAccumulator
+	continents: ContinentCounts
+	countries: CountryCounts
 };
+
 interface MultiResult {
 	/* solved minus unsolved */
 	score: number,
@@ -32,12 +41,12 @@ export function filterRankingsAction(rankings: Rankings, filters: Filters): Rank
 	};
 };
 
-export function sortResultsAction(sortColumns: SortColumn[], region: Filters["region"]): ResultsSortedAction {
+export function sortResultsAction(sortColumns: SortColumn[], rankingType: Filters["rankingType"]): ResultsSortedAction {
 	return {
 		type: AppActionTypes.resultsSorted,
 		payload: {
 			sortColumns,
-			region,
+			rankingType: rankingType,
 		}
 	};
 };
@@ -49,8 +58,9 @@ export function resultsReducer(results: ResultRow[] = [], action: AppAction): Re
 		case AppActionTypes.rankingsFiltered: {
 			return filterRankings(payload.rankings, payload.filters);
 		}
+
 		case AppActionTypes.resultsSorted: {
-			return sortResults(results, payload.sortColumns, payload.region);
+			return sortResults(results, payload.sortColumns, payload.rankingType);
 		}
 	}
 
@@ -69,7 +79,7 @@ function filterRankings(rankings: Rankings, filters: Filters): ResultRow[] {
 
 		// eventRanking: type (single, average, ...), age, ranks[]
 		for (const eventRanking of event.rankings) {
-			const acc = {world: 0, continents: {}, countries: {}} as Accumulators;
+			const regionCounts = {world: 0, continents: {}, countries: {}} as RegionCounts;
 
 			// rank: rank, id, best, competition
 			for (const [rankIdx, rank] of eventRanking.ranks.entries()) {
@@ -93,18 +103,18 @@ function filterRankings(rankings: Rankings, filters: Filters): ResultRow[] {
 					(new Date().getTime() - new Date(comp.startDate).getTime()) / MS_PER_DAY
 				);
 
-				acc.world++;
-				acc.continents[continent.id] ??= 0;
-				acc.continents[continent.id]++;
-				acc.countries[country.id] ??= 0;
-				acc.countries[country.id]++;
+				regionCounts.world++;
+				regionCounts.continents[continent.id] ??= 0;
+				regionCounts.continents[continent.id]++;
+				regionCounts.countries[country.id] ??= 0;
+				regionCounts.countries[country.id]++;
 
 				const missingWorld = eventRanking.missing?.world ?? 0;
 				let missing: number;
 				let fakeRatio = 1;
 				let thisRank: number;
 
-				if (filters.region === "continent") {
+				if (filters.rankingType === "cr") {
 					if (eventRanking.missing.continents?.[continent.id]) {
 						missing = eventRanking.missing.continents[continent.id];
 
@@ -115,9 +125,9 @@ function filterRankings(rankings: Rankings, filters: Filters): ResultRow[] {
 						fakeRatio = 0;
 					}
 
-					thisRank = acc.continents[continent.id] + fakeRatio * (rank.rank - rankIdx - 1);
+					thisRank = regionCounts.continents[continent.id] + fakeRatio * (rank.rank - rankIdx - 1);
 
-				} else if (filters.region === "country") {
+				} else if (filters.rankingType === "nr") {
 					if (eventRanking.missing.countries?.[country.id]) {
 						missing = eventRanking.missing.countries[country.id];
 
@@ -128,11 +138,11 @@ function filterRankings(rankings: Rankings, filters: Filters): ResultRow[] {
 						fakeRatio = 0;
 					}
 
-					thisRank = acc.countries[country.id] + fakeRatio * (rank.rank - rankIdx - 1);
+					thisRank = regionCounts.countries[country.id] + fakeRatio * (rank.rank - rankIdx - 1);
 
 				} else {
 					missing = missingWorld;
-					thisRank = acc.world + fakeRatio * (rank.rank - rankIdx - 1);
+					thisRank = regionCounts.world + fakeRatio * (rank.rank - rankIdx - 1);
 				}
 				thisRank = Number(thisRank.toFixed(0));
 
@@ -165,15 +175,31 @@ function filterRankings(rankings: Rankings, filters: Filters): ResultRow[] {
 	return results;
 }
 
-/**
- *
- * @param rowData
- * @param filters
- * @returns
- */
 function checkFilters(rowData: ResultRow, filters: Filters): boolean {
-	const {search} = filters;
+	return (
+		checkSearchFilter(rowData, filters.search)
+		&& checkContinentFilter(rowData, filters.continent)
+		&& checkCountryFilter(rowData, filters.country)
+	);
+}
 
+function checkContinentFilter(rowData: ResultRow, continent: Filters["continent"]): boolean {
+	if (!continent) {
+		return true;
+	}
+
+	return rowData.continent.id === continent;
+}
+
+function checkCountryFilter(rowData: ResultRow, country: Filters["country"]): boolean {
+	if (!country) {
+		return true;
+	}
+
+	return rowData.country.id === country;
+}
+
+function checkSearchFilter(rowData: ResultRow, search: Filters["search"]): boolean {
 	if (!search) {
 		return true;
 	}
@@ -199,13 +225,13 @@ function checkFilters(rowData: ResultRow, filters: Filters): boolean {
  *
  * @param results
  * @param sortColumns
- * @param region
+ * @param rankingType
  * @returns
  */
 function sortResults(
 	results: ResultRow[],
 	sortColumns: SortColumn[],
-	region: Filters["region"]
+	rankingType: Filters["rankingType"]
 ): ResultRow[] {
 	const resultsCopy = [...results];
 	const sortColumnsCopy = [...sortColumns];
@@ -224,18 +250,18 @@ function sortResults(
 		//---------------------------------------------------------------
 		//
 		function customGroupSort(a: ResultRow, b: ResultRow): number {
-			switch (region) {
-				case "world": {
+			switch (rankingType) {
+				case "wr": {
 					return direction * (a.age - b.age);
 				}
 
-				case "continent": {
+				case "cr": {
 					const aValue = `${a.continent.id} ${a.age}`;
 					const bValue = `${b.continent.id} ${b.age}`;
 					return direction * aValue.localeCompare(bValue);
 				}
 
-				case "country": {
+				case "nr": {
 					const aValue = `${a.country.id} ${a.age}`;
 					const bValue = `${b.country.id} ${b.age}`;
 					return direction * aValue.localeCompare(bValue);

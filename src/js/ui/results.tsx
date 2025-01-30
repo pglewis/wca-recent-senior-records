@@ -153,7 +153,7 @@ function TableRow(props: {rowData: ResultRow, appProps: AppProps}): JSX.Element 
 	const COMPETITION_BASE_URL = "https://www.worldcubeassociation.org/competitions";
 	const RANKINGS_BASE_URL = "https://wca-seniors.org/Senior_Rankings.html";
 	const {rowData, appProps} = props;
-	const region = appProps.store.getState().filters.region;
+	const rankingType = appProps.store.getState().filters.rankingType;
 
 	// Insert a wbr tag to declare that we can word-break after the "YYYY-" portion
 	const dashIndex = rowData.date.indexOf("-");
@@ -165,8 +165,8 @@ function TableRow(props: {rowData: ResultRow, appProps: AppProps}): JSX.Element 
 	const rankingURL = `${RANKINGS_BASE_URL}#${rowData.eventID}-${rowData.eventType}-${rowData.age}`;
 
 	let groupLink: JSX.Element;
-	switch (region) {
-		case "world": {
+	switch (rankingType) {
+		case "wr": {
 			groupLink = (
 				<a href={rankingURL} target="_blank">
 					{rowData.age}+
@@ -175,7 +175,7 @@ function TableRow(props: {rowData: ResultRow, appProps: AppProps}): JSX.Element 
 			break;
 		}
 
-		case "continent": {
+		case "cr": {
 			groupLink = (
 				<a href={rankingURL + `-${rowData.continent.id}`} target="_blank">
 					{rowData.continent.id}&nbsp;{rowData.age}+
@@ -184,7 +184,7 @@ function TableRow(props: {rowData: ResultRow, appProps: AppProps}): JSX.Element 
 			break;
 		}
 
-		case "country": {
+		case "nr": {
 			groupLink = (
 				<a href={rankingURL + `-xx-${rowData.country.id}`} target="_blank">
 					{rowData.country.id}&nbsp;{rowData.age}+

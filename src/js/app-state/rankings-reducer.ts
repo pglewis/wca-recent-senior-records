@@ -14,13 +14,25 @@ export function rankingsReducer(rankings: Rankings = initialState.rankings, acti
 
 	switch (type) {
 		case AppActionTypes.rankingsDataSet: {
+			const competitionIDToIndex = buildCompetitionLookup(payload);
+			const personIDToIndex = buildPersonLookup(payload);
+			const continentIDToIndex = buildContinentLookup(payload);
+			const countryIDToIndex = buildCountryLookup(payload);
+			const activeRegions = buildActiveRegions(
+				payload,
+				personIDToIndex,
+				continentIDToIndex,
+				countryIDToIndex
+			);
+
 			return {
 				lastUpdated: payload.refreshed,
 				data: payload,
-				competitionIDToIndex: buildCompetitionLookup(payload),
-				personIDToIndex: buildPersonLookup(payload),
-				continentIDToIndex: buildContinentLookup(payload),
-				countryIDToIndex: buildCountryLookup(payload)
+				competitionIDToIndex,
+				personIDToIndex,
+				continentIDToIndex,
+				countryIDToIndex,
+				activeRegions,
 			};
 		}
 	}
@@ -68,3 +80,39 @@ function buildCountryLookup(rankings: RankingsSnapshot) {
 	return lookup;
 }
 
+function buildActiveRegions(
+	rankingsData: RankingsSnapshot,
+	personIDToIndex: {[key: string]: number},
+	continentIDToIndex: {[key: string]: number},
+	countryIDToIndex: {[key: string]: number}
+): Rankings["activeRegions"] {
+
+	const activeRegions: Rankings["activeRegions"] = {
+		continents: new Set(),
+		countries: new Set()
+	};
+
+	for (const event of rankingsData.events) {
+		for (const eventRanking of event.rankings) {
+			for (const rank of eventRanking.ranks) {
+				const person = rankingsData.persons[personIDToIndex[rank.id]];
+				if (!person) {
+					throw new Error(`Missing competitor ID ${rank.id}`);
+				}
+				const country = rankingsData.countries[countryIDToIndex[person.country]];
+				if (!country) {
+					throw new Error(`Missing country ID ${person.country}`);
+				}
+				const continent = rankingsData.continents[continentIDToIndex[country.continent]];
+				if (!continent) {
+					throw new Error(`Missing continent ID ${country.continent}`);
+				}
+
+				activeRegions.continents.add(continent.id);
+				activeRegions.countries.add(country.id);
+			}
+		}
+	}
+
+	return activeRegions;
+}

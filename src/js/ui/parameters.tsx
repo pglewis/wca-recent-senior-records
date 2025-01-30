@@ -1,31 +1,27 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {h} from "tsx-dom";
 import type {AppProps, Filters} from "../app-state/app-state";
-import {setTopNAction, setTimeFrameAction, setRegionAction} from "../app-state/filters-reducer";
+import {setTopNAction, setTimeFrameAction, setRankingTypeAction} from "../app-state/filters-reducer";
+import {SelectOptions, type SelectOption} from "./select-options";
 
-interface Option {
-	value: string
-	label: string
+interface RankingTypeOption extends SelectOption {
+	value: Filters["rankingType"]
 }
 
-interface RegionOption extends Option {
-	value: Filters["region"]
-}
-
-const topNOptions: Option[] = [
+const topNOptions: SelectOption[] = [
 	{value: "5", label: "5"},
 	{value: "10", label: "10"},
 	{value: "25", label: "25"},
 	{value: "50", label: "50"},
 ];
 
-const regionOptions: RegionOption[] = [
-	{value: "world", label: "WR"},
-	{value: "continent", label: "CR"},
-	{value: "country", label: "NR"},
+const rankingTypeOptions: RankingTypeOption[] = [
+	{value: "wr", label: "WR"},
+	{value: "cr", label: "CR"},
+	{value: "nr", label: "NR"},
 ];
 
-const timeFrameOptions: Option[] = [
+const timeFrameOptions: SelectOption[] = [
 	{value: "7", label: "7 days"},
 	{value: "14", label: "14 days"},
 	{value: "30", label: "30 days"},
@@ -35,7 +31,7 @@ const timeFrameOptions: Option[] = [
 
 export function Parameters(props: AppProps): JSX.Element {
 	const {store, handleRender} = props;
-	const {timeFrame, topN, region} = store.getState().filters;
+	const {timeFrame, topN, rankingType} = store.getState().filters;
 
 	function handleTimeFrameChange(this: HTMLSelectElement) {
 		store.dispatch(setTimeFrameAction(Number(this.value)));
@@ -47,8 +43,8 @@ export function Parameters(props: AppProps): JSX.Element {
 		handleRender();
 	}
 
-	function handleRegionChange(this: HTMLSelectElement) {
-		store.dispatch(setRegionAction(this.value as Filters["region"]));
+	function handleRankingTypeChange(this: HTMLSelectElement) {
+		store.dispatch(setRankingTypeAction(this.value as Filters["rankingType"]));
 		handleRender();
 	}
 
@@ -62,8 +58,8 @@ export function Parameters(props: AppProps): JSX.Element {
 			</label>
 			<label class="strong">
 				&nbsp;&nbsp;Type:&nbsp;
-				<select id="region" onChange={handleRegionChange}>
-					{SelectOptions(regionOptions, region)}
+				<select id="ranking-type-filter" onChange={handleRankingTypeChange}>
+					{SelectOptions(rankingTypeOptions, rankingType)}
 				</select>
 			</label>
 			<label class="strong">
@@ -73,11 +69,5 @@ export function Parameters(props: AppProps): JSX.Element {
 				</select>
 			</label>
 		</div>
-	);
-}
-
-function SelectOptions(options: Option[], selected: string | number): JSX.Element[] {
-	return options.map(option =>
-		<option value={option.value} selected={option.value == selected}>{option.label}</option>
 	);
 }

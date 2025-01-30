@@ -4,17 +4,23 @@ import type {SortChange} from "./sort-columns-reducer";
 import type {Rankings, Filters, SortColumn, UIState} from "./app-state";
 
 export enum AppActionTypes {
+	rankingsDataSet = "rankingsDataSet",
 	searchFilterChanged = "searchFilterChanged",
 	topNChanged = "topNChanged",
 	timeFrameChanged = "timeFrameChanged",
-	regionChanged = "regionChanged",
-	rankingsDataSet = "rankingsDataSet",
+	rankingTypeChanged = "rankingTypeChanged",
+	continentFilterChanged = "continentFilterChanged",
+	countryFilterChanged = "countryFilterChanged",
 	rankingsFiltered = "rankingsFiltered",
 	resultsSorted = "resultsSorted",
 	sortColumnsChanged = "sortColumnsChanged",
 	uiStateSet = "uiStateSet",
 };
 
+export interface RankingsDataSetAction extends UnknownAction {
+	type: AppActionTypes.rankingsDataSet
+	payload: RankingsSnapshot
+}
 export interface SearchFilterChangedAction extends UnknownAction {
 	type: AppActionTypes.searchFilterChanged
 	payload: string
@@ -30,14 +36,19 @@ export interface TimeFrameChangedAction extends UnknownAction {
 	payload: number
 }
 
-export interface RegionChangedAction extends UnknownAction {
-	type: AppActionTypes.regionChanged
-	payload: Filters["region"]
+export interface RankingTypeChangedAction extends UnknownAction {
+	type: AppActionTypes.rankingTypeChanged
+	payload: Filters["rankingType"]
 }
 
-export interface RankingsDataSetAction extends UnknownAction {
-	type: AppActionTypes.rankingsDataSet
-	payload: RankingsSnapshot
+export interface ContinentFilterChangedAction extends UnknownAction {
+	type: AppActionTypes.continentFilterChanged
+	payload: Filters["continent"]
+}
+
+export interface CountryFilterChangedAction extends UnknownAction {
+	type: AppActionTypes.countryFilterChanged
+	payload: Filters["country"]
 }
 
 export interface RankingsFilteredAction extends UnknownAction {
@@ -52,7 +63,7 @@ export interface ResultsSortedAction extends UnknownAction {
 	type: AppActionTypes.resultsSorted
 	payload: {
 		sortColumns: SortColumn[]
-		region: Filters["region"]
+		rankingType: Filters["rankingType"]
 	}
 }
 
@@ -67,11 +78,13 @@ export interface UIStateSetAction extends UnknownAction {
 }
 
 export type AppAction =
-	TopNChangedAction
+	RankingsDataSetAction
+	| TopNChangedAction
 	| TimeFrameChangedAction
 	| SearchFilterChangedAction
-	| RegionChangedAction
-	| RankingsDataSetAction
+	| RankingTypeChangedAction
+	| ContinentFilterChangedAction
+	| CountryFilterChangedAction
 	| RankingsFilteredAction
 	| ResultsSortedAction
 	| SortColumnsChangedAction
