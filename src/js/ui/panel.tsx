@@ -1,11 +1,14 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {h} from "tsx-dom";
 import {AppProps} from "../app-state/app-state";
-import {SortColumnList} from "./sort-column-list";
 import {Search} from "./search";
-import {Parameters} from "./parameters";
+import {EventFilter} from "./event-filter";
 import {ContinentFilter} from "./continent-filter";
 import {CountryFilter} from "./country-filter";
+import {Parameters} from "./parameters";
+import {SortColumnList} from "./sort-column-list";
+import {EventTypeFilter} from "./event-type-filter";
+import {AgeFilter} from "./age-filter";
 
 export function Panel(props: AppProps): JSX.Element {
 	const {results} = props.store.getState();
@@ -14,6 +17,9 @@ export function Panel(props: AppProps): JSX.Element {
 		<div id="panel">
 			<div class="panel-grid">
 				<Search {...props} />
+				<EventFilter {...props} />
+				<EventTypeFilter {...props} />
+				<AgeFilter {...props} />
 				<ContinentFilter {...props} />
 				<CountryFilter {...props} />
 				<Parameters {...props} />

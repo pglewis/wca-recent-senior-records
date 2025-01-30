@@ -10,7 +10,6 @@ export function CountryFilter(props: AppProps): JSX.Element {
 	const activeCountries = store.getState().rankings.activeRegions.countries;
 	const countryFilter = store.getState().filters.country;
 	const continentFilter = store.getState().filters.continent;
-	const optionArray: SelectOption[] = [];
 
 	function handleChange(this: HTMLSelectElement) {
 		//--!! More effin' duct-tape: tsx-dom cannot use empty string as the value
@@ -22,8 +21,9 @@ export function CountryFilter(props: AppProps): JSX.Element {
 	const filteredCountries = countries
 		.filter(c => activeCountries.has(c.id))
 		.filter(c => continentFilter === "" || c.continent === continentFilter)
-	;
+		;
 
+	const optionArray: SelectOption[] = [];
 	for (const country of filteredCountries) {
 		optionArray.push({label: country.name, value: country.id});
 	}

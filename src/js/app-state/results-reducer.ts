@@ -147,10 +147,8 @@ function filterRankings(rankings: Rankings, filters: Filters): ResultRow[] {
 				thisRank = Number(thisRank.toFixed(0));
 
 				const rowData: ResultRow = {
-					eventID: event.id,
-					eventName: event.name,
+					event: event,
 					eventType: eventRanking.type,
-					eventFormat: event.format,
 					age: eventRanking.age,
 					date: comp.startDate,
 					rank: thisRank,
@@ -178,9 +176,36 @@ function filterRankings(rankings: Rankings, filters: Filters): ResultRow[] {
 function checkFilters(rowData: ResultRow, filters: Filters): boolean {
 	return (
 		checkSearchFilter(rowData, filters.search)
+		&& checkEventFilter(rowData, filters.event)
+		&& checkEventTypeFilter(rowData, filters.eventType)
+		&& checkAgeFilter(rowData, filters.age)
 		&& checkContinentFilter(rowData, filters.continent)
 		&& checkCountryFilter(rowData, filters.country)
 	);
+}
+
+function checkEventFilter(rowData: ResultRow, eventID: Filters["event"]) {
+	if (!eventID) {
+		return true;
+	}
+
+	return rowData.event.id === eventID;
+}
+
+function checkEventTypeFilter(rowData: ResultRow, eventType: Filters["eventType"]) {
+	if (!eventType) {
+		return true;
+	}
+
+	return rowData.eventType === eventType;
+}
+
+function checkAgeFilter(rowData: ResultRow, age: Filters["age"]) {
+	if (!age) {
+		return true;
+	}
+
+	return rowData.age >= age;
 }
 
 function checkContinentFilter(rowData: ResultRow, continent: Filters["continent"]): boolean {
@@ -207,12 +232,12 @@ function checkSearchFilter(rowData: ResultRow, search: Filters["search"]): boole
 	// Concatenate the values we want to search in a space separated string
 	const searchFields = [
 		rowData.date,
-		rowData.eventID, rowData.continent.id, rowData.age,
-		rowData.eventID, rowData.country.id, rowData.age,
-		rowData.eventID, rowData.age,
-		rowData.eventID, rowData.eventType, rowData.continent.id, rowData.age,
-		rowData.eventID, rowData.eventType, rowData.country.id, rowData.age,
-		rowData.eventID, rowData.eventType, rowData.age,
+		rowData.event.id, rowData.continent.id, rowData.age,
+		rowData.event.id, rowData.country.id, rowData.age,
+		rowData.event.id, rowData.age,
+		rowData.event.id, rowData.eventType, rowData.continent.id, rowData.age,
+		rowData.event.id, rowData.eventType, rowData.country.id, rowData.age,
+		rowData.event.id, rowData.eventType, rowData.age,
 		rowData.name,
 		rowData.compName,
 	];
@@ -278,8 +303,8 @@ function sortResults(
 				"clock", "minx", "pyram", "skewb", "sq1",
 				"444bf", "555bf", "333mbf",
 			];
-			const aOrder = eventOrder.indexOf(a.eventID);
-			const bOrder = eventOrder.indexOf(b.eventID);
+			const aOrder = eventOrder.indexOf(a.event.id);
+			const bOrder = eventOrder.indexOf(b.event.id);
 
 			// Sort single before average
 			if (aOrder === bOrder && a.eventType !== b.eventType) {
@@ -291,18 +316,18 @@ function sortResults(
 		//---------------------------------------------------------------
 		//
 		function customResultSort(a: ResultRow, b: ResultRow): number {
-			if (a.eventFormat !== b.eventFormat) {
+			if (a.event.format !== b.event.format) {
 				// Comparing different formats, arbitrarily
 				// sort in order: time, number, multi
-				if (a.eventFormat === "time" || b.eventFormat === "time") {
-					return direction * (a.eventFormat === "time" ? -1 : 1);
+				if (a.event.format === "time" || b.event.format === "time") {
+					return direction * (a.event.format === "time" ? -1 : 1);
 				}
 
 				// Different formats and neither is time, so one must be number
-				return direction * (a.eventFormat === "number" ? -1 : 1);
+				return direction * (a.event.format === "number" ? -1 : 1);
 			} else {
 				// They're both the same format, what are we comparing?
-				switch (a.eventFormat) {
+				switch (a.event.format) {
 					case "time": {
 						const [aSeconds, bSeconds] = [a.result, b.result].map(timeResultToSeconds);
 						return direction * (aSeconds - bSeconds);

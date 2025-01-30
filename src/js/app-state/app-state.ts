@@ -45,14 +45,7 @@ export interface Rankings {
 }
 
 export interface ResultRow {
-	/** eg 333bf */
-	eventID: WCAEvent["id"]
-
-	/** eg 3x3x3 Blindfolded */
-	eventName: WCAEvent["name"]
-
-	/** The format used for the result */
-	eventFormat: WCAEvent["format"]
+	event: WCAEvent
 
 	/** single, average */
 	eventType: EventRanking["type"]
@@ -93,13 +86,18 @@ export interface ResultRow {
 
 export interface Filters {
 	search: string
+	event: WCAEvent["id"] | ""
+	eventType: EventRanking["type"] | ""
+	age: EventRanking["age"] | ""
+	continent: Continent["id"] | ""
+	country: Country["id"] | ""
 	topN: number
+
+	/** world, continent, or national ranking */
+	rankingType: "wr" | "cr" | "nr"
 
 	/** In days */
 	timeFrame: number
-	rankingType: "wr" | "cr" | "nr"
-	continent: Continent["id"] | ""
-	country: Country["id"] | ""
 }
 
 export interface SortColumn {
@@ -129,11 +127,14 @@ export const initialState: AppState = {
 	results: [],
 	filters: {
 		search: "",
-		topN: 10,
-		timeFrame: 30,
-		rankingType: "wr",
+		event: "",
+		eventType: "",
+		age: "",
 		continent: "",
 		country: "",
+		topN: 10,
+		rankingType: "wr",
+		timeFrame: 30,
 	},
 	sortColumns: [
 		{name: "date", label: "Date", direction: -1},

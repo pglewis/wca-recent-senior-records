@@ -6,14 +6,7 @@ import {debounce} from "../util/debounce";
 
 function getPlaceholder() {
 	const placeholders = [
-		"333bf",
-		"333 60",
-		"sq1 eu",
-		"555 au 40",
-		"50",
-		"skewb single na 50",
-		"clock average",
-		"333fm average",
+		"40, 50, 60, etc.",
 		"competitor name",
 		"competition name",
 	];

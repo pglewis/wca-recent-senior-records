@@ -1,16 +1,21 @@
 import type {UnknownAction} from "../state/actions";
-import type {RankingsSnapshot} from "../rankings-snapshot";
+import type {EventRanking, RankingsSnapshot, WCAEvent} from "../rankings-snapshot";
 import type {SortChange} from "./sort-columns-reducer";
 import type {Rankings, Filters, SortColumn, UIState} from "./app-state";
 
 export enum AppActionTypes {
 	rankingsDataSet = "rankingsDataSet",
+
 	searchFilterChanged = "searchFilterChanged",
-	topNChanged = "topNChanged",
-	timeFrameChanged = "timeFrameChanged",
-	rankingTypeChanged = "rankingTypeChanged",
+	eventFilterChanged = "eventFilterChanged",
+	eventTypeFilterChanged = "eventTypeFilterChanged",
+	ageFilterChanged = "ageFilterChanged",
 	continentFilterChanged = "continentFilterChanged",
 	countryFilterChanged = "countryFilterChanged",
+	topNChanged = "topNChanged",
+	rankingTypeChanged = "rankingTypeChanged",
+	timeFrameChanged = "timeFrameChanged",
+
 	rankingsFiltered = "rankingsFiltered",
 	resultsSorted = "resultsSorted",
 	sortColumnsChanged = "sortColumnsChanged",
@@ -26,13 +31,33 @@ export interface SearchFilterChangedAction extends UnknownAction {
 	payload: string
 }
 
-export interface TopNChangedAction extends UnknownAction {
-	type: AppActionTypes.topNChanged
-	payload: number
+export interface EventFilterChangedAction extends UnknownAction {
+	type: AppActionTypes.eventFilterChanged
+	payload: WCAEvent["id"] | ""
 }
 
-export interface TimeFrameChangedAction extends UnknownAction {
-	type: AppActionTypes.timeFrameChanged
+export interface EventTypeFilterChangedAction extends UnknownAction {
+	type: AppActionTypes.eventTypeFilterChanged
+	payload: EventRanking["type"] | ""
+}
+
+export interface AgeFilterChangedAction extends UnknownAction {
+	type: AppActionTypes.ageFilterChanged
+	payload: EventRanking["age"] | ""
+}
+
+export interface ContinentFilterChangedAction extends UnknownAction {
+	type: AppActionTypes.continentFilterChanged
+	payload: Filters["continent"] | ""
+}
+
+export interface CountryFilterChangedAction extends UnknownAction {
+	type: AppActionTypes.countryFilterChanged
+	payload: Filters["country"] | ""
+}
+
+export interface TopNChangedAction extends UnknownAction {
+	type: AppActionTypes.topNChanged
 	payload: number
 }
 
@@ -41,14 +66,9 @@ export interface RankingTypeChangedAction extends UnknownAction {
 	payload: Filters["rankingType"]
 }
 
-export interface ContinentFilterChangedAction extends UnknownAction {
-	type: AppActionTypes.continentFilterChanged
-	payload: Filters["continent"]
-}
-
-export interface CountryFilterChangedAction extends UnknownAction {
-	type: AppActionTypes.countryFilterChanged
-	payload: Filters["country"]
+export interface TimeFrameChangedAction extends UnknownAction {
+	type: AppActionTypes.timeFrameChanged
+	payload: number
 }
 
 export interface RankingsFilteredAction extends UnknownAction {
@@ -79,12 +99,17 @@ export interface UIStateSetAction extends UnknownAction {
 
 export type AppAction =
 	RankingsDataSetAction
-	| TopNChangedAction
-	| TimeFrameChangedAction
+
 	| SearchFilterChangedAction
-	| RankingTypeChangedAction
+	| EventFilterChangedAction
+	| EventTypeFilterChangedAction
+	| AgeFilterChangedAction
 	| ContinentFilterChangedAction
 	| CountryFilterChangedAction
+	| TopNChangedAction
+	| RankingTypeChangedAction
+	| TimeFrameChangedAction
+
 	| RankingsFilteredAction
 	| ResultsSortedAction
 	| SortColumnsChangedAction

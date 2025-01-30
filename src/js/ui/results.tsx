@@ -160,9 +160,9 @@ function TableRow(props: {rowData: ResultRow, appProps: AppProps}): JSX.Element 
 	const dateYear = rowData.date.slice(0, dashIndex + 1);
 	const dateMonthAndDay = rowData.date.slice(dashIndex + 1);
 
-	const competitorURL = `${COMPETITOR_BASE_URL}/${rowData.wcaID}?event=${rowData.eventID}`;
+	const competitorURL = `${COMPETITOR_BASE_URL}/${rowData.wcaID}?event=${rowData.event.id}`;
 	const competitionURL = `${COMPETITION_BASE_URL}/${rowData.compWebID}/results/by_person#${rowData.wcaID}`;
-	const rankingURL = `${RANKINGS_BASE_URL}#${rowData.eventID}-${rowData.eventType}-${rowData.age}`;
+	const rankingURL = `${RANKINGS_BASE_URL}#${rowData.event.id}-${rowData.eventType}-${rowData.age}`;
 
 	let groupLink: JSX.Element;
 	switch (rankingType) {
@@ -198,8 +198,8 @@ function TableRow(props: {rowData: ResultRow, appProps: AppProps}): JSX.Element 
 		<tr>
 			<td class="date">{dateYear}<wbr />{dateMonthAndDay}</td>
 			<td class="event">
-				<i class={`event-${rowData.eventID} cubing-icon icon`} />
-				{rowData.eventID} {rowData.eventType}
+				<i class={`event-${rowData.event.id} cubing-icon icon`} />
+				{rowData.event.id} {rowData.eventType}
 			</td>
 			<td class="group">
 				{groupLink}
