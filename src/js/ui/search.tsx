@@ -26,17 +26,15 @@ export function Search(props: AppProps): JSX.Element {
 
 	return (
 		<div id="search">
-			<div>
-				<label class="strong">Search:</label>
-				<input
-					value={search}
-					onInput={debounce(handleInput, 350)}
-					id="search-input"
-					type="search"
-					size={18}
-					placeholder={getPlaceholder()}
-				/>
-			</div>
+			<label class="strong">Search:</label>
+			<input
+				value={search}
+				onInput={debounce(handleInput, 350)}
+				id="search-input"
+				type="search"
+				size={18}
+				placeholder={getPlaceholder()}
+			/>
 		</div>
 	);
 }

@@ -16,9 +16,9 @@ const topNOptions: SelectOption[] = [
 ];
 
 const rankingTypeOptions: RankingTypeOption[] = [
-	{value: "wr", label: "WR"},
-	{value: "cr", label: "CR"},
-	{value: "nr", label: "NR"},
+	{value: "wr", label: "World (WR)"},
+	{value: "cr", label: "Continent (CR)"},
+	{value: "nr", label: "National (NR)"},
 ];
 
 const timeFrameOptions: SelectOption[] = [

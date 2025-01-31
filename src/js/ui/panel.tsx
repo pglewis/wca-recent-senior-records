@@ -11,22 +11,18 @@ import {EventTypeFilter} from "./event-type-filter";
 import {AgeFilter} from "./age-filter";
 
 export function Panel(props: AppProps): JSX.Element {
-	const {results} = props.store.getState();
-
 	return (
 		<div id="panel">
 			<div class="panel-grid">
 				<Parameters {...props} />
 				<DropDownFilters {...props} />
 				<SortColumnList {...props} />
-				<div class="strong">Showing {results.length} {results.length === 1 ? "result" : "results"}</div>
 			</div>
 		</div>
 	);
 }
 
 function DropDownFilters(props: AppProps): JSX.Element {
-
 	return (
 		<div id="dropdown-filters">
 			<EventFilter {...props} />

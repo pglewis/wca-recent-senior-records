@@ -19,6 +19,7 @@ body {
 #panel {
 	width: 100%;
 	background-color: #f6f8fa;
+	margin: 1em 0;
 }
 
 #panel .panel-grid {
@@ -26,22 +27,39 @@ body {
 	flex-direction: column;
 	row-gap: 1em;
 	padding: .5em;
-	margin-bottom: 1em;
 	border: 1px solid #dfe2e5;
 }
 
-#dropdown-filters,
+/* the main parameters */
 #parameters {
 	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
 	column-gap: 1em;
 }
 
-#dropdown-filters div,
-#parameters div {
+#parameters>div {
 	display: flex;
 	flex-direction: column;
+}
+
+/* The dropdowns for filtering */
+#dropdown-filters {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5em;
+	margin: .5em 0;
+}
+
+#dropdown-filters>div {
+	display: flex;
+}
+
+#dropdown-filters>div>label {
+	flex: 1;
+}
+
+#dropdown-filters>div>input,
+#dropdown-filters>div>select {
+	flex: 3;
 }
 
 /**
@@ -101,6 +119,7 @@ body {
  */
 table.rankings {
 	width: 100%;
+	margin: 1em 0;
 }
 
 /* th only */
@@ -223,6 +242,19 @@ table.rankings .competition {
 @media screen and (min-width: 500px) {
 	html {
 		font-size: 12px;
+	}
+
+	#dropdown-filters {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		column-gap: 1em;
+		row-gap: .75em;
+	}
+
+	#dropdown-filters div {
+		display: flex;
+		flex-direction: column;
 	}
 
 	table.rankings th button,
