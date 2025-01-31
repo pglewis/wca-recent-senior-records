@@ -35,13 +35,11 @@ export function ContinentFilter(props: AppProps): JSX.Element {
 
 	return (
 		<div>
-			<label class="strong">
-				Continent:&nbsp;
-				<select id="continent-filter" onChange={handleChange}>
-					<option value="xx">All Continents</option>
-					{SelectOptions(optionArray, continentFilter)}
-				</select>
-			</label>
+			<label class="strong">Continent:</label>
+			<select id="continent-filter" onChange={handleChange}>
+				<option value="xx">All Continents</option>
+				{SelectOptions(optionArray, continentFilter)}
+			</select>
 		</div>
 	);
 }

@@ -30,13 +30,11 @@ export function CountryFilter(props: AppProps): JSX.Element {
 
 	return (
 		<div>
-			<label class="strong">
-				Country:&nbsp;
-				<select id="country-filter" onChange={handleChange}>
-					<option value="xx">All Countries</option>
-					{SelectOptions(optionArray, countryFilter)}
-				</select>
-			</label>
+			<label class="strong">Country:</label>
+			<select id="country-filter" onChange={handleChange}>
+				<option value="xx">All Countries</option>
+				{SelectOptions(optionArray, countryFilter)}
+			</select>
 		</div>
 	);
 }

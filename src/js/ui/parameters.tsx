@@ -50,24 +50,24 @@ export function Parameters(props: AppProps): JSX.Element {
 
 	return (
 		<div id="parameters">
-			<label class="strong">
-				Top:&nbsp;
+			<div>
+				<label class="strong">Show Top:</label>
 				<select id="top-n" onChange={handleTopNChange}>
 					{SelectOptions(topNOptions, topN)}
 				</select>
-			</label>
-			<label class="strong">
-				&nbsp;&nbsp;Type:&nbsp;
+			</div>
+			<div>
+				<label class="strong">Ranking Type:</label>
 				<select id="ranking-type-filter" onChange={handleRankingTypeChange}>
 					{SelectOptions(rankingTypeOptions, rankingType)}
 				</select>
-			</label>
-			<label class="strong">
-				&nbsp;&nbsp;Time frame:&nbsp;
+			</div>
+			<div>
+				<label class="strong">Time frame:</label>
 				<select id="time-frame" onChange={handleTimeFrameChange}>
 					{SelectOptions(timeFrameOptions, timeFrame)}
 				</select>
-			</label>
+			</div>
 		</div>
 	);
 }

@@ -27,12 +27,10 @@ export function AgeFilter(props: AppProps): JSX.Element {
 
 	return (
 		<div>
-			<label class="strong">
-				Age:&nbsp;
-				<select id="age-filter" onChange={handleEventFilterChange}>
-					{SelectOptions(optionArray, ageFilter)}
-				</select>
-			</label>
+			<label class="strong">Age:</label>
+			<select id="age-filter" onChange={handleEventFilterChange}>
+				{SelectOptions(optionArray, ageFilter)}
+			</select>
 		</div>
 	);
 }

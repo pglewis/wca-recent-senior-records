@@ -22,13 +22,11 @@ export function EventFilter(props: AppProps): JSX.Element {
 
 	return (
 		<div>
-			<label class="strong">
-				Event:&nbsp;
-				<select id="event-filter" onChange={handleEventFilterChange}>
-					<option value="xx">All Events</option>
-					{SelectOptions(optionArray, eventFilter)}
-				</select>
-			</label>
+			<label class="strong">Event:</label>
+			<select id="event-filter" onChange={handleEventFilterChange}>
+				<option value="xx">All Events</option>
+				{SelectOptions(optionArray, eventFilter)}
+			</select>
 		</div>
 	);
 }

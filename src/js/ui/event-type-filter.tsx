@@ -27,13 +27,11 @@ export function EventTypeFilter(props: AppProps): JSX.Element {
 
 	return (
 		<div>
-			<label class="strong">
-				Ranking type:&nbsp;
-				<select id="event-type-filter" onChange={handleEventFilterChange}>
-					<option value="xx">Any</option>
-					{SelectOptions(optionArray, eventTypeFilter)}
-				</select>
-			</label>
+			<label class="strong">Result:</label>
+			<select id="event-type-filter" onChange={handleEventFilterChange}>
+				<option value="xx">Any</option>
+				{SelectOptions(optionArray, eventTypeFilter)}
+			</select>
 		</div>
 	);
 }

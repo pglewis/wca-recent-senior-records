@@ -30,13 +30,19 @@ body {
 	border: 1px solid #dfe2e5;
 }
 
-/**
- rankingType filter
- */
- #ranking-type-filter div {
-	margin-left: 1em;
-	line-height: 1.2em;
- }
+#dropdown-filters,
+#parameters {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	column-gap: 1em;
+}
+
+#dropdown-filters div,
+#parameters div {
+	display: flex;
+	flex-direction: column;
+}
 
 /**
  Sort columns
