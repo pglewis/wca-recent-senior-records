@@ -1,5 +1,12 @@
 @import url("css/common.css");
 
+:root {
+	--flag-scale-sm: .6;
+	--flag-scale-med: .7;
+	--flag-scale-lg: .8;
+	--flag-scale-full: 1;
+}
+
 html {
 	width: 100%;
 	font-size: 11px;
@@ -11,6 +18,14 @@ body {
 	 * with no (or few) results.
 	 */
 	margin: 2px 2px 30em 2px;
+}
+
+.flag {
+	position: relative;
+	bottom: 1px;
+	transform: scale(var(--flag-scale-sm));
+	transform-origin: left center;
+	margin-right: calc(-24px * (1.0 - var(--flag-scale-sm)));
 }
 
 /**
@@ -28,6 +43,10 @@ body {
 	row-gap: 1em;
 	padding: .5em;
 	border: 1px solid #dfe2e5;
+}
+
+#panel .panel-grid>div {
+	width: 240px;
 }
 
 /* the main parameters */
@@ -244,6 +263,15 @@ table.rankings .competition {
 		font-size: 12px;
 	}
 
+	.flag {
+		transform: scale(var(--flag-scale-med));
+		margin-right: calc(-24px * (1.0 - var(--flag-scale-med)));
+	}
+
+	#panel .panel-grid>div {
+		width: auto;
+	}
+
 	#dropdown-filters {
 		display: flex;
 		flex-direction: row;
@@ -268,6 +296,11 @@ table.rankings .competition {
 @media screen and (min-width: 768px) {
 	html {
 		font-size: 13px;
+	}
+
+	.flag {
+		transform: scale(var(--flag-scale-lg));
+		margin-right: calc(-24px * (1.0 - var(--flag-scale-lg)));
 	}
 
 	table.rankings th button,
@@ -297,6 +330,11 @@ table.rankings .competition {
 @media screen and (min-width: 1024px) {
 	html {
 		font-size: 15px;
+	}
+
+	.flag {
+		transform: scale(var(--flag-scale-full));
+		margin-right: calc(-24px * (1.0 - var(--flag-scale-full)));
 	}
 
 	table.rankings th button,
