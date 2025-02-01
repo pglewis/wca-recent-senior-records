@@ -9,7 +9,7 @@
 
 html {
 	width: 100%;
-	font-size: 11px;
+	font-size: 12px;
 }
 
 body {
@@ -45,7 +45,7 @@ body {
 	border: 1px solid #dfe2e5;
 }
 
-#panel .panel-grid>div {
+#dropdown-filters {
 	width: 240px;
 }
 
@@ -260,7 +260,7 @@ table.rankings .competition {
 
 @media screen and (min-width: 500px) {
 	html {
-		font-size: 12px;
+		font-size: 13px;
 	}
 
 	.flag {
@@ -268,7 +268,7 @@ table.rankings .competition {
 		margin-right: calc(-24px * (1.0 - var(--flag-scale-med)));
 	}
 
-	#panel .panel-grid>div {
+	#dropdown-filters {
 		width: auto;
 	}
 
@@ -295,7 +295,7 @@ table.rankings .competition {
 
 @media screen and (min-width: 768px) {
 	html {
-		font-size: 13px;
+		font-size: 14px;
 	}
 
 	.flag {
@@ -318,7 +318,7 @@ table.rankings .competition {
 
 @media screen and (min-width: 992px) {
 	html {
-		font-size: 14px;
+		font-size: 15px;
 	}
 
 	/* We can include the event icon at this point */
