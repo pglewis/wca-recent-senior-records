@@ -12,9 +12,7 @@ export function CountryFilter(props: AppProps): JSX.Element {
 	const continentFilter = store.getState().filters.continent;
 
 	function handleChange(this: HTMLSelectElement) {
-		//--!! More effin' duct-tape: tsx-dom cannot use empty string as the value
-		const value = this.value !== "xx" ? this.value : "";
-		store.dispatch(setCountryFilterAction(value));
+		store.dispatch(setCountryFilterAction(this.value));
 		handleRender();
 	}
 
@@ -32,7 +30,7 @@ export function CountryFilter(props: AppProps): JSX.Element {
 		<div>
 			<label class="strong">Country:</label>
 			<select id="country-filter" onChange={handleChange}>
-				<option value="xx">All Countries</option>
+				<option value="">All Countries</option>
 				{SelectOptions(optionArray, countryFilter)}
 			</select>
 		</div>

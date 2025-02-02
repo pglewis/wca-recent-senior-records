@@ -35,7 +35,6 @@ function SortColumnButton(sortColumn: SortColumn, colIndex: number): JSX.Element
 			onDrop={handleDrop}
 			onDragEnd={handleDragEnd}
 			class={`sort-column ${sortDirection} ${sortLevels[colIndex]} strong`}
-			// @ts-expect-error: tsx-dom incorrectly has draggable as boolean
 			draggable="true"
 			data-sort-on={sortColumn.name}
 			data-position={colIndex}

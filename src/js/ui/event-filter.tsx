@@ -14,9 +14,7 @@ export function EventFilter(props: AppProps): JSX.Element {
 	}
 
 	function handleEventFilterChange(this: HTMLSelectElement) {
-		//--!! duct-tape: tsx-dom cannot use empty string as the value
-		const value = this.value !== "xx" ? this.value : "";
-		store.dispatch(setEventFilterAction(value));
+		store.dispatch(setEventFilterAction(this.value));
 		handleRender();
 	}
 
@@ -24,7 +22,7 @@ export function EventFilter(props: AppProps): JSX.Element {
 		<div>
 			<label class="strong">Event:</label>
 			<select id="event-filter" onChange={handleEventFilterChange}>
-				<option value="xx">All Events</option>
+				<option value="">All Events</option>
 				{SelectOptions(optionArray, eventFilter)}
 			</select>
 		</div>

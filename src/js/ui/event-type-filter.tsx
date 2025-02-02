@@ -14,9 +14,7 @@ export function EventTypeFilter(props: AppProps): JSX.Element {
 	const {eventType: eventTypeFilter} = store.getState().filters;
 
 	function handleEventFilterChange(this: HTMLSelectElement) {
-		//--!! duct-tape: tsx-dom cannot use empty string as the value
-		const value = this.value !== "xx" ? this.value as EventRanking["type"] : "";
-		store.dispatch(setEventTypeFilterAction(value));
+		store.dispatch(setEventTypeFilterAction(this.value as EventRanking["type"]));
 		handleRender();
 	}
 
@@ -29,7 +27,7 @@ export function EventTypeFilter(props: AppProps): JSX.Element {
 		<div>
 			<label class="strong">Result:</label>
 			<select id="event-type-filter" onChange={handleEventFilterChange}>
-				<option value="xx">Any</option>
+				<option value="">Any</option>
 				{SelectOptions(optionArray, eventTypeFilter)}
 			</select>
 		</div>

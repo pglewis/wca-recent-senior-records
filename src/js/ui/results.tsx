@@ -117,7 +117,6 @@ function HeaderSortable(props: {columnHeader: ColumnHeader, appProps: AppProps})
 
 	return (
 		<th
-			// @ts-expect-error: tsx-dom incorrectly types draggable as boolean
 			draggable="true"
 			class={classes.join(" ")}
 			data-sort-on={columnHeader.name}

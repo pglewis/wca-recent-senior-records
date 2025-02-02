@@ -3,16 +3,13 @@ import {h} from "tsx-dom";
 import {AppProps} from "../app-state/app-state";
 import {SelectOptions, type SelectOption} from "./select-options";
 import {setAgeFilterAction} from "../app-state/filters-reducer";
-import {EventRanking} from "../rankings-snapshot";
 
 export function AgeFilter(props: AppProps): JSX.Element {
 	const {store, handleRender} = props;
 	const {age: ageFilter} = store.getState().filters;
 
 	function handleEventFilterChange(this: HTMLSelectElement) {
-		//--!! duct-tape: tsx-dom cannot use empty string as the value
-		const value = this.value !== "xx" ? Number(this.value) as EventRanking["age"] : "";
-		store.dispatch(setAgeFilterAction(Number(value)));
+		store.dispatch(setAgeFilterAction(Number(this.value)));
 		handleRender();
 	}
 
