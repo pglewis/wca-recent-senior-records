@@ -14,6 +14,7 @@
         "eslint": "^9.18.0",
         "eslint-plugin-jsdoc": "^50.6.1",
         "globals": "^15.14.0",
+        "patch-package": "^8.0.0",
         "tsx-dom": "^3.0.1",
         "typescript": "^5.7.3",
         "typescript-eslint": "^8.20.0",
@@ -25,6 +26,7 @@
         "preview": "npx vite preview",
         "lint": "npx eslint",
         "tsc": "npx tsc --noEmit",
-        "get-data": "./bin/get-data.sh"
+        "get-data": "./bin/get-data.sh",
+        "postinstall": "patch-package"
     }
 }

@@ -1,0 +1,13 @@
+diff --git a/node_modules/tsx-dom/dist/setAttributes.js b/node_modules/tsx-dom/dist/setAttributes.js
+index f877812..df31dd3 100644
+--- a/node_modules/tsx-dom/dist/setAttributes.js
++++ b/node_modules/tsx-dom/dist/setAttributes.js
+@@ -39,7 +39,7 @@ function setAttributes(element, attrs) {
+             element.innerHTML = value;
+         else if (value === true)
+             element.setAttribute(name, name);
+-        else if (value || value === 0)
++        else if (value || value === 0 || value === "")
+             element.setAttribute(name, value.toString());
+     }
+ }
