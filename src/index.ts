@@ -1,6 +1,7 @@
 import type {RankingsSnapshot} from "./js/rankings-snapshot";
 import {createStore} from "./js/state/state";
-import {initialState, rootReducer, UIState} from "./js/app-state/app-state";
+import {initialState, UIState} from "./js/app-state/app-state";
+import {appReducer} from "./js/app-state/app-reducer";
 import {setUIStateAction} from "./js/app-state/ui-reducer";
 import {setRankingsDataAction} from "./js/app-state/rankings-reducer";
 import {filterRankingsAction, sortResultsAction} from "./js/app-state/results-reducer";
@@ -17,7 +18,7 @@ if (!rankingsSnapshot) {
 	throw new Error("Missing rankings data");
 }
 
-const store = createStore(initialState, rootReducer);
+const store = createStore(initialState, appReducer);
 store.dispatch(setRankingsDataAction(rankingsSnapshot));
 render();
 

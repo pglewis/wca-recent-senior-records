@@ -4,7 +4,7 @@ type Dispatch<A extends Action> = (action: A) => void;
 
 type StateSlice = unknown
 
-type State = {
+export type State = {
 	[key: string]: StateSlice
 }
 
