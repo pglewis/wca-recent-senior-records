@@ -22,7 +22,7 @@
     },
     "scripts": {
         "dev": "npx vite",
-        "build": "npx vite build",
+        "build": "npm run lint && npm run tsc && npx vite build",
         "preview": "npx vite preview",
         "lint": "npx eslint",
         "tsc": "npx tsc --noEmit",
