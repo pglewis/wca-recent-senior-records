@@ -51,7 +51,7 @@ export function Parameters(props: AppProps): JSX.Element {
 	return (
 		<div id="parameters">
 			<div>
-				<label class="strong">Show Top:</label>
+				<label class="strong">Top:</label>
 				<select id="top-n" onChange={handleTopNChange}>
 					{SelectOptions(topNOptions, topN)}
 				</select>

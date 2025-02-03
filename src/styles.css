@@ -37,6 +37,11 @@ body {
 	margin: 1em 0;
 }
 
+/** Panel labels */
+#panel .strong {
+	font-size: 13px
+}
+
 #panel .panel-grid {
 	display: flex;
 	flex-direction: column;
@@ -45,14 +50,10 @@ body {
 	border: 1px solid #dfe2e5;
 }
 
-#dropdown-filters {
-	width: 240px;
-}
-
 /* the main parameters */
 #parameters {
 	display: flex;
-	column-gap: 1em;
+	column-gap: .8em;
 }
 
 #parameters>div {
@@ -99,7 +100,6 @@ body {
 	border: 1px solid #dfe2e5;
 	padding: 0.25em 0 0.25em 0.5em;
 	font-weight: 700;
-	font-size: 90%;
 }
 
 .sort-column:hover {

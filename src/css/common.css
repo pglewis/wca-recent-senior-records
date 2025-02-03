@@ -32,7 +32,7 @@ button:focus-visible {
 fieldset,
 select,
 input {
-	font-size: inherit;
+	font-size: 16px;
 }
 
 table {
