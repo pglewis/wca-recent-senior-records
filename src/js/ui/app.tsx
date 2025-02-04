@@ -6,11 +6,13 @@ import {Panel} from "./panel";
 import {Results} from "./results";
 
 export function App(props: AppProps): JSX.Element {
-	const results = props.store.getState().results;
+	const store = props.store;
+	const state = store.getState();
+	const results = state.results;
 
 	return (
 		<div>
-			<Info {...props} />
+			<Info lastUpdated={state.rankings.lastUpdated} />
 			<Panel {...props} />
 			<div class="strong">Showing {results.length} {results.length === 1 ? "result" : "results"}</div>
 			<Results {...props} />
