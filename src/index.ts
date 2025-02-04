@@ -73,10 +73,12 @@ function setUIState(uiState: UIState): void {
 		document.getElementById(uiState.activeID)?.focus();
 	}
 
-	const search = document.getElementById("search-input") as HTMLInputElement;
-	search.selectionStart = uiState?.selectionStart || null;
-	search.selectionEnd = uiState?.selectionEnd || null;
-	search.selectionDirection = uiState?.selectionDirection || "none";
+	if (uiState.activeID === "search-input") {
+		const search = document.getElementById("search-input") as HTMLInputElement;
+		search.selectionStart = uiState?.selectionStart || null;
+		search.selectionEnd = uiState?.selectionEnd || null;
+		search.selectionDirection = uiState?.selectionDirection || "none";
+	}
 
 	window.scroll(uiState.scrollX, uiState.scrollY);
 }

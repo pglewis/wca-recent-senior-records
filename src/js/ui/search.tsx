@@ -3,7 +3,6 @@ import {h} from "tsx-dom";
 import {AppProps} from "../app-state/app-state";
 import {setSearchFilterAction} from "../app-state/filters-reducer";
 import {debounce} from "../util/debounce";
-import {isIOS} from "../util/is-ios";
 
 function getPlaceholder() {
 	const placeholders = [
@@ -32,7 +31,7 @@ export function Search(props: AppProps): JSX.Element {
 				id="search-input"
 				value={search}
 				onInput={debounce(handleInput, 350)}
-				type={isIOS() ? "text" : "search"}
+				type="search"
 				size={19}
 				placeholder={getPlaceholder()}
 			/>
