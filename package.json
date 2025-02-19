@@ -1,6 +1,6 @@
 {
     "name": "wca-recent-senior-records",
-    "priavate": true,
+    "private": true,
     "version": "1.0.0",
     "type": "module",
     "homepage": "https://pglewis.github.io/wca-recent-senior-records/",
