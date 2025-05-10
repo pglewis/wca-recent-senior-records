@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Recent Senior Records</title>
+
+	<script src="../data/senior-rankings.js"></script>
+	<script src="./scripts/vendor/drag-drop-touch.js" type="module"></script>
+	<script src="./index.ts" type="module"></script>
+
+	<link rel="stylesheet" href="./styles.css">
+	<link rel="stylesheet" href="../common/css/flags.css">
+	<link rel="stylesheet" href="../common/css/cubing-icons.css">
+
+	<link rel="shortcut icon" type="image/x-icon" href="../favicon.ico">
+</head>
+<body>
+	<div class="container">
+		<h2>Recent Senior Records</h2>
+		<a href="../">Senior Cubing Tracker home</a>
+		<p>
+			These are the latest top results from the
+			<a href="https://wca-seniors.org" target="_blank">unofficial senior cubing rankings</a>.
+			More information in <a href="./about.html">the about page</a>.
+		</p>
+		<div id="app">
+			<h3 class="message">Loading... please wait</h3>
+		</div>
+	</div>
+</body>
+</html>

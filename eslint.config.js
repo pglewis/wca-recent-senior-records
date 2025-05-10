@@ -8,7 +8,7 @@ import globals from "globals";
 export default tseslint.config(
 	eslint.configs.recommended,
 	tseslint.configs.recommended,
-	{ignores: ["dist", "src/data", "src/js/vendor"]},
+	{ignores: ["dist", "src/data", "src/recent/scripts/vendor"]},
 	{languageOptions: {globals: globals.browser}},
 	{
 		plugins: {
