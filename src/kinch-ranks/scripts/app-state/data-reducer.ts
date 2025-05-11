@@ -261,5 +261,5 @@ function getPersonMultiScore(topRanks: TopRank[], personId: string, event: WCAEv
 
 function getKinchMultiScore(result: string) {
 	const multiResult = parseMultiResult(result);
-	return multiResult.score + (multiResult.seconds / (60 * 60));
+	return multiResult.score + 1 - multiResult.seconds / (60 * 60);
 }
