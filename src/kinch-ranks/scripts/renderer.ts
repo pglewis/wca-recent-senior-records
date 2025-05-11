@@ -24,7 +24,7 @@ export class Renderer {
 	constructor(store: DataStore<AppState>, appRoot: Root) {
 		this.store = store;
 		this.appRoot = appRoot;
-		window.addEventListener("popstate", this.setFiltersfromURLState.bind(this));
+		window.addEventListener("popstate", this.setFiltersFromURLState.bind(this));
 	}
 
 	/*
@@ -51,7 +51,7 @@ export class Renderer {
 	/*
 	 *
 	 */
-	setFiltersfromURLState() {
+	setFiltersFromURLState() {
 		const urlFilters = getURLState();
 
 		this.store.dispatch(setFiltersAction({...initialState.filters, ...urlFilters}));

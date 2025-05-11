@@ -27,5 +27,4 @@ store.dispatch(setTopRanksAction(store.getState().rankings));
 
 // Render the UI
 const renderer = new Renderer(store, appRoot);
-renderer.setFiltersfromURLState();
-renderer.render();
+renderer.setFiltersFromURLState();

@@ -7,16 +7,16 @@ export interface TopRank {
 	result: string;
 }
 
-export interface KinchEvent {
-	id: WCAEventID;
-	eventName: string;
-	score: number;
-	result: string;
-}
-
 export interface KinchRank {
 	personId: string;
 	personName: string;
 	overall: number;
 	events: KinchEvent[];
+}
+
+export interface KinchEvent {
+	id: WCAEventID;
+	eventName: string;
+	score: number;
+	result: string;
 }
