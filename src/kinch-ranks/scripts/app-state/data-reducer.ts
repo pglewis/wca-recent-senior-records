@@ -101,7 +101,6 @@ export function buildTopRanks(rankings: Rankings): TopRank[] {
 	return topRanks;
 }
 
-// getRanksForPerson(rankings, topRanks, filters, p.id)
 export function getRanksForPerson(rankings: Rankings, topRanks: TopRank[], filters: AppFilters, personId: string): KinchRank {
 	const rankingsData = rankings.data;
 	const person = rankingsData.persons.find(p => p.id === personId);
@@ -123,7 +122,8 @@ export function getRanksForPerson(rankings: Rankings, topRanks: TopRank[], filte
 				id: event.id,
 				eventName: event.name,
 				score: 0,
-				result: ""
+				result: "",
+				type: null,
 			});
 		} else if (event.id === "333mbf") {
 			// Multi blind is a special case
@@ -174,7 +174,8 @@ function getPersonAverageScore(topRanks: TopRank[], personId: string, event: WCA
 			id: event.id,
 			eventName: event.name,
 			score: 0,
-			result: ""
+			result: "",
+			type: null,
 		};
 	}
 
@@ -182,7 +183,8 @@ function getPersonAverageScore(topRanks: TopRank[], personId: string, event: WCA
 		id: event.id,
 		eventName: event.name,
 		score: getPersonScore(event.format, topRank, result),
-		result: result
+		result: result,
+		type: "average",
 	};
 }
 
@@ -198,12 +200,14 @@ function getPersonSingeleOrAverageScore(topRanks: TopRank[], personId: string, e
 			id: event.id,
 			eventName: event.name,
 			score: 0,
-			result: ""
+			result: "",
+			type: null,
 		};
 	}
 
 	let result: string;
 	let score = 0;
+	let type: KinchEvent["type"];
 	const singleScore = getPersonScore(event.format, singleTopRank, singleResult);
 	if (averageResult && averageTopRank) {
 		const averageScore = getPersonScore(event.format, averageTopRank, averageResult);
@@ -212,20 +216,24 @@ function getPersonSingeleOrAverageScore(topRanks: TopRank[], personId: string, e
 		if (singleScore > averageScore) {
 			score = singleScore;
 			result = singleResult;
+			type = "single";
 		} else {
 			score = averageScore;
 			result = averageResult;
+			type = "average";
 		}
 	} else {
 		score = singleScore;
 		result = singleResult;
+		type = "single";
 	}
 
 	return {
 		id: event.id,
 		eventName: event.name,
 		score: score,
-		result: result
+		result: result,
+		type: type,
 	};
 }
 
@@ -246,7 +254,8 @@ function getPersonMultiScore(topRanks: TopRank[], personId: string, event: WCAEv
 			id: event.id,
 			eventName: event.name,
 			score: 0,
-			result: ""
+			result: "",
+			type: null,
 		};
 	}
 
@@ -255,7 +264,8 @@ function getPersonMultiScore(topRanks: TopRank[], personId: string, event: WCAEv
 		id: event.id,
 		eventName: event.name,
 		score: (getKinchMultiScore(result) / getKinchMultiScore(topRank.result)) * 100,
-		result: result
+		result: result,
+		type: "single",
 	};
 }
 

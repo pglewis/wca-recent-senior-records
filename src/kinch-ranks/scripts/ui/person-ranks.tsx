@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {h} from "tsx-dom";
 import {KinchEvent, KinchRank} from "../types";
-import {AppProps} from "../app-state/app-state";
+import {AppFilters, AppProps} from "../app-state/app-state";
 
 export function PersonRanks(props: AppProps) {
 	const {store} = props;
@@ -10,6 +10,9 @@ export function PersonRanks(props: AppProps) {
 	const {kinchRanks} = state.data;
 	const {wcaid} = state.filters;
 	const rankIndex = kinchRanks.findIndex(rank => rank.personId === wcaid);
+	const competitorBaseURL = "https://www.worldcubeassociation.org/persons";
+	const competitorURL = `${competitorBaseURL}/${wcaid}`;
+
 
 	if (rankIndex < 0) {
 		const person = rankings.data.persons[rankings.personIDToIndex[wcaid as string]];
@@ -24,18 +27,18 @@ export function PersonRanks(props: AppProps) {
 	return (
 		<div>
 			<p>
-				<h3>{kinchRank.personName}</h3>
+				<h3><a href={competitorURL} target="_blank">{kinchRank.personName}</a></h3>
 				<div>Rank: {ranking}</div>
 				<div>Overall score: {kinchRank.overall.toFixed(2)}</div>
 				<div><a href=".">View the leaderboard</a></div>
 			</p>
-			<KinchEventTable kinchRank={kinchRank} />
+			<KinchEventTable kinchRank={kinchRank} filters={state.filters}/>
 		</div>
 	);
 }
 
-function KinchEventTable(props: {kinchRank: KinchRank}) {
-	const kinchRank = props.kinchRank;
+function KinchEventTable(props: {kinchRank: KinchRank, filters: AppFilters}) {
+	const {kinchRank, filters} = props;
 
 	return (
 		<table id="person-ranks">
@@ -45,13 +48,14 @@ function KinchEventTable(props: {kinchRank: KinchRank}) {
 					<th class="score">Score</th>
 					<th class="result">Result</th>
 				</tr>
-				{kinchRank.events.map(e => KinchEventRow(e))}
+				{kinchRank.events.map(e => KinchEventRow({kinchEvent: e, filters: filters}))}
 			</tbody>
 		</table>
 	);
 }
 
-function KinchEventRow(kinchEvent: KinchEvent) {
+function KinchEventRow(props: {kinchEvent: KinchEvent, filters: AppFilters}) {
+	const {kinchEvent, filters} = props;
 	const {eventName, score, result} = kinchEvent;
 
 	let className = "";
@@ -63,11 +67,20 @@ function KinchEventRow(kinchEvent: KinchEvent) {
 		className = "good-score";
 	}
 
+	let resultOut;
+	if (result) {
+		const rankingsBaseURL = "https://wca-seniors.org/Senior_Rankings.html";
+		const rankingURL = `${rankingsBaseURL}#${kinchEvent.id}-${kinchEvent.type}-${filters.age}`;
+		resultOut = (<a href={rankingURL} target="_blank">{result}</a>);
+	} else {
+		resultOut = "--";
+	}
+
 	return (
 		<tr class={className}>
 			<td class="event">{eventName}</td>
 			<td class="score">{score.toFixed(2)}</td>
-			<td class="result">{result || "--"}</td>
+			<td class="result">{resultOut}</td>
 		</tr>
 	);
 }

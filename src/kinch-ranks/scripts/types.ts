@@ -1,4 +1,4 @@
-import {WCAEventID} from "../../common/scripts/rankings-snapshot";
+import {WCAEventID, EventRanking} from "../../common/scripts/rankings-snapshot";
 
 export interface TopRank {
 	eventId: string;
@@ -19,4 +19,5 @@ export interface KinchEvent {
 	eventName: string;
 	score: number;
 	result: string;
+	type: EventRanking["type"] | null;
 }
