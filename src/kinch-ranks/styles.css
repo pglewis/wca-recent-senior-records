@@ -59,7 +59,21 @@ table th.result {
 	text-align: right;
 }
 
-/* Personal event high score colors */
+/* Personal event table */
+table#person-ranks th.event,
+table#person-ranks th.score {
+	cursor: pointer;
+}
+
+/* Add arrow indicator for sorted column */
+table#person-ranks th.event.sorted::after,
+table#person-ranks th.score.sorted::after {
+    content: "▲";
+    padding-left: 0.4em;
+    font-size: 0.8em;
+}
+
+/* high score colors */
 table#person-ranks tr.top-score {
 	background-color: #00ff0080;
 }

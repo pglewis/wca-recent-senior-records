@@ -2,19 +2,18 @@ import {EventRanking} from "../../../common/scripts/rankings-snapshot";
 import {
 	AppActionTypes,
 	AppAction,
-	FiltersSetAction,
+	AllFiltersSetAction,
 	AgeFilterChangedAction,
 	WCAIDFilterChangedAction,
 	RegionFilterChangedAction,
 	PageFilterChangedAction,
-	SearchFilterChangedAction,
 	RowsPerPageFilterChangedAction,
 } from "./app-actions";
 import {AppFilters, initialState} from "./app-state";
 
-export function setFiltersAction(filters: AppFilters): FiltersSetAction {
+export function setAllFiltersAction(filters: AppFilters): AllFiltersSetAction {
 	return {
-		type: AppActionTypes.filtersSet,
+		type: AppActionTypes.allFiltersSet,
 		payload: filters
 	};
 }
@@ -47,13 +46,6 @@ export function setPageFilterAction(page: number): PageFilterChangedAction {
 	};
 }
 
-export function setSearchFilterAction(search: string): SearchFilterChangedAction {
-	return {
-		type: AppActionTypes.searchFilterChanged,
-		payload: search
-	};
-}
-
 export function setRowsPerPageFilterAction(rowsPerPage: number): RowsPerPageFilterChangedAction {
 	return {
 		type: AppActionTypes.rowsPerPageFilterChanged,
@@ -65,7 +57,7 @@ export function filtersReducer(filters: AppFilters = initialState.filters, actio
 	const {type, payload} = action;
 
 	switch (type) {
-		case AppActionTypes.filtersSet: {
+		case AppActionTypes.allFiltersSet: {
 			return {...filters, ...payload};
 		}
 		case AppActionTypes.ageFilterChanged: {
@@ -79,9 +71,6 @@ export function filtersReducer(filters: AppFilters = initialState.filters, actio
 		}
 		case AppActionTypes.pageFilterChanged: {
 			return {...filters, page: payload};
-		}
-		case AppActionTypes.searchFilterChanged: {
-			return {...filters, searchTerm: payload};
 		}
 		case AppActionTypes.rowsPerPageFilterChanged: {
 			return {...filters, rowsPerPage: payload};

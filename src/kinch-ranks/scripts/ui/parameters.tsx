@@ -3,9 +3,10 @@ import {h} from "tsx-dom";
 import {AppProps} from "../app-state/app-state";
 import {AgeFilter} from "./age-filter";
 import {Pagination} from "../../../common/scripts/ui/pagination";
-import {setAgeFilterAction, setPageFilterAction, setSearchFilterAction, setWCAIDFilterAction} from "../app-state/filters-reducer";
+import {setAgeFilterAction, setPageFilterAction, setWCAIDFilterAction} from "../app-state/filters-reducer";
 import {Search} from "./search";
 import {getURLState, updateURLState} from "../url-state";
+import {setSearchFilterAction} from "../app-state/ui-state-reducer";
 
 export function Parameters(props: AppProps) {
 	const {store, handleRender} = props;

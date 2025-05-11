@@ -4,6 +4,7 @@ import {KinchRank, TopRank} from "../types";
 import {rankingsReducer} from "./rankings-reducer";
 import {dataReducer} from "./data-reducer";
 import {filtersReducer} from "./filters-reducer";
+import {UIStateReducer} from "./ui-state-reducer";
 
 export interface AppProps {
 	store: DataStore<AppState>,
@@ -37,13 +38,29 @@ export interface AppFilters {
 	page: number,
 	rowsPerPage: number,
 	wcaid?: string,
-	searchTerm: string,
+};
+
+export interface UIState {
+	controlState: {
+		scrollX: number,
+		scrollY: number,
+		activeID: string | null,
+		selectionStart: number | null,
+		selectionEnd: number | null,
+		selectionDirection: "forward" | "backward" | "none" | null,
+
+	},
+	userInputState: {
+		searchTerm: string,
+		eventScoreSort: "event" | "score",
+	}
 };
 
 export type AppState = {
 	rankings: Rankings,
 	data: AppData,
 	filters: AppFilters,
+	uiState: UIState,
 };
 
 export const initialState: AppState = {
@@ -66,12 +83,26 @@ export const initialState: AppState = {
 		region: "World",
 		page: 1,
 		rowsPerPage: 25,
-		searchTerm: "",
-	}
+	},
+	uiState: {
+		controlState: {
+			scrollX: window.scrollX,
+			scrollY: window.scrollY,
+			activeID: null,
+			selectionStart: null,
+			selectionEnd: null,
+			selectionDirection: null,
+		},
+		userInputState: {
+			searchTerm: "",
+			eventScoreSort: "event",
+		},
+	},
 };
 
 export const rootReducer = combineReducers<AppState>({
 	rankings: rankingsReducer,
 	data: dataReducer,
 	filters: filtersReducer,
+	uiState: UIStateReducer,
 } as ReducersMapObject<AppState>);

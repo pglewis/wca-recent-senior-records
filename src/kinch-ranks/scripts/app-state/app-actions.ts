@@ -5,26 +5,31 @@ import {AppFilters, Rankings} from "./app-state";
 
 export enum AppActionTypes {
 	rankingsDataSet = "rankingsDataSet",
+
 	topRanksSet = "topRanksSet",
 	updateKinchRanks = "updateKinchRanks",
-	filtersSet = "filtersSet",
+
+	allFiltersSet = "allFiltersSet",
 	ageFilterChanged = "ageFilterChanged",
 	wcaidFilterChanged = "wcaidFilterChanged",
-	searchFilterChanged = "searchFilterChanged",
 	regionFilterChanged = "regionFilterChanged",
 	pageFilterChanged = "pageFilterChanged",
 	rowsPerPageFilterChanged = "rowsPerPageFilterChanged",
+
+	controlStateChanged = "controlStateChanged",
+	searchTermChanged = "searchTermChanged",
+	eventScoreSortChanged = "eventScoreSortChanged",
 };
 
 export interface RankingsDataSetAction extends UnknownAction {
-	type: AppActionTypes.rankingsDataSet
-	payload: RankingsSnapshot
-}
+	type: AppActionTypes.rankingsDataSet,
+	payload: RankingsSnapshot,
+};
 
 export interface TopRanksSetAction extends UnknownAction {
 	type: AppActionTypes.topRanksSet,
-	payload: Rankings
-}
+	payload: Rankings,
+};
 
 export interface KinchRanksUpdatedAction extends UnknownAction {
 	type: AppActionTypes.updateKinchRanks,
@@ -32,47 +37,71 @@ export interface KinchRanksUpdatedAction extends UnknownAction {
 		rankings: Rankings,
 		topRanks: TopRank[],
 		filters: AppFilters,
-	}
-}
+	},
+};
 
-export interface FiltersSetAction extends UnknownAction {
-	type: AppActionTypes.filtersSet,
-	payload: AppFilters
-}
+export interface AllFiltersSetAction extends UnknownAction {
+	type: AppActionTypes.allFiltersSet,
+	payload: AppFilters,
+
+};
 export interface AgeFilterChangedAction extends UnknownAction {
 	type: AppActionTypes.ageFilterChanged,
-	payload: EventRanking["age"]
-}
+	payload: EventRanking["age"],
+
+};
 export interface WCAIDFilterChangedAction extends UnknownAction {
 	type: AppActionTypes.wcaidFilterChanged,
-	payload: string | undefined
-}
+	payload: string | undefined,
+};
+
 export interface RegionFilterChangedAction extends UnknownAction {
 	type: AppActionTypes.regionFilterChanged,
-	payload: string
-}
+	payload: string,
+};
 export interface PageFilterChangedAction extends UnknownAction {
 	type: AppActionTypes.pageFilterChanged,
-	payload: number
-}
+	payload: number,
+};
 
-export interface SearchFilterChangedAction extends UnknownAction {
-	type: AppActionTypes.searchFilterChanged,
-	payload: string
-}
 export interface RowsPerPageFilterChangedAction extends UnknownAction {
 	type: AppActionTypes.rowsPerPageFilterChanged,
-	payload: number
-}
+	payload: number,
+};
+
+export interface ControlStateChangedAction extends UnknownAction {
+	type: AppActionTypes.controlStateChanged,
+	payload: {
+		scrollX: number,
+		scrollY: number,
+		activeID: string | null,
+		selectionStart: number | null,
+		selectionEnd: number | null,
+		selectionDirection: "forward" | "backward" | "none" | null,
+	},
+};
+
+export interface SearchFilterChangedAction extends UnknownAction {
+	type: AppActionTypes.searchTermChanged,
+	payload: string,
+};
+
+export interface EventScoreSortChangedAction extends UnknownAction {
+	type: AppActionTypes.eventScoreSortChanged,
+	payload: "event" | "score",
+};
 
 export type AppAction =
 	RankingsDataSetAction
 	| TopRanksSetAction
 	| KinchRanksUpdatedAction
-	| FiltersSetAction
+	| AllFiltersSetAction
 	| AgeFilterChangedAction
 	| WCAIDFilterChangedAction
 	| RegionFilterChangedAction
 	| PageFilterChangedAction
+	| RowsPerPageFilterChangedAction
+	| ControlStateChangedAction
 	| SearchFilterChangedAction
-	| RowsPerPageFilterChangedAction;
+	| EventScoreSortChangedAction
+;

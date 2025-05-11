@@ -2,6 +2,7 @@
 import {h} from "tsx-dom";
 import {KinchEvent, KinchRank} from "../types";
 import {AppFilters, AppProps} from "../app-state/app-state";
+import {setEventScoreSortAction} from "../app-state/ui-state-reducer";
 
 export function PersonRanks(props: AppProps) {
 	const {store} = props;
@@ -9,10 +10,10 @@ export function PersonRanks(props: AppProps) {
 	const rankings = state.rankings;
 	const {kinchRanks} = state.data;
 	const {wcaid} = state.filters;
+	const {eventScoreSort} = state.uiState.userInputState;
 	const rankIndex = kinchRanks.findIndex(rank => rank.personId === wcaid);
 	const competitorBaseURL = "https://www.worldcubeassociation.org/persons";
 	const competitorURL = `${competitorBaseURL}/${wcaid}`;
-
 
 	if (rankIndex < 0) {
 		const person = rankings.data.persons[rankings.personIDToIndex[wcaid as string]];
@@ -24,6 +25,12 @@ export function PersonRanks(props: AppProps) {
 
 	const kinchRank = kinchRanks[rankIndex];
 	const ranking = rankIndex + 1;
+
+	function handleEventScoreSortChange(sort: "event" | "score") {
+		store.dispatch(setEventScoreSortAction(sort));
+		props.handleRender();
+	};
+
 	return (
 		<div>
 			<p>
@@ -32,31 +39,69 @@ export function PersonRanks(props: AppProps) {
 				<div>Overall score: {kinchRank.overall.toFixed(2)}</div>
 				<div><a href=".">View the leaderboard</a></div>
 			</p>
-			<KinchEventTable kinchRank={kinchRank} filters={state.filters}/>
+			<KinchEventTable kinchRank={kinchRank} filters={state.filters} eventScoreSort={eventScoreSort} onEventScoreSortChange={handleEventScoreSortChange} />
 		</div>
 	);
 }
 
-function KinchEventTable(props: {kinchRank: KinchRank, filters: AppFilters}) {
-	const {kinchRank, filters} = props;
+interface KinchEventTableProps {
+	kinchRank: KinchRank,
+	filters: AppFilters,
+	eventScoreSort: "event" | "score",
+	onEventScoreSortChange: (sort: "event" | "score") => void,
+};
+
+function KinchEventTable(props: KinchEventTableProps) {
+	const {
+		kinchRank,
+		filters,
+		eventScoreSort,
+		onEventScoreSortChange
+	} = props;
+
+	const kinchEvents = [...kinchRank.events];
+	if (eventScoreSort === "score") {
+		kinchEvents.sort((a, b) => b.score - a.score);
+	}
+
+	function getHeaderClass(column: "event" | "score"): string {
+		return `${column}${eventScoreSort === column ? " sorted" : ""}`;
+	}
+
+	function handleEventColClick() {
+		onEventScoreSortChange("event");
+	}
+
+	function handleScoreColClick() {
+		onEventScoreSortChange("score");
+	}
 
 	return (
 		<table id="person-ranks">
 			<tbody>
 				<tr>
-					<th class="event">Event</th>
-					<th class="score">Score</th>
+					<th class={getHeaderClass("event")} onClick={handleEventColClick}>Event</th>
+					<th class={getHeaderClass("score")} onClick={handleScoreColClick}>Score</th>
 					<th class="result">Result</th>
 				</tr>
-				{kinchRank.events.map(e => KinchEventRow({kinchEvent: e, filters: filters}))}
+				{kinchEvents.map(kinchEvent => KinchEventRow({
+					kinchEvent: kinchEvent,
+					filters: filters,
+				}))}
 			</tbody>
 		</table>
 	);
 }
 
-function KinchEventRow(props: {kinchEvent: KinchEvent, filters: AppFilters}) {
+interface KinchEventRowProps {
+	kinchEvent: KinchEvent,
+	filters: AppFilters,
+};
+
+function KinchEventRow(props: KinchEventRowProps) {
 	const {kinchEvent, filters} = props;
 	const {eventName, score, result} = kinchEvent;
+
 
 	let className = "";
 	if (score >= 100) {
