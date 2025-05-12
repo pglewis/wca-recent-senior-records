@@ -45,7 +45,7 @@ export function Parameters(props: AppProps) {
 		<div class="parameters">
 			<AgeFilter age={filters.age} onAgeChange={handleAgeChange} />
 			<Search
-				searchTerm={filters.searchTerm}
+				searchTerm={state.uiState.userInputState.searchTerm}
 				kinchRanks={state.data.kinchRanks}
 				onChange={handleSearchChange}
 				onSelect={handleSearchSelect}
