@@ -95,6 +95,18 @@ table#person-ranks tr.good-score {
 	margin: 1em 0;
 }
 
+.parameters > div {
+  width: 100%;
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+.parameters select,
+.parameters input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
 /* Search */
 ul#search-results {
 	position: absolute;
@@ -115,6 +127,10 @@ ul#search-results li {
 }
 
 /* Pagination */
+.page-selector-box {
+	font-size: .9em;
+}
+
 .page-button {
 	width: 1.5em;
 	padding: .25em 0;
@@ -136,5 +152,6 @@ ul#search-results li {
 }
 
 .page-selector-box input[type="number"] {
+	font-size: inherit;
 	width: 2.7em;
 }
