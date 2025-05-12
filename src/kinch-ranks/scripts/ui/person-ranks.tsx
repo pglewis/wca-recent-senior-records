@@ -3,6 +3,7 @@ import {h} from "tsx-dom";
 import {KinchEvent, KinchRank} from "../types";
 import {AppFilters, AppProps} from "../app-state/app-state";
 import {setEventScoreSortAction} from "../app-state/ui-state-reducer";
+import {scoreAverageOnly} from "../app-state/data-reducer";
 
 export function PersonRanks(props: AppProps) {
 	const {store} = props;
@@ -100,7 +101,7 @@ interface KinchEventRowProps {
 
 function KinchEventRow(props: KinchEventRowProps) {
 	const {kinchEvent, filters} = props;
-	const {eventName, score, result} = kinchEvent;
+	const {eventName, score, result, type} = kinchEvent;
 
 
 	let className = "";
@@ -115,8 +116,19 @@ function KinchEventRow(props: KinchEventRowProps) {
 	let resultOut;
 	if (result) {
 		const rankingsBaseURL = "https://wca-seniors.org/Senior_Rankings.html";
-		const rankingURL = `${rankingsBaseURL}#${kinchEvent.id}-${kinchEvent.type}-${filters.age}`;
-		resultOut = (<a href={rankingURL} target="_blank">{result}</a>);
+		const rankingURL = `${rankingsBaseURL}#${kinchEvent.id}-${type}-${filters.age}`;
+
+		let resultType = "";
+		if (kinchEvent.id !== "333mbf" && !scoreAverageOnly[kinchEvent.id]) {
+			resultType = type === "single" ? " (sing)" : " (avg)";
+		}
+		resultOut = (
+			<span>
+				<a href={rankingURL} target="_blank" rel="noopener noreferrer">
+					{result} {resultType}
+				</a>
+			</span>
+		);
 	} else {
 		resultOut = "--";
 	}
@@ -135,6 +147,7 @@ function NoKinchData(props: {name: string}) {
 		<div>
 			<h3>{props.name}</h3>
 			<p>No Kinch ranks available for this age group.</p>
+			<div><a href=".">View the leaderboard</a></div>
 		</div>
 	);
 }

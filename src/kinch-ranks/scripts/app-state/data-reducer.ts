@@ -1,4 +1,4 @@
-import {EventRanking, WCAEvent} from "../../../common/scripts/rankings-snapshot";
+import {EventRanking, WCAEvent, WCAEventID} from "../../../common/scripts/rankings-snapshot";
 import {parseMultiResult, timeResultToSeconds} from "../../../common/scripts/util/parse";
 import {KinchEvent, KinchRank, TopRank} from "../types";
 import {AppData, AppFilters, Rankings} from "./app-state";
@@ -9,7 +9,7 @@ import {
 	KinchRanksUpdatedAction,
 } from "./app-actions";
 
-const useAverage = {
+export const scoreAverageOnly: Record<WCAEventID, boolean> = {
 	"333": true,
 	"222": true,
 	"444": true,
@@ -85,7 +85,7 @@ export function buildTopRanks(rankings: Rankings): TopRank[] {
 		for (const eventRanking of event.rankings) {
 			const {age, ranks} = eventRanking;
 
-			if (ranks.length === 0 || (useAverage[event.id] && eventRanking.type !== "average")) {
+			if (ranks.length === 0 || (scoreAverageOnly[event.id] && eventRanking.type !== "average")) {
 				continue;
 			}
 
@@ -128,7 +128,7 @@ export function getRanksForPerson(rankings: Rankings, topRanks: TopRank[], filte
 		} else if (event.id === "333mbf") {
 			// Multi blind is a special case
 			kinchRanks.events.push(getPersonMultiScore(topRanks, person.id, event, filters.age));
-		} else if (useAverage[event.id]) {
+		} else if (scoreAverageOnly[event.id]) {
 			// Use the average
 			kinchRanks.events.push(getPersonAverageScore(topRanks, person.id, event, filters.age));
 		} else {
