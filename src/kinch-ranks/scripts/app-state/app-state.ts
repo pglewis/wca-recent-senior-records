@@ -80,7 +80,7 @@ export const initialState: AppState = {
 	filters: {
 		wcaid: undefined,
 		age: 40,
-		region: "World",
+		region: "world",
 		page: 1,
 		rowsPerPage: 25,
 	},

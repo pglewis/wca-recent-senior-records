@@ -27,6 +27,7 @@ export class Renderer {
 	 */
 	render() {
 		const {store, appRoot} = this;
+
 		try {
 			store.dispatch(setControlStateAction(this.getCurrentControlState()));
 			appRoot.render(Loading());

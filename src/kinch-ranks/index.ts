@@ -1,13 +1,12 @@
 import type {RankingsSnapshot} from "../common/scripts/rankings-snapshot";
-import {createRoot} from "../common/scripts/ui/create-root";
-import {ErrorMessage} from "./scripts/ui/error-message";
-
 import {createStore} from "../common/scripts/state/state";
 import {initialState} from "./scripts/app-state/app-state";
 import {appReducer} from "./scripts/app-state/app-reducer";
 import {setRankingsDataAction} from "./scripts/app-state/rankings-reducer";
-import {Renderer} from "./scripts/renderer";
 import {setTopRanksAction} from "./scripts/app-state/data-reducer";
+import {createRoot} from "../common/scripts/ui/create-root";
+import {ErrorMessage} from "./scripts/ui/error-message";
+import {Renderer} from "./scripts/renderer";
 
 // Setup the root for all UI display
 const appRoot = createRoot("#app");

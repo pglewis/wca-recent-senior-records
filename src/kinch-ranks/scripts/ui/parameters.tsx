@@ -1,12 +1,18 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {h} from "tsx-dom";
-import {AppProps} from "../app-state/app-state";
-import {AgeFilter} from "./age-filter";
-import {Pagination} from "../../../common/scripts/ui/pagination";
-import {setAgeFilterAction, setPageFilterAction, setWCAIDFilterAction} from "../app-state/filters-reducer";
-import {Search} from "./search";
+import {TopRank} from "../types";
 import {getURLState, updateURLState} from "../url-state";
+import {AppFilters, AppProps} from "../app-state/app-state";
+import {
+	setAgeFilterAction,
+	setPageFilterAction,
+	setWCAIDFilterAction,
+} from "../app-state/filters-reducer";
 import {setSearchFilterAction} from "../app-state/ui-state-reducer";
+import {Search} from "./search";
+import {AgeFilter} from "./age-filter";
+import {RegionFilter} from "./region-filter";
+import {Pagination} from "../../../common/scripts/ui/pagination";
 
 export function Parameters(props: AppProps) {
 	const {store, handleRender} = props;
@@ -34,25 +40,46 @@ export function Parameters(props: AppProps) {
 		handleRender();
 	};
 
-	const handleSearchSelect = function(personId: string) {
+	const handleSearchSelect = function(personID: string) {
 		store.dispatch(setSearchFilterAction(""));
-		store.dispatch(setWCAIDFilterAction(personId));
-		updateURLState({...getURLState(), ...{wcaid: personId}});
+		store.dispatch(setWCAIDFilterAction(personID));
+		updateURLState({...getURLState(), ...{wcaid: personID}});
 		handleRender();
 	};
 
+	const ageList = getAgeList(state.data.topRanks, filters);
+
 	return (
 		<div class="parameters">
-			<AgeFilter age={filters.age} onAgeChange={handleAgeChange} />
 			<Search
 				searchTerm={state.uiState.userInputState.searchTerm}
 				kinchRanks={state.data.kinchRanks}
 				onChange={handleSearchChange}
 				onSelect={handleSearchSelect}
 			/>
-			{(totalPages > 1 && !filters.wcaid) ?
-				(<Pagination currentPage={filters.page} totalPages={totalPages} onPageChange={handlePageChange} />) : ""
+
+			<AgeFilter age={filters.age} ageList={ageList} onAgeChange={handleAgeChange} />
+
+			<RegionFilter {...props} />
+
+			{(totalPages > 1 && !filters.wcaid)
+				? (<Pagination
+					currentPage={filters.page}
+					totalPages={totalPages}
+					onPageChange={handlePageChange}
+				/>)
+				: ""
 			}
 		</div>
 	);
+}
+
+function getAgeList(topRanks: TopRank[], filters: AppFilters): number[] {
+	return Array.from(
+		new Set(
+			topRanks
+				.filter(tr => tr.region === filters.region)
+				.map(tr => tr.age)
+		)
+	).sort((a, b) => a - b);
 }

@@ -1,18 +1,19 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {h} from "tsx-dom";
-import {KinchEvent, KinchRank} from "../types";
+import {Continent, Country} from "../../../common/scripts/rankings-snapshot";
 import {AppFilters, AppProps} from "../app-state/app-state";
 import {setEventScoreSortAction} from "../app-state/ui-state-reducer";
 import {scoreAverageOnly} from "../app-state/data-reducer";
+import {KinchEvent, KinchRank} from "../types";
 
 export function PersonRanks(props: AppProps) {
 	const {store} = props;
 	const state = store.getState();
 	const rankings = state.rankings;
 	const {kinchRanks} = state.data;
-	const {wcaid} = state.filters;
+	const {wcaid, age, region} = state.filters;
 	const {eventScoreSort} = state.uiState.userInputState;
-	const rankIndex = kinchRanks.findIndex(rank => rank.personId === wcaid);
+	const rankIndex = kinchRanks.findIndex(rank => rank.personID === wcaid);
 	const competitorBaseURL = "https://www.worldcubeassociation.org/persons";
 	const competitorURL = `${competitorBaseURL}/${wcaid}`;
 
@@ -36,11 +37,19 @@ export function PersonRanks(props: AppProps) {
 		<div>
 			<p>
 				<h3><a href={competitorURL} target="_blank">{kinchRank.personName}</a></h3>
+				<div>Age Group: {age}</div>
+				<div>Region: {region === "world" ? "World" : region}</div>
 				<div>Rank: {ranking}</div>
 				<div>Overall score: {kinchRank.overall.toFixed(2)}</div>
-				<div><a href=".">View the leaderboard</a></div>
 			</p>
-			<KinchEventTable kinchRank={kinchRank} filters={state.filters} eventScoreSort={eventScoreSort} onEventScoreSortChange={handleEventScoreSortChange} />
+			<KinchEventTable
+				kinchRank={kinchRank}
+				filters={state.filters}
+				eventScoreSort={eventScoreSort}
+				onEventScoreSortChange={handleEventScoreSortChange}
+				continents={rankings.data.continents}
+				countries={rankings.data.countries}
+			/>
 		</div>
 	);
 }
@@ -50,6 +59,8 @@ interface KinchEventTableProps {
 	filters: AppFilters,
 	eventScoreSort: "event" | "score",
 	onEventScoreSortChange: (sort: "event" | "score") => void,
+	continents: Continent[],
+	countries: Country[],
 };
 
 function KinchEventTable(props: KinchEventTableProps) {
@@ -57,7 +68,8 @@ function KinchEventTable(props: KinchEventTableProps) {
 		kinchRank,
 		filters,
 		eventScoreSort,
-		onEventScoreSortChange
+		onEventScoreSortChange,
+		continents,
 	} = props;
 
 	const kinchEvents = [...kinchRank.events];
@@ -85,10 +97,13 @@ function KinchEventTable(props: KinchEventTableProps) {
 					<th class={getHeaderClass("score")} onClick={handleScoreColClick}>Score</th>
 					<th class="result">Result</th>
 				</tr>
-				{kinchEvents.map(kinchEvent => KinchEventRow({
-					kinchEvent: kinchEvent,
-					filters: filters,
-				}))}
+				{kinchEvents.map(
+					kinchEvent => KinchEventRow({
+						kinchEvent: kinchEvent,
+						filters: filters,
+						continents: continents,
+					})
+				)}
 			</tbody>
 		</table>
 	);
@@ -97,34 +112,47 @@ function KinchEventTable(props: KinchEventTableProps) {
 interface KinchEventRowProps {
 	kinchEvent: KinchEvent,
 	filters: AppFilters,
+	continents: Continent[],
 };
 
 function KinchEventRow(props: KinchEventRowProps) {
-	const {kinchEvent, filters} = props;
+	const {
+		kinchEvent,
+		filters,
+		continents,
+	} = props;
 	const {eventName, score, result, type} = kinchEvent;
 
-
-	let className = "";
+	let rowClass = "";
 	if (score >= 100) {
-		className = "top-score";
+		rowClass = "top-score";
 	} else if (score >= 90) {
-		className = "high-score";
+		rowClass = "high-score";
 	} else if (score >= 80) {
-		className = "good-score";
+		rowClass = "good-score";
 	}
 
 	let resultOut;
 	if (result) {
 		const rankingsBaseURL = "https://wca-seniors.org/Senior_Rankings.html";
-		const rankingURL = `${rankingsBaseURL}#${kinchEvent.id}-${type}-${filters.age}`;
+
+		let regionCode = "";
+		if (filters.region !== "world") {
+			if (continents.some(c => c.id === filters.region)) {
+				regionCode = `-${filters.region}`;
+			} else {
+				regionCode = `-xx-${filters.region}`;
+			}
+		}
+		const rankingURL = `${rankingsBaseURL}#${kinchEvent.eventID}-${type}-${filters.age}${regionCode}`;
 
 		let resultType = "";
-		if (kinchEvent.id !== "333mbf" && !scoreAverageOnly[kinchEvent.id]) {
+		if (kinchEvent.eventID !== "333mbf" && !scoreAverageOnly[kinchEvent.eventID]) {
 			resultType = type === "single" ? " (sing)" : " (avg)";
 		}
 		resultOut = (
 			<span>
-				<a href={rankingURL} target="_blank" rel="noopener noreferrer">
+				<a href={rankingURL} target="_blank">
 					{result} {resultType}
 				</a>
 			</span>
@@ -134,7 +162,7 @@ function KinchEventRow(props: KinchEventRowProps) {
 	}
 
 	return (
-		<tr class={className}>
+		<tr class={rowClass}>
 			<td class="event">{eventName}</td>
 			<td class="score">{score.toFixed(2)}</td>
 			<td class="result">{resultOut}</td>
@@ -147,7 +175,6 @@ function NoKinchData(props: {name: string}) {
 		<div>
 			<h3>{props.name}</h3>
 			<p>No Kinch ranks available for this age group.</p>
-			<div><a href=".">View the leaderboard</a></div>
 		</div>
 	);
 }

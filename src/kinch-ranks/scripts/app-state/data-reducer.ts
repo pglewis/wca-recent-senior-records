@@ -76,12 +76,12 @@ export function dataReducer(data: AppData, action: AppAction): AppData {
 
 export function buildTopRanks(rankings: Rankings): TopRank[] {
 	const rankingsData = rankings.data;
-	const topRanks = [];
+	const topRanks: TopRank[] = [];
 
-	// format (time, number, multi), id (eg "333"), name ("3x3x3 Cube")
+	// format (time, number, multi), id (eg "333"), name ("3x3x3 Cube"), rankings[]
 	for (const event of rankingsData.events) {
 
-		// type (single/average) and age(40, 50, etc)
+		// type (single/average) and age(40, 50, etc), ranks[]
 		for (const eventRanking of event.rankings) {
 			const {age, ranks} = eventRanking;
 
@@ -89,37 +89,79 @@ export function buildTopRanks(rankings: Rankings): TopRank[] {
 				continue;
 			}
 
+			// Stash the top (world) ranking
 			topRanks.push({
-				eventId: event.id,
+				eventID: event.id,
 				type: eventRanking.type,
 				age: age,
+				region: "world",
 				result: ranks[0].best
 			});
+
+			// rank (#), id (wca id), best (results), competition (comp ID)
+			const regions = new Set();
+			for (const rank of ranks) {
+				const person = rankingsData.persons[rankings.personIDToIndex[rank.id]];
+				const country = rankingsData.countries[rankings.countryIDToIndex[person.country]];
+				const continent = rankingsData.continents[rankings.continentIDToIndex[country.continent]];
+
+				// First ranking for each continent is top for the region
+				if (!regions.has(continent.id)) {
+					regions.add(continent.id);
+
+					topRanks.push({
+						eventID: event.id,
+						type: eventRanking.type,
+						age: age,
+						region: continent.id,
+						result: rank.best,
+					});
+				}
+
+				// First ranking for each country is top for the region
+				if (!regions.has(country.id)) {
+					regions.add(country.id);
+
+					topRanks.push({
+						eventID: event.id,
+						type: eventRanking.type,
+						age: age,
+						region: country.id,
+						result: rank.best,
+					});
+				}
+			}
 		}
 	}
 
 	return topRanks;
 }
 
-export function getRanksForPerson(rankings: Rankings, topRanks: TopRank[], filters: AppFilters, personId: string): KinchRank {
+function getRanksForPerson(rankings: Rankings, topRanks: TopRank[], filters: AppFilters, personID: string): KinchRank {
 	const rankingsData = rankings.data;
-	const person = rankingsData.persons.find(p => p.id === personId);
+	const person = rankingsData.persons.find(p => p.id === personID);
 	if (!person) {
-		throw new Error(`We were looking for someone's rankings but WCA ID "${personId}" was not found.`);
+		throw new Error(`We were looking for someone's rankings but WCA ID "${personID}" was not found.`);
 	}
 
-	const kinchRanks = {
-		personId: personId,
+	const kinchRank: KinchRank = {
+		personID: personID,
 		personName: person.name,
 		overall: 0,
 		events: [] as KinchEvent[]
 	};
 
+	const country = rankingsData.countries[rankings.countryIDToIndex[person.country]];
+	const continent = rankingsData.continents[rankings.continentIDToIndex[country.continent]];
+	if (filters.region !== "world" && filters.region !== country.id && filters.region !== continent.id) {
+		return kinchRank;
+	}
+
 	for (const event of rankingsData.events) {
 		if (!person.events.includes(event.id)) {
 			// They've never competed in this event at all
-			kinchRanks.events.push({
-				id: event.id,
+			kinchRank.events.push({
+				eventID: event.id,
 				eventName: event.name,
 				score: 0,
 				result: "",
@@ -127,37 +169,42 @@ export function getRanksForPerson(rankings: Rankings, topRanks: TopRank[], filte
 			});
 		} else if (event.id === "333mbf") {
 			// Multi blind is a special case
-			kinchRanks.events.push(getPersonMultiScore(topRanks, person.id, event, filters.age));
+			kinchRank.events.push(getPersonMultiScore(topRanks, person.id, event, filters));
 		} else if (scoreAverageOnly[event.id]) {
 			// Use the average
-			kinchRanks.events.push(getPersonAverageScore(topRanks, person.id, event, filters.age));
+			kinchRank.events.push(getPersonAverageScore(topRanks, person.id, event, filters));
 		} else {
 			// best of single or average
-			kinchRanks.events.push(getPersonSingeleOrAverageScore(topRanks, person.id, event, filters.age));
+			kinchRank.events.push(getPersonSingeleOrAverageScore(topRanks, person.id, event, filters));
 		}
 	}
 
-	kinchRanks.overall = kinchRanks.events.reduce((acc, current) => acc + current.score, 0) / kinchRanks.events.length;
-	return kinchRanks;
+	kinchRank.overall = kinchRank.events.reduce((acc, current) => acc + current.score, 0) / kinchRank.events.length;
+	return kinchRank;
 }
 
-function getTopRank(topRanks: TopRank[], eventId: string, type: EventRanking["type"], age: number): TopRank | undefined {
+function getTopRank(topRanks: TopRank[], eventID: string, type: EventRanking["type"], filters: AppFilters): TopRank | undefined {
 	const topRank = topRanks.find(r =>
-		r.eventId === eventId
+		r.eventID === eventID
 		&& r.type === type
-		&& r.age === age
+		&& r.age === filters.age
+		&& r.region === filters.region
 	);
 
 	return topRank;
 }
 
-function getPersonResult(event: WCAEvent, type: EventRanking["type"], personId: string, age: number): string | undefined {
-	const eventRanking = event.rankings.find(r => r.type === type && r.age === age);
+function getPersonResult(event: WCAEvent, type: EventRanking["type"], personID: string, filters: AppFilters): string | undefined {
+	const eventRanking = event.rankings.find(
+		r => r.type === type
+			&& r.age === filters.age
+	);
+
 	if (!eventRanking) {
 		return undefined;
 	}
 
-	const rank = eventRanking.ranks.find(r => r.id === personId);
+	const rank = eventRanking.ranks.find(r => r.id === personID);
 	if (!rank) {
 		return undefined;
 	}
@@ -165,13 +212,13 @@ function getPersonResult(event: WCAEvent, type: EventRanking["type"], personId: 
 	return rank.best;
 }
 
-function getPersonAverageScore(topRanks: TopRank[], personId: string, event: WCAEvent, age: number): KinchEvent {
-	const topRank = getTopRank(topRanks, event.id, "average", age);
-	const result = getPersonResult(event, "average", personId, age);
+function getPersonAverageScore(topRanks: TopRank[], personID: string, event: WCAEvent, filters: AppFilters): KinchEvent {
+	const topRank = getTopRank(topRanks, event.id, "average", filters);
+	const result = getPersonResult(event, "average", personID, filters);
 
 	if (!result || !topRank) {
 		return {
-			id: event.id,
+			eventID: event.id,
 			eventName: event.name,
 			score: 0,
 			result: "",
@@ -180,7 +227,7 @@ function getPersonAverageScore(topRanks: TopRank[], personId: string, event: WCA
 	}
 
 	return {
-		id: event.id,
+		eventID: event.id,
 		eventName: event.name,
 		score: getPersonScore(event.format, topRank, result),
 		result: result,
@@ -188,16 +235,16 @@ function getPersonAverageScore(topRanks: TopRank[], personId: string, event: WCA
 	};
 }
 
-function getPersonSingeleOrAverageScore(topRanks: TopRank[], personId: string, event: WCAEvent, age: number): KinchEvent {
-	const singleTopRank = getTopRank(topRanks, event.id, "single", age);
-	const averageTopRank = getTopRank(topRanks, event.id, "average", age);
-	const singleResult = getPersonResult(event, "single", personId, age);
-	const averageResult = getPersonResult(event, "average", personId, age);
+function getPersonSingeleOrAverageScore(topRanks: TopRank[], personID: string, event: WCAEvent, filters: AppFilters): KinchEvent {
+	const singleTopRank = getTopRank(topRanks, event.id, "single", filters);
+	const averageTopRank = getTopRank(topRanks, event.id, "average", filters);
+	const singleResult = getPersonResult(event, "single", personID, filters);
+	const averageResult = getPersonResult(event, "average", personID, filters);
 
 	if (!singleResult || !singleTopRank) {
 		// We can end up here if they've competed in the event but not in this age bracket
 		return {
-			id: event.id,
+			eventID: event.id,
 			eventName: event.name,
 			score: 0,
 			result: "",
@@ -229,7 +276,7 @@ function getPersonSingeleOrAverageScore(topRanks: TopRank[], personId: string, e
 	}
 
 	return {
-		id: event.id,
+		eventID: event.id,
 		eventName: event.name,
 		score: score,
 		result: result,
@@ -245,13 +292,13 @@ function getPersonScore(format: WCAEvent["format"], topRank: TopRank, result: st
 	}
 }
 
-function getPersonMultiScore(topRanks: TopRank[], personId: string, event: WCAEvent, age: number): KinchEvent {
-	const topRank = getTopRank(topRanks, event.id, "single", age); // We just use single for mbld
-	const result = getPersonResult(event, "single", personId, age);
+function getPersonMultiScore(topRanks: TopRank[], personID: string, event: WCAEvent, filters: AppFilters): KinchEvent {
+	const topRank = getTopRank(topRanks, event.id, "single", filters); // We just use single for mbld
+	const result = getPersonResult(event, "single", personID, filters);
 
 	if (!result || !topRank) {
 		return {
-			id: event.id,
+			eventID: event.id,
 			eventName: event.name,
 			score: 0,
 			result: "",
@@ -261,7 +308,7 @@ function getPersonMultiScore(topRanks: TopRank[], personId: string, event: WCAEv
 
 	// Bigger result is better for mbld, so the division is reversed
 	return {
-		id: event.id,
+		eventID: event.id,
 		eventName: event.name,
 		score: (getKinchMultiScore(result) / getKinchMultiScore(topRank.result)) * 100,
 		result: result,

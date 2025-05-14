@@ -29,7 +29,7 @@ export function Search(props: SearchProps): JSX.Element {
 	if (searchTerm && searchTerm.length > 2) {
 		const lowerTerm = searchTerm.toLowerCase();
 		filteredResults = kinchRanks.filter(kr =>
-			kr.personId.toLowerCase().includes(lowerTerm)
+			kr.personID.toLowerCase().includes(lowerTerm)
 			|| kr.personName.toLowerCase().includes(lowerTerm)
 		).slice(0, 10); // Limit to X results
 		showDropdown = filteredResults.length > 0;
@@ -41,7 +41,7 @@ export function Search(props: SearchProps): JSX.Element {
 	}
 
 	function handleSelect(result: KinchRank) {
-		onSelect(result.personId);
+		onSelect(result.personID);
 	}
 
 	return (
@@ -61,7 +61,7 @@ export function Search(props: SearchProps): JSX.Element {
 				<ul id="search-results">
 					{filteredResults.map(result => (
 						<li onClick={() => handleSelect(result)}>
-							{result.personName} ({result.personId})
+							{result.personName} ({result.personID})
 						</li>
 					))}
 				</ul>

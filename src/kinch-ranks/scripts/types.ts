@@ -1,23 +1,24 @@
 import {WCAEventID, EventRanking} from "../../common/scripts/rankings-snapshot";
 
 export interface TopRank {
-	eventId: string;
-	type: "single" | "average";
-	age: number;
-	result: string;
-}
+	eventID: string,
+	type: "single" | "average",
+	age: number,
+	region: string,
+	result: string,
+};
 
 export interface KinchRank {
-	personId: string;
-	personName: string;
-	overall: number;
-	events: KinchEvent[];
-}
+	personID: string,
+	personName: string,
+	overall: number,
+	events: KinchEvent[],
+};
 
 export interface KinchEvent {
-	id: WCAEventID;
-	eventName: string;
-	score: number;
-	result: string;
-	type: EventRanking["type"] | null;
-}
+	eventID: WCAEventID,
+	eventName: string,
+	score: number,
+	result: string,
+	type: EventRanking["type"] | null,
+};

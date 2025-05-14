@@ -34,16 +34,16 @@ export function Leaderboard(props: AppProps) {
 
 function RankingRow(appProps: AppProps, kinchRank: KinchRank, ranking: number) {
 	const {store, handleRender} = appProps;
-	const {personId, personName, overall} = kinchRank;
+	const {personID, personName, overall} = kinchRank;
 	const url = new URL(window.location.href);
 
-	url.searchParams.set("wcaid", personId);
+	url.searchParams.set("wcaid", personID);
 	const link = `${url.pathname}${url.search}`;
 
-	function handlePersonClick(e: Event, personId: string) {
+	function handlePersonClick(e: Event, personID: string) {
 		e.preventDefault();
-		store.dispatch(setWCAIDFilterAction(personId));
-		updateURLState({...getURLState(), ...{wcaid: personId}});
+		store.dispatch(setWCAIDFilterAction(personID));
+		updateURLState({...getURLState(), ...{wcaid: personID}});
 		handleRender();
 	}
 
@@ -51,7 +51,7 @@ function RankingRow(appProps: AppProps, kinchRank: KinchRank, ranking: number) {
 		<tr>
 			<td class="rank">{ranking}</td>
 			<td class="name">
-				<a href={link} class="link" onClick={(e) => handlePersonClick(e, personId)}>{personName}</a>
+				<a href={link} class="link" onClick={(e) => handlePersonClick(e, personID)}>{personName}</a>
 			</td>
 			<td class="score">{overall.toFixed(2)}</td>
 		</tr>
