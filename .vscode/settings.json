@@ -1,6 +1,0 @@
-{
-	"javascript.format.insertSpaceAfterFunctionKeywordForAnonymousFunctions": false,
-	"javascript.format.insertSpaceAfterOpeningAndBeforeClosingEmptyBraces": false,
-	"javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": false,
-	"javascript.format.semicolons": "insert"
-}
