@@ -28,6 +28,9 @@ jobs:
       - name: Copy senior rankings data
         run: npm run get-data
 
+      - name: Convert data to JSON
+        run: num run convert-data
+
       - name: Create .nojekyll
         run: touch ./dist/.nojekyll
 

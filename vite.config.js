@@ -4,6 +4,7 @@ export default defineConfig({
 	root: "src",
 	base: "",
 	build: {
+		target: "es2022",
 		outDir: "../dist",
 		emptyOutDir: true,
 		rollupOptions: {

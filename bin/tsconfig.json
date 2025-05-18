@@ -1,0 +1,13 @@
+{
+	// Node config
+	"extends": "../tsconfig.base.json",
+	"compilerOptions": {
+		"target": "es2022",
+		"module": "es2022",
+		"moduleResolution": "node",
+		"outDir": "./",
+	},
+	"include": [
+		"./src/*.ts",
+	],
+}

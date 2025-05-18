@@ -8,7 +8,14 @@ import globals from "globals";
 export default tseslint.config(
 	eslint.configs.recommended,
 	tseslint.configs.recommended,
-	{ignores: ["dist", "src/data", "src/recent/scripts/vendor"]},
+	{
+		ignores: [
+			"dist",
+			"bin/**/*.js",
+			"src/data",
+			"src/recent/scripts/vendor"
+		]
+	},
 	{languageOptions: {globals: globals.browser}},
 	{
 		plugins: {
@@ -61,5 +68,13 @@ export default tseslint.config(
 			"jsdoc/require-returns-type": "off",
 			"jsdoc/require-param-type": "off",
 		}
+	}, {
+	// Overrides for node scripts in 'bin/' directory
+		files: ["bin/**/*.ts"],
+		languageOptions: {
+			globals: {
+				...globals.node, // merge node globals
+			},
+		},
 	},
 );

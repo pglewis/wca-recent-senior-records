@@ -11,12 +11,20 @@ import {Renderer} from "./scripts/renderer";
 // Setup the root for all UI display
 const appRoot = createRoot("#app");
 
-// Make sure the rankings data snapshot exists
-declare global {interface Window {rankings: RankingsSnapshot | undefined}}
-const rankingsSnapshot = window.rankings;
-if (!rankingsSnapshot) {
+// Get the rankings data
+let rankingsSnapshot: RankingsSnapshot;
+const url = "../data/senior-rankings.json";
+const response = await fetch(url);
+try {
+	if (!response.ok) {
+		appRoot.render(ErrorMessage("The rankings data is missing, try back in a bit."));
+		throw new Error(`Fetch response: ${response.statusText}`);
+	}
+
+	rankingsSnapshot = await response.json();
+} catch (error) {
 	appRoot.render(ErrorMessage("The rankings data is missing, try back in a bit."));
-	throw new Error("Missing rankings data");
+	throw error;
 }
 
 // Create the data store and do initial, one-time calculations

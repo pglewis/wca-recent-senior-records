@@ -11,9 +11,11 @@
     "devDependencies": {
         "@eslint/js": "^9.18.0",
         "@stylistic/eslint-plugin-js": "^2.12.1",
+        "@types/node": "^22.15.18",
         "eslint": "^9.18.0",
         "eslint-plugin-jsdoc": "^50.6.1",
         "globals": "^15.14.0",
+        "shx": "^0.4.0",
         "tsx-dom": "^3.1.0",
         "typescript": "^5.7.3",
         "typescript-eslint": "^8.20.0",
@@ -21,10 +23,14 @@
     },
     "scripts": {
         "dev": "npx vite",
+        "lint": "npx eslint",
+        "tsc-client": "npx tsc --project ./src",
+        "tsc-node": "npx tsc -project ./bin/tsconfig.json",
+        "tsc": "npm run tsc-client && npm run tsc-node",
         "build": "npm run lint && npm run tsc && npx vite build",
         "preview": "npx vite preview",
-        "lint": "npx eslint",
-        "tsc": "npx tsc --noEmit",
-        "get-data": "./bin/get-data.sh"
+        "get-data": "./bin/get-data.sh",
+        "convert-data": "node bin/convert-to-json.js",
+        "copy-dev-data": "shx cp dist/data/* src/data/"
     }
 }
