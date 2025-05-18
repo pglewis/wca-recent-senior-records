@@ -29,7 +29,7 @@ jobs:
         run: npm run get-data
 
       - name: Convert data to JSON
-        run: num run convert-data
+        run: npm run convert-data
 
       - name: Create .nojekyll
         run: touch ./dist/.nojekyll
