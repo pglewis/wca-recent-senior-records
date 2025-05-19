@@ -8,14 +8,21 @@ import {filterRankingsAction, sortResultsAction} from "./scripts/app-state/resul
 import {createRoot} from "../common/scripts/ui/create-root";
 import {App, Loading, ErrorMessage} from "./scripts/ui/app";
 
-declare global {interface Window {rankings: RankingsSnapshot | undefined}}
-
-const rankingsSnapshot = window.rankings;
 const appRoot = createRoot("#app");
 
-if (!rankingsSnapshot) {
+let rankingsSnapshot: RankingsSnapshot;
+const url = "../data/senior-rankings.json";
+const response = await fetch(url);
+try {
+	if (!response.ok) {
+		appRoot.render(ErrorMessage("The rankings data is missing, try back in a bit."));
+		throw new Error(`Fetch response: ${response.statusText}`);
+	}
+
+	rankingsSnapshot = await response.json();
+} catch (error) {
 	appRoot.render(ErrorMessage("The rankings data is missing, try back in a bit."));
-	throw new Error("Missing rankings data");
+	throw error;
 }
 
 const store = createStore(initialState, appReducer);

@@ -25,11 +25,8 @@ jobs:
       - name: Vite Build
         run: npm run build
 
-      - name: Copy senior rankings data
+      - name: Copy and process the senior rankings data
         run: npm run get-data
-
-      - name: Convert data to JSON
-        run: npm run convert-data
 
       - name: Create .nojekyll
         run: touch ./dist/.nojekyll

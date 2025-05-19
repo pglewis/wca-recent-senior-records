@@ -25,12 +25,11 @@
         "dev": "npx vite",
         "lint": "npx eslint",
         "tsc-client": "npx tsc --project ./src",
-        "tsc-node": "npx tsc -project ./bin/tsconfig.json",
+        "tsc-node": "npx tsc --project ./bin",
         "tsc": "npm run tsc-client && npm run tsc-node",
         "build": "npm run lint && npm run tsc && npx vite build",
         "preview": "npx vite preview",
-        "get-data": "./bin/get-data.sh",
-        "convert-data": "node bin/convert-to-json.js",
+        "get-data": "node bin/get-data.js",
         "copy-dev-data": "shx cp dist/data/* src/data/"
     }
 }
