@@ -2,7 +2,7 @@
 import {h} from "tsx-dom";
 import {Continent, Country} from "../../../common/scripts/rankings-snapshot";
 import {AppProps} from "../app-state/app-state";
-import {setRegionFilterAction} from "../app-state/filters-reducer";
+import {setPageFilterAction, setRegionFilterAction} from "../app-state/filters-reducer";
 import {getURLState, updateURLState} from "../url-state";
 
 export function RegionFilter(props: AppProps) {
@@ -40,7 +40,8 @@ export function RegionFilter(props: AppProps) {
 
 	function handleChange(this: HTMLSelectElement) {
 		store.dispatch(setRegionFilterAction(this.value));
-		updateURLState({...getURLState(), ...{region: this.value}});
+		store.dispatch(setPageFilterAction(1));
+		updateURLState({...getURLState(), ...{region: this.value, page: 1}});
 		handleRender();
 	}
 
