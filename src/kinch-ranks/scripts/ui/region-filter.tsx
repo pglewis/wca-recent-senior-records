@@ -12,7 +12,8 @@ export function RegionFilter(props: AppProps) {
 	const topRanks = state.data.topRanks;
 	const filters = state.filters;
 	const {continents, countries, persons} = rankings.data;
-	const {continents: activeContinents, countries: activeCountries} = rankings.activeRegions;
+	const activeContinents = new Set(rankings.activeRegions.continents);
+	const activeCountries = new Set(rankings.activeRegions.countries);
 	const {region: currentRegion, wcaid} = filters;
 
 	let filteredContinents: Continent[];

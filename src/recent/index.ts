@@ -1,16 +1,16 @@
-import type {RankingsSnapshot} from "../common/scripts/rankings-snapshot";
+import {ExtendedRankingsData} from "../common/scripts/rankings-snapshot";
 import {createStore} from "../common/scripts/state/state";
 import {initialState, UIState} from "./scripts/app-state/app-state";
 import {appReducer} from "./scripts/app-state/app-reducer";
 import {setUIStateAction} from "./scripts/app-state/ui-reducer";
-import {setRankingsDataAction} from "./scripts/app-state/rankings-reducer";
 import {filterRankingsAction, sortResultsAction} from "./scripts/app-state/results-reducer";
 import {createRoot} from "../common/scripts/ui/create-root";
 import {App, Loading, ErrorMessage} from "./scripts/ui/app";
+import {setRankingsDataAction} from "./scripts/app-state/rankings-reducer";
 
 const appRoot = createRoot("#app");
 
-let rankingsSnapshot: RankingsSnapshot;
+let rankings: ExtendedRankingsData;
 const url = "../data/senior-rankings.json";
 const response = await fetch(url);
 try {
@@ -19,14 +19,14 @@ try {
 		throw new Error(`Fetch response: ${response.statusText}`);
 	}
 
-	rankingsSnapshot = await response.json();
+	rankings = await response.json();
 } catch (error) {
 	appRoot.render(ErrorMessage("The rankings data is missing, try back in a bit."));
 	throw error;
 }
 
-const store = createStore(initialState, appReducer);
-store.dispatch(setRankingsDataAction(rankingsSnapshot));
+const store = createStore({...initialState, ...{rankings}}, appReducer);
+store.dispatch(setRankingsDataAction(rankings));
 render();
 
 /*

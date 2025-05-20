@@ -9,10 +9,10 @@ export default defineConfig({
 		emptyOutDir: true,
 		rollupOptions: {
 			input: {
-				main: "src/index.html",
-				recent: "src/recent/index.html",
+				"main": "src/index.html",
+				"recent": "src/recent/index.html",
 				"recent-about": "src/recent/about.html",
-				kinch: "src/kinch-ranks/index.html",
+				"kinch": "src/kinch-ranks/index.html",
 				"kinch-faq": "src/kinch-ranks/faq.html"
 			},
 		},

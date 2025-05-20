@@ -1,5 +1,6 @@
 import type {
 	RankingsSnapshot,
+	ExtendedRankingsData,
 	Person,
 	WCAEvent,
 	EventRanking,
@@ -9,7 +10,7 @@ import type {
 	Country,
 } from "../../../common/scripts/rankings-snapshot";
 import {combineReducers, type DataStore, type ReducersMapObject} from "../../../common/scripts/state/state";
-import {rankingsReducer} from "./rankings-reducer";
+import {rankingsReducer} from "../../../kinch-ranks/scripts/app-state/rankings-reducer";
 import {filtersReducer} from "./filters-reducer";
 import {resultsReducer} from "./results-reducer";
 import {sortColumnsReducer} from "./sort-columns-reducer";
@@ -23,25 +24,11 @@ export interface AppProps {
 }
 
 export type AppState = {
-	rankings: Rankings
+	rankings: ExtendedRankingsData
 	results: ResultRow[]
 	filters: Filters
 	sortColumns: SortColumn[]
 	uiState: UIState
-}
-
-export interface Rankings {
-	/** date/time string of the data snapshot in UTC */
-	lastUpdated: string
-	data: RankingsSnapshot
-	personIDToIndex: {[key: string]: number}
-	competitionIDToIndex: {[key: number]: number}
-	continentIDToIndex: {[key: string]: number}
-	countryIDToIndex: {[key: string]: number}
-	activeRegions: {
-		continents: Set<Continent["id"]>
-		countries: Set<Country["id"]>
-	}
 }
 
 export interface ResultRow {
@@ -122,7 +109,7 @@ export const initialState: AppState = {
 		personIDToIndex: {},
 		continentIDToIndex: {},
 		countryIDToIndex: {},
-		activeRegions: {continents: new Set(), countries: new Set()},
+		activeRegions: {continents: [], countries: []},
 	},
 	results: [],
 	filters: {

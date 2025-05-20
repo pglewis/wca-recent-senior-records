@@ -6,10 +6,11 @@ import {SelectOptions, type SelectOption} from "./select-options";
 
 export function CountryFilter(props: AppProps): JSX.Element {
 	const {store, handleRender} = props;
-	const countries = store.getState().rankings.data.countries;
-	const activeCountries = store.getState().rankings.activeRegions.countries;
-	const countryFilter = store.getState().filters.country;
-	const continentFilter = store.getState().filters.continent;
+	const {rankings, filters} = store.getState();
+	const countries = rankings.data.countries;
+	const activeCountries = new Set(rankings.activeRegions.countries);
+	const countryFilter = filters.country;
+	const continentFilter = filters.continent;
 
 	function handleChange(this: HTMLSelectElement) {
 		store.dispatch(setCountryFilterAction(this.value));

@@ -1,7 +1,7 @@
-import {RankingsSnapshot, EventRanking} from "../../../common/scripts/rankings-snapshot";
+import {ExtendedRankingsData, EventRanking} from "../../../common/scripts/rankings-snapshot";
 import type {UnknownAction} from "../../../common/scripts/state/actions";
 import {TopRank} from "../types";
-import {AppFilters, Rankings} from "./app-state";
+import {AppFilters} from "./app-state";
 
 export enum AppActionTypes {
 	rankingsDataSet = "rankingsDataSet",
@@ -23,18 +23,18 @@ export enum AppActionTypes {
 
 export interface RankingsDataSetAction extends UnknownAction {
 	type: AppActionTypes.rankingsDataSet,
-	payload: RankingsSnapshot,
+	payload: ExtendedRankingsData,
 };
 
 export interface TopRanksSetAction extends UnknownAction {
 	type: AppActionTypes.topRanksSet,
-	payload: Rankings,
+	payload: ExtendedRankingsData,
 };
 
 export interface KinchRanksUpdatedAction extends UnknownAction {
 	type: AppActionTypes.updateKinchRanks,
 	payload: {
-		rankings: Rankings,
+		rankings: ExtendedRankingsData,
 		topRanks: TopRank[],
 		filters: AppFilters,
 	},

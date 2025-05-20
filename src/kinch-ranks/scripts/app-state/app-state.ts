@@ -1,7 +1,7 @@
-import {Continent, Country, EventRanking, RankingsSnapshot} from "../../../common/scripts/rankings-snapshot";
+import {EventRanking, RankingsSnapshot, ExtendedRankingsData} from "../../../common/scripts/rankings-snapshot";
 import {combineReducers, type DataStore, type ReducersMapObject} from "../../../common/scripts/state/state";
-import {KinchRank, TopRank} from "../types";
 import {rankingsReducer} from "./rankings-reducer";
+import {KinchRank, TopRank} from "../types";
 import {dataReducer} from "./data-reducer";
 import {filtersReducer} from "./filters-reducer";
 import {UIStateReducer} from "./ui-state-reducer";
@@ -11,20 +11,6 @@ export interface AppProps {
 
 	/** Callback to trigger a re-render of the UI */
 	handleRender: () => void
-};
-
-export interface Rankings {
-	/** date/time string of the data snapshot in UTC */
-	lastUpdated: string,
-	data: RankingsSnapshot,
-	personIDToIndex: {[key: string]: number},
-	competitionIDToIndex: {[key: number]: number},
-	continentIDToIndex: {[key: string]: number},
-	countryIDToIndex: {[key: string]: number},
-	activeRegions: {
-		continents: Set<Continent["id"]>
-		countries: Set<Country["id"]>
-	}
 };
 
 export type AppData = {
@@ -57,7 +43,7 @@ export interface UIState {
 };
 
 export type AppState = {
-	rankings: Rankings,
+	rankings: ExtendedRankingsData,
 	data: AppData,
 	filters: AppFilters,
 	uiState: UIState,
@@ -71,7 +57,7 @@ export const initialState: AppState = {
 		personIDToIndex: {},
 		continentIDToIndex: {},
 		countryIDToIndex: {},
-		activeRegions: {continents: new Set(), countries: new Set()},
+		activeRegions: {continents: [], countries: []},
 	},
 	data: {
 		kinchRanks: [],

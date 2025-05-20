@@ -5,9 +5,9 @@
 		"target": "es2022",
 		"module": "es2022",
 		"moduleResolution": "node",
-		"outDir": "./",
+		"noEmit": true,
 	},
 	"include": [
-		"./src/*.ts",
+		"*.ts",
 	],
 }

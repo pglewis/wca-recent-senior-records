@@ -1,7 +1,7 @@
-import {EventRanking, WCAEvent, WCAEventID} from "../../../common/scripts/rankings-snapshot";
+import {ExtendedRankingsData, EventRanking, WCAEvent, WCAEventID} from "../../../common/scripts/rankings-snapshot";
 import {parseMultiResult, timeResultToSeconds} from "../../../common/scripts/util/parse";
 import {KinchEvent, KinchRank, TopRank} from "../types";
-import {AppData, AppFilters, Rankings} from "./app-state";
+import {AppData, AppFilters} from "./app-state";
 import {
 	AppActionTypes,
 	AppAction,
@@ -29,14 +29,14 @@ export const scoreAverageOnly: Record<WCAEventID, boolean> = {
 	"333mbf": false,
 };
 
-export function setTopRanksAction(rankings: Rankings): TopRanksSetAction {
+export function setTopRanksAction(rankings: ExtendedRankingsData): TopRanksSetAction {
 	return {
 		type: AppActionTypes.topRanksSet,
 		payload: rankings
 	};
 }
 
-export function setKinchRanksAction(rankings: Rankings, topRanks: AppData["topRanks"], filters: AppFilters): KinchRanksUpdatedAction {
+export function setKinchRanksAction(rankings: ExtendedRankingsData, topRanks: AppData["topRanks"], filters: AppFilters): KinchRanksUpdatedAction {
 	return {
 		type: AppActionTypes.updateKinchRanks,
 		payload: {
@@ -74,7 +74,7 @@ export function dataReducer(data: AppData, action: AppAction): AppData {
 	return data;
 };
 
-export function buildTopRanks(rankings: Rankings): TopRank[] {
+export function buildTopRanks(rankings: ExtendedRankingsData): TopRank[] {
 	const rankingsData = rankings.data;
 	const topRanks: TopRank[] = [];
 
@@ -137,7 +137,7 @@ export function buildTopRanks(rankings: Rankings): TopRank[] {
 	return topRanks;
 }
 
-function getRanksForPerson(rankings: Rankings, topRanks: TopRank[], filters: AppFilters, personID: string): KinchRank {
+function getRanksForPerson(rankings: ExtendedRankingsData, topRanks: TopRank[], filters: AppFilters, personID: string): KinchRank {
 	const rankingsData = rankings.data;
 	const person = rankingsData.persons.find(p => p.id === personID);
 	if (!person) {

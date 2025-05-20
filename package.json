@@ -6,7 +6,7 @@
     "homepage": "https://pglewis.github.io/wca-recent-senior-records/",
     "license": "GPL-2.0+",
     "engines": {
-        "node": ">= 23.5.0"
+        "node": ">= 23.6.0"
     },
     "devDependencies": {
         "@eslint/js": "^9.18.0",
@@ -24,12 +24,12 @@
     "scripts": {
         "dev": "npx vite",
         "lint": "npx eslint",
-        "tsc-client": "npx tsc --project ./src",
         "tsc-node": "npx tsc --project ./bin",
-        "tsc": "npm run tsc-client && npm run tsc-node",
+        "tsc-client": "npx tsc --project ./src",
+        "tsc": "npm run tsc-node && npm run tsc-client",
         "build": "npm run lint && npm run tsc && npx vite build",
         "preview": "npx vite preview",
-        "get-data": "node bin/get-data.js",
+        "get-data": "node bin/get-data.ts",
         "copy-dev-data": "shx cp dist/data/* src/data/"
     }
 }

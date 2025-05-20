@@ -19,6 +19,11 @@ jobs:
       - name: Checkout main
         uses: actions/checkout@v4
 
+      - name: Set node version (we need 23.6.0 for native type stripping)
+        uses: actions/setup-node@v4
+        with:
+          node-version: 23.6.0
+
       - name: npm install
         run: npm install
 

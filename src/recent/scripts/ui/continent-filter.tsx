@@ -11,7 +11,7 @@ export function ContinentFilter(props: AppProps): JSX.Element {
 	const {continent: continentFilter, country: countryFilter} = filters;
 	const {countryIDToIndex} = rankings;
 	const {continents, countries} = rankings.data;
-	const activeContinents = rankings.activeRegions.continents;
+	const activeContinents = new Set(rankings.activeRegions.continents);
 	const optionArray: SelectOption[] = [];
 
 	function handleChange(this: HTMLSelectElement) {

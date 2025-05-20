@@ -1,12 +1,6 @@
-import type {Continent, Country} from "../../../common/scripts/rankings-snapshot";
+import {ExtendedRankingsData, Continent, Country} from "../../../common/scripts/rankings-snapshot";
 import {parseMultiResult, timeResultToSeconds} from "../../../common/scripts/util/parse";
-
-import {
-	type ResultRow,
-	type Rankings,
-	type Filters,
-	type SortColumn,
-} from "./app-state";
+import {ResultRow, Filters, SortColumn} from "./app-state";
 
 import {
 	type AppAction,
@@ -29,7 +23,7 @@ export interface RegionCounts {
 	countries: CountryCounts
 };
 
-export function filterRankingsAction(rankings: Rankings, filters: Filters): RankingsFilteredAction {
+export function filterRankingsAction(rankings: ExtendedRankingsData, filters: Filters): RankingsFilteredAction {
 	return {
 		type: AppActionTypes.rankingsFiltered,
 		payload: {rankings: rankings, filters}
@@ -62,7 +56,7 @@ export function resultsReducer(results: ResultRow[] = [], action: AppAction): Re
 	return results;
 };
 
-function filterRankings(rankings: Rankings, filters: Filters): ResultRow[] {
+function filterRankings(rankings: ExtendedRankingsData, filters: Filters): ResultRow[] {
 	const rankingsData = rankings.data;
 	const {competitionIDToIndex, personIDToIndex, continentIDToIndex, countryIDToIndex} = rankings;
 	const {topN, timeFrame} = filters;

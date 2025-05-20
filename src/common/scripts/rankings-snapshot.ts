@@ -1,12 +1,25 @@
+export interface ExtendedRankingsData {
+	/** date/time string of the data snapshot in UTC */
+	lastUpdated: string,
+	data: RankingsSnapshot,
+	personIDToIndex: {[key: string]: number;},
+	competitionIDToIndex: {[key: number]: number;},
+	continentIDToIndex: {[key: string]: number;},
+	countryIDToIndex: {[key: string]: number;},
+	activeRegions: {
+		continents: Continent["id"][],
+		countries: Country["id"][],
+	};
+};
 export interface RankingsSnapshot {
 	/** Human readable date/time string of the data snapshot, in UTC */
-	refreshed: string
-	events: WCAEvent[]
-	persons: Person[]
-	competitions: Competition[]
-	continents: Continent[]
-	countries: Country[]
-}
+	refreshed: string,
+	events: WCAEvent[],
+	persons: Person[],
+	competitions: Competition[],
+	continents: Continent[],
+	countries: Country[],
+};
 
 export type WCAEventID =
 	"333" |
