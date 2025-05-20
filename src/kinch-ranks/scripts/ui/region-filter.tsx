@@ -48,12 +48,12 @@ export function RegionFilter(props: AppProps) {
 			<select id="region-filter" onChange={handleChange}>
 				<option value="world">World</option>
 				<optgroup label="Continents">
-					{Array.from(filteredContinents).map(
+					{filteredContinents.map(
 						c => ContinentOption(c.id, c.name, currentRegion)
 					)}
 				</optgroup>
 				<optgroup label="Countries">
-					{Array.from(filteredCountries).sort().map(
+					{filteredCountries.sort().map(
 						c => CountryOption(c.id, c.name, currentRegion)
 					)}
 				</optgroup>
