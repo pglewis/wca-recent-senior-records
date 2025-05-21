@@ -10,8 +10,8 @@ export default tseslint.config(
 	tseslint.configs.recommended,
 	{
 		ignores: [
+			"**/node_modules/**",
 			"dist",
-			"bin/**/*.js",
 			"site/data",
 			"site/recent/scripts/vendor"
 		]
