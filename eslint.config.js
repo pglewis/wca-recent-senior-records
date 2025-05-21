@@ -12,8 +12,8 @@ export default tseslint.config(
 		ignores: [
 			"dist",
 			"bin/**/*.js",
-			"src/data",
-			"src/recent/scripts/vendor"
+			"site/data",
+			"site/recent/scripts/vendor"
 		]
 	},
 	{languageOptions: {globals: globals.browser}},

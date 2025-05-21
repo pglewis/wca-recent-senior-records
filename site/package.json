@@ -1,0 +1,19 @@
+{
+    "name": "@repo/site",
+    "private": true,
+    "version": "1.0.0",
+    "type": "module",
+       "dependencies": {
+        "@repo/lib": "*"
+    },
+    "devDependencies": {
+        "@eslint/js": "^9.18.0",
+        "@stylistic/eslint-plugin-js": "^2.12.1",
+        "eslint": "^9.18.0",
+        "eslint-plugin-jsdoc": "^50.6.1",
+        "globals": "^15.14.0",
+        "tsx-dom": "^3.1.0",
+        "typescript": "^5.7.3",
+        "typescript-eslint": "^8.20.0"
+    }
+}

@@ -1,6 +1,6 @@
 import {writeFile, mkdir} from "node:fs/promises";
 import {createContext, runInContext} from "node:vm";
-import type {RankingsSnapshot, ExtendedRankingsData} from "../src/common/scripts/rankings-snapshot";
+import type {RankingsSnapshot, ExtendedRankingsData} from "@repo/lib/types/rankings-snapshot";
 
 const RANKINGS_URL = "https://wca-seniors.org/data/Senior_Rankings.js";
 const DESTINATION_DIR = "dist/data";
