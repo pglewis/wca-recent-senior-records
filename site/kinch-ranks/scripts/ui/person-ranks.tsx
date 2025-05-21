@@ -3,8 +3,7 @@ import {h} from "tsx-dom";
 import {Continent, Country} from "@repo/lib/types/rankings-snapshot";
 import {AppFilters, AppProps} from "../app-state/app-state";
 import {setEventScoreSortAction} from "../app-state/ui-state-reducer";
-import {scoreAverageOnly} from "../app-state/data-reducer";
-import {KinchEvent, KinchRank} from "../types";
+import {KinchEvent, KinchRank, scoreAverageOnly} from "@repo/lib/types/kinch-types";
 
 export function PersonRanks(props: AppProps) {
 	const {store} = props;

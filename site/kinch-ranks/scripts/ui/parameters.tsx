@@ -1,6 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {h} from "tsx-dom";
-import {TopRank} from "../types";
+import {TopRank} from "@repo/lib/types/kinch-types";
 import {getURLState, updateURLState} from "../url-state";
 import {AppFilters, AppProps} from "../app-state/app-state";
 import {

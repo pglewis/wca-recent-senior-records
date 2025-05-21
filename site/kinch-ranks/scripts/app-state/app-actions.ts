@@ -1,6 +1,6 @@
 import {ExtendedRankingsData, EventRanking} from "@repo/lib/types/rankings-snapshot";
 import type {UnknownAction} from "@repo/lib/state/actions";
-import {TopRank} from "../types";
+import {TopRank} from "@repo/lib/types/kinch-types";
 import {AppFilters} from "./app-state";
 
 export enum AppActionTypes {
@@ -28,7 +28,7 @@ export interface RankingsDataSetAction extends UnknownAction {
 
 export interface TopRanksSetAction extends UnknownAction {
 	type: AppActionTypes.topRanksSet,
-	payload: ExtendedRankingsData,
+	payload: TopRank[],
 };
 
 export interface KinchRanksUpdatedAction extends UnknownAction {

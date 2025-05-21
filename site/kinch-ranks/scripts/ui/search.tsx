@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {h} from "tsx-dom";
 import {debounce} from "@repo/lib/util/debounce";
-import {KinchRank} from "../types";
+import {KinchRank} from "@repo/lib/types/kinch-types";
 import {Person} from "@repo/lib/types/rankings-snapshot";
 
 interface SearchProps {

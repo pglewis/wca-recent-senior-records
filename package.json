@@ -21,13 +21,15 @@
     },
     "scripts": {
         "dev": "npx vite",
+        "preview": "npx vite preview",
         "lint": "npx eslint",
-        "tsc-node": "npx tsc --project ./bin",
-        "tsc-client": "npx tsc --project ./site",
+        "tsc-node": "npx tsc --project bin",
+        "tsc-client": "npx tsc --project site",
         "tsc": "npm run tsc-node && npm run tsc-client",
         "build": "npm run lint && npm run tsc && npx vite build",
-        "preview": "npx vite preview",
         "get-data": "node bin/get-data.ts",
+        "create-topranks": "node bin/create-topranks.ts",
+        "create-data": "npm run get-data && npm run create-topranks",
         "copy-dev-data": "shx cp dist/data/* site/data/"
     }
 }

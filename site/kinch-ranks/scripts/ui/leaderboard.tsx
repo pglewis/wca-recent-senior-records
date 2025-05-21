@@ -1,6 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {h} from "tsx-dom";
-import {KinchRank} from "../types";
+import {KinchRank} from "@repo/lib/types/kinch-types";
 import {AppProps} from "../app-state/app-state";
 import {setWCAIDFilterAction} from "../app-state/filters-reducer";
 import {getURLState, updateURLState} from "../url-state";

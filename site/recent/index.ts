@@ -25,7 +25,7 @@ try {
 	throw error;
 }
 
-const store = createStore({...initialState, ...{rankings}}, appReducer);
+const store = createStore(initialState, appReducer);
 store.dispatch(setRankingsDataAction(rankings));
 render();
 

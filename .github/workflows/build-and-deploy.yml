@@ -31,7 +31,7 @@ jobs:
         run: npm run build
 
       - name: Copy and process the senior rankings data
-        run: npm run get-data
+        run: npm run create-data
 
       - name: Create .nojekyll
         run: touch ./dist/.nojekyll

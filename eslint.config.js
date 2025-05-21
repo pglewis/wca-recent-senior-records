@@ -68,8 +68,9 @@ export default tseslint.config(
 			"jsdoc/require-returns-type": "off",
 			"jsdoc/require-param-type": "off",
 		}
-	}, {
-	// Overrides for node scripts in 'bin/' directory
+	},
+	{
+		// Overrides for node scripts in the 'bin/' directory
 		files: ["bin/**/*.ts"],
 		languageOptions: {
 			globals: {

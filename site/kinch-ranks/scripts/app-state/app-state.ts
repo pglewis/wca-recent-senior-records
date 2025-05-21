@@ -1,7 +1,7 @@
 import {EventRanking, RankingsSnapshot, ExtendedRankingsData} from "@repo/lib/types/rankings-snapshot";
 import {combineReducers, type DataStore, type ReducersMapObject} from "@repo/lib/state/state";
 import {rankingsReducer} from "./rankings-reducer";
-import {KinchRank, TopRank} from "../types";
+import {KinchRank, TopRank} from "@repo/lib/types/kinch-types";
 import {dataReducer} from "./data-reducer";
 import {filtersReducer} from "./filters-reducer";
 import {UIStateReducer} from "./ui-state-reducer";

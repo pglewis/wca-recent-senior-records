@@ -1,6 +1,6 @@
-import {ExtendedRankingsData, EventRanking, WCAEvent, WCAEventID} from "@repo/lib/types/rankings-snapshot";
+import {ExtendedRankingsData, EventRanking, WCAEvent} from "@repo/lib/types/rankings-snapshot";
 import {parseMultiResult, timeResultToSeconds} from "@repo/lib/util/parse";
-import {KinchEvent, KinchRank, TopRank} from "../types";
+import {TopRank, KinchEvent, KinchRank, scoreAverageOnly} from "@repo/lib/types/kinch-types";
 import {AppData, AppFilters} from "./app-state";
 import {
 	AppActionTypes,
@@ -9,30 +9,10 @@ import {
 	KinchRanksUpdatedAction,
 } from "./app-actions";
 
-export const scoreAverageOnly: Record<WCAEventID, boolean> = {
-	"333": true,
-	"222": true,
-	"444": true,
-	"555": true,
-	"666": true,
-	"777": true,
-	"333bf": false,
-	"333fm": false,
-	"333oh": true,
-	"clock": true,
-	"minx": true,
-	"pyram": true,
-	"skewb": true,
-	"sq1": true,
-	"444bf": false,
-	"555bf": false,
-	"333mbf": false,
-};
-
-export function setTopRanksAction(rankings: ExtendedRankingsData): TopRanksSetAction {
+export function setTopRanksAction(topRanks: TopRank[]): TopRanksSetAction {
 	return {
 		type: AppActionTypes.topRanksSet,
-		payload: rankings
+		payload: topRanks
 	};
 }
 
@@ -54,7 +34,7 @@ export function dataReducer(data: AppData, action: AppAction): AppData {
 		case AppActionTypes.topRanksSet: {
 			return {
 				...data,
-				topRanks: buildTopRanks(payload)
+				topRanks: payload,
 			};
 		}
 		case AppActionTypes.updateKinchRanks: {
@@ -73,69 +53,6 @@ export function dataReducer(data: AppData, action: AppAction): AppData {
 
 	return data;
 };
-
-export function buildTopRanks(rankings: ExtendedRankingsData): TopRank[] {
-	const rankingsData = rankings.data;
-	const topRanks: TopRank[] = [];
-
-	// format (time, number, multi), id (eg "333"), name ("3x3x3 Cube"), rankings[]
-	for (const event of rankingsData.events) {
-
-		// type (single/average) and age(40, 50, etc), ranks[]
-		for (const eventRanking of event.rankings) {
-			const {age, ranks} = eventRanking;
-
-			if (ranks.length === 0 || (scoreAverageOnly[event.id] && eventRanking.type !== "average")) {
-				continue;
-			}
-
-			// Stash the top (world) ranking
-			topRanks.push({
-				eventID: event.id,
-				type: eventRanking.type,
-				age: age,
-				region: "world",
-				result: ranks[0].best
-			});
-
-			// rank (#), id (wca id), best (results), competition (comp ID)
-			const regions = new Set();
-			for (const rank of ranks) {
-				const person = rankingsData.persons[rankings.personIDToIndex[rank.id]];
-				const country = rankingsData.countries[rankings.countryIDToIndex[person.country]];
-				const continent = rankingsData.continents[rankings.continentIDToIndex[country.continent]];
-
-				// First ranking for each continent is top for the region
-				if (!regions.has(continent.id)) {
-					regions.add(continent.id);
-
-					topRanks.push({
-						eventID: event.id,
-						type: eventRanking.type,
-						age: age,
-						region: continent.id,
-						result: rank.best,
-					});
-				}
-
-				// First ranking for each country is top for the region
-				if (!regions.has(country.id)) {
-					regions.add(country.id);
-
-					topRanks.push({
-						eventID: event.id,
-						type: eventRanking.type,
-						age: age,
-						region: country.id,
-						result: rank.best,
-					});
-				}
-			}
-		}
-	}
-
-	return topRanks;
-}
 
 function getRanksForPerson(rankings: ExtendedRankingsData, topRanks: TopRank[], filters: AppFilters, personID: string): KinchRank {
 	const rankingsData = rankings.data;
